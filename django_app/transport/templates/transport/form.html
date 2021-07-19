@@ -1,17 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Hello</h1>
-<h2>A form to get user's input will be here</h2>
 
-  <div class="row">
-    <div class="col">
-      <form
-              enctype="multipart/form-data"
-              method = "post">
-          {% csrf_token %}
-          {{ form.as_p }}
-          <button type="submit">SEND</button>
-      </form>
-    </div>
-  </div>
+<div class="alert alert-light" role="alert">
+  Fill in the form to identify the desired departure, arrival and date
+</div>
+
+<form method = "post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">FIND TRANSPORT</button>
+</form>
+
 {% endblock content %}
+
