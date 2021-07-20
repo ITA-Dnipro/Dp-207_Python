@@ -2,4 +2,4 @@
 .vscode
 *jpg
 .idea
-.venv
+/venv
