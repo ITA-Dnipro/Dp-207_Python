@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, abort
-from parser import ScraperForHotel
+from .parser import ScraperForHotel
 from marshmallow import Schema, fields, validate
-from utils.api_jwt import check_token
+from .utils.api_jwt import check_token
 
 
 # create schema for hotel responce
