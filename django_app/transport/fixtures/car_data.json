@@ -1,7 +1,6 @@
 [
   {
     "model": "transport.Route",
-    "pk": 1,
     "fields": {
       "departure_name": "Сумы",
       "arrival_name": "Киев",
@@ -14,8 +13,8 @@
 
   {
     "model": "transport.Car",
-    "pk": 1,
     "fields": {
+      "route_id": 1,
       "departure_name": "Сумы",
       "departure_date": "2021-07-19 01:18:09.184106+01:00",
       "arrival_name": "Киев",
@@ -29,7 +28,6 @@
   },
   {
     "model": "transport.Route",
-    "pk": 2,
     "fields": {
       "departure_name": "Сумы",
       "arrival_name": "Киев",
@@ -41,8 +39,8 @@
   },
   {
     "model": "transport.Car",
-    "pk": 2,
     "fields": {
+      "route_id": 2,
       "departure_name": "Сумы",
       "departure_date": "2021-01-19 04:30:00.184106+01:00",
       "arrival_name": "Киев",

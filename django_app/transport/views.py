@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic.edit import FormView
 from .models import Route
 from .forms import JourneyDetailsForm
-
+from .api_helper import Transport
 
 import json
 from .api_utils.api_request_helpers import create_api_call
@@ -16,12 +16,44 @@ class TransportListView(ListView):
     model = Route
 
 
-class JourneyDetailsView(FormView):
-    template_name = 'transport/form.html'
-    form_class = JourneyDetailsForm
 
-    def form_valid(self, form):
-        departure_place = form.cleaned_data['departure_name']
-        arrival_place = form.cleaned_data['arrival_name']
-        departure_day = form.cleaned_data['departure_date']
-        return redirect('some_view_that_will_use_this_data', departure_place, arrival_place, departure_day)
+# def my_test_view(request):
+#     payload = {
+#         "departure_name": data['departure_name'],
+#         "departure_date": data['arrival_name'],
+#         "arrival_name": data['departure_date'],
+#     }
+#     TRANSPORT_APP_API_CARS_URL = os.environ.get('TRANSPORT_APP_API_CARS_URL')
+#     api_response = create_api_call(payload, TRANSPORT_APP_API_CARS_URL)
+#     context = json.loads(api_response.text)
+#     print(context)
+#     return render(request, 'transport/route_list.html', context=context)
+
+
+def route_detales(request):
+    departure_name = request.POST.get('departure_name')
+    arrival_name = request.POST.get('arrival_name')
+    departure_date = request.POST.get('departure_date')
+    return render(request, "transport/form.html",
+                  {"departure_name": departure_name,
+                   "arrival_name": arrival_name,
+                   "departure_date": departure_date})
+
+
+def journey_details_view(request):
+    form = JourneyDetailsForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            departure_name = request.POST.get('departure_name')
+            arrival_name = request.POST.get('arrival_name')
+            departure_date = request.POST.get('departure_date')
+            routes = Transport(departure_name, arrival_name, departure_date)
+            if not routes.create_route():
+                return redirect(request, "transport/home.html")
+            else:
+                routes.create_route()
+            return render(request, 'transport/route_list.html')
+    else:
+        form = JourneyDetailsForm()
+    return render(request, "transport/route_form.html", {'form': form})
+

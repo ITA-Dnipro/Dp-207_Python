@@ -1,7 +1,6 @@
 [
   {
     "model": "transport.Route",
-    "pk": 3,
     "fields": {
       "departure_name": "Киев",
       "arrival_name": "Рахов",
@@ -14,8 +13,8 @@
 
   {
     "model": "transport.Train",
-    "pk": 1,
     "fields": {
+      "route_id": 3,
       "train_name": "ВЛАДИСЛАВ ЗУБЕНКО",
       "train_number": "015О",
       "train_uid": "015O_0_2",
@@ -34,7 +33,6 @@
 
   {
     "model": "transport.Route",
-    "pk": 4,
     "fields": {
       "departure_name": "Киев",
       "arrival_name": "Львов",
@@ -47,8 +45,8 @@
 
   {
     "model": "transport.Train",
-    "pk": 2,
     "fields": {
+      "route_id": 4,
       "train_name": "ЛЬВІВ",
       "train_number": "091К",
       "train_uid": "091K_0_2",

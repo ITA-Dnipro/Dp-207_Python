@@ -7,5 +7,5 @@ from . import views
 app_name = 'transport'
 urlpatterns = [
     path('list/', TransportListView.as_view(), name='transport_list'),
-    path('form/', views.JourneyDetailsView.as_view(), name='user_input'),
+    path('form/', views.journey_details_view, name='form_view'),
 ]

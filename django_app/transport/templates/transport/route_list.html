@@ -13,7 +13,7 @@
       <th scope="col">Departure City</th>
       <th scope="col">Arrival City</th>
       <th scope="col">Departure Time</th>
-      <th scope="col">Source Name</th>
+      <th scope="col">Parsed Time</th>
       <th scope="col">Source URL</th>
     </tr>
   </thead>
@@ -24,13 +24,12 @@
               <th>{{ transport.departure_name}}</th>
               <th>{{ transport.arrival_name}}</th>
               <th>{{ transport.departure_date}}</th>
-              <th>{{ transport.source_name}}</th>
+              <th>{{ transport.parsed_time}}</th>
               <th><a href = "{{transport.source_url}}">Go to book</a></th>
             </tr>
     {% endfor %}
   </tbody>
 </table>
-
 {%endblock content%}
 
 

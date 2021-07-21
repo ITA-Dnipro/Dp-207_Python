@@ -5,11 +5,10 @@
   Fill in the form to identify the desired departure, arrival and date
 </div>
 
-<form method = "post">
+<form action="" method="POST" name="data">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">FIND TRANSPORT</button>
+   <input type="Submit" name="submit" value="Submit"/>
 </form>
 
 {% endblock content %}
-
