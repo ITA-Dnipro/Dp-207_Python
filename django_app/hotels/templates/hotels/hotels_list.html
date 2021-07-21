@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load page_tag %}
+
+
+{%block content%}
+
+
+<h3>Hotels in {{ hotels.0.city }}</h3>
+
+{% for hotel in hotels %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <img src="{{ hotel.photo.url }}" class="img-fluid">
+
+        </div>
+        <div class="col">
+            <h1><a href="{{ hotel.get_absolute_url }}" class="text-info">{{  hotel.name }}</a></h1>
+            <p>{{ hotel.details }}</p>
+        </div>
+        <div class="col">
+            <h6>адресс: {{ hotel.adress }}</h6>
+            <h6>город: {{ hotel.city }}</h6>
+            <p>{{ hotel.price }}</p>
+            <p class="text-success">Комментарии: {{ hotel.comments.all|length }}</p>
+            {% if hotel.get_avg_marks > 0 %}
+            <p class="text-success text-center">RATING: {{ hotel.get_avg_marks }}</p>
+            {% else %}
+            <p class="text-success text-center">Not Rated Yet</p>
+            {% endif %}
+        </div>
+    </div>
+        </div>
+{% endfor %}
+
+
+</div>
+
+{% endblock %}
