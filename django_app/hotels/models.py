@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Avg, F
+from django.db.models import Avg
 from django.urls import reverse
 from django.core.files import File
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -10,6 +10,7 @@ import pytz
 import os
 
 RATING_CHOICE = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)]
+
 
 # create City model
 class City(models.Model):
@@ -52,7 +53,8 @@ class Hotel(models.Model):
         rates = self.rating_set.all()
         if not rates:
             return 0.0
-        return round(self.rating_set.all().aggregate(Avg('mark'))['mark__avg'], 1)
+        return round(self.rating_set.all().aggregate(
+            Avg('mark'))['mark__avg'], 1)
 
 
 # create class for comment model
@@ -81,8 +83,8 @@ class HotelComment(models.Model):
 
 # create class for Rating model
 class Rating(models.Model):
-    mark = models.FloatField(null=True, blank=True, choices=RATING_CHOICE, validators=[MinValueValidator(0),
-                                       MaxValueValidator(10)])
+    mark = models.FloatField(null=True, blank=True, choices=RATING_CHOICE,
+                             validators=[MinValueValidator(0),
+                                         MaxValueValidator(10)])
     # relation with hotel
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
-

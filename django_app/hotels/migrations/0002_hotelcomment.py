@@ -15,11 +15,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='HotelComment',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('text', models.TextField()),
-                ('author', models.CharField(max_length=50)),
-                ('date_time', models.DateTimeField(default=datetime.datetime.now)),
-                ('hotel', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='hotels.hotel')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')), # noqa
+                ('text', models.TextField()), # noqa
+                ('author', models.CharField(max_length=50)), # noqa
+                ('date_time', models.DateTimeField(default=datetime.datetime.now)), # noqa
+                ('hotel', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='hotels.hotel')), # noqa
             ],
             options={
                 'ordering': ['-date_time'],

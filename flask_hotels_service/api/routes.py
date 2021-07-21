@@ -1,7 +1,7 @@
-from flask import Blueprint, request, jsonify, abort, render_template
-from .parser import ScraperForHotel
+from flask import Blueprint, request, jsonify, abort
+from parser import ScraperForHotel
 from marshmallow import Schema, fields, validate
-from .utils.api_jwt import check_token
+from utils.api_jwt import check_token
 
 
 # create schema for hotel responce
@@ -53,5 +53,3 @@ def get_all_hotels():
 #             hotel_result = {"title": data['title'], "city": data['city']}
 #             result = hotel_schema.dump(hotel_result)
 #             return jsonify({'hotel': result})
-
-

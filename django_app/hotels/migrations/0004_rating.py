@@ -15,9 +15,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Rating',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('mark', models.IntegerField(blank=True, choices=[(1, 'one'), (2, 'two')], null=True, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(10)])),
-                ('hotel', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='hotels.hotel')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')), # noqa
+                ('mark', models.IntegerField(blank=True, choices=[(1, 'one'), (2, 'two')], null=True, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(10)])), # noqa
+                ('hotel', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='hotels.hotel')), # noqa
             ],
         ),
     ]

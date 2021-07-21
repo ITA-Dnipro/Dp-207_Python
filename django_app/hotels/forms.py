@@ -1,5 +1,5 @@
-from django.forms import Form, Textarea, CharField, ModelForm, ChoiceField, Select, RadioSelect
-from .models import City, HotelComment, Rating
+from django.forms import Form, Textarea, CharField, ModelForm
+from .models import City, Rating
 
 
 class CityModelForm(ModelForm):

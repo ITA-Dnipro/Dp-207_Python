@@ -11,8 +11,9 @@ def main_page(request):
     # get sorted hotels by rating
     hotels = sorted(Hotel.objects.all(), key=lambda x: -x.get_avg_marks())
     if hotels:
-        return render(request, 'hotels/main_page.html', {'form': CityModelForm(),
-                                                         'hotels': hotels[:5]})
+        return render(request, 'hotels/main_page.html',
+                      {'form': CityModelForm(),
+                       'hotels': hotels[:5]})
     return render(request, 'hotels/main_page.html', {'form': CityModelForm()})
 
 
@@ -51,7 +52,6 @@ class HotelDetailView(DetailView):
 
 # create comments view
 def hotel_comment(request, pk):
-
     # get requested hotel by pk
     hotel = Hotel.objects.get(pk=pk)
 
@@ -65,7 +65,7 @@ def hotel_comment(request, pk):
                 text=text, author=author,
             )
             new_comment.save()
-    except:
+    except TypeError:
         print('Problem with creating new comment')
     finally:
         return HttpResponseRedirect(hotel.get_absolute_url())
@@ -85,7 +85,8 @@ def create_rating(request, pk):
                 mark=mark,
             )
             new_mark.save()
-    except:
+    except TypeError:
         print('Problem with creating new comment')
     finally:
         return HttpResponseRedirect(hotel.get_absolute_url())
+

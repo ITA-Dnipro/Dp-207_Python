@@ -3,3 +3,4 @@
 *jpg
 .idea
 **/venv
+**/__pycache__

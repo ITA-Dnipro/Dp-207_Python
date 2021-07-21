@@ -10,6 +10,7 @@ class CustomException(Exception):
     def __init__(self, msg):
         self.msg = msg
 
+
 class CityNotExists(CustomException):
     pass
 
@@ -19,32 +20,41 @@ class ScraperForHotel():
     Class for scrapping the site hotels24.ua
     """
 
-    desktop_agents = ['Mozilla/5.0 (Window s NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
-                 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
-                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
-                 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/602.2.14 (KHTML, like Gecko) Version/10.0.1 Safari/602.2.14',
-                 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36',
-                 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.98 Safari/537.36',
-                 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.98 Safari/537.36',
-                 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36',
-                 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
-                 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0']
+    desktop_agents = [
+        'Mozilla/5.0 (Window s NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
+        'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 '
+        'Safari/537.36',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+        'Chrome/54.0.2840.99 Safari/537.36',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/602.2.14 (KHTML, like Gecko) '
+        'Version/10.0.1 Safari/602.2.14',
+        'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 '
+        'Safari/537.36',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) '
+        'Chrome/54.0.2840.98 Safari/537.36',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.98 '
+        'Safari/537.36',
+        'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36',
+        'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 '
+        'Safari/537.36',
+        'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0']
 
     URL = 'https://hotels24.ua'
 
     def __init__(self, city):
         self.city = city
-    
+
     @staticmethod
     def random_headers():
-        return {'User-Agent': choice(ScraperForHotel.desktop_agents),'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'}
+        return {'User-Agent': choice(ScraperForHotel.desktop_agents),
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'}
 
     @staticmethod
     def add_domen(url_for_detail):
         url_for_detail = ScraperForHotel.URL + '/' + url_for_detail
         return url_for_detail
 
-    @staticmethod        
+    @staticmethod
     def parse_adress(adress):
         tmp = adress[1].split(', ')
         adress = ' '.join(tmp).strip()
@@ -56,7 +66,7 @@ class ScraperForHotel():
         Takes url and send request to the url and returns tree of elements DOM
         """
         try:
-            response = requests.get(url, headers = ScraperForHotel.random_headers())
+            response = requests.get(url, headers=ScraperForHotel.random_headers())
             tree = html.fromstring(response.text)
             return tree
         except requests.exceptions.RequestException as e:
@@ -74,7 +84,7 @@ class ScraperForHotel():
             print(count)
             url = 'https:' + href[-1]
             return url
-        elif href or count <=2:
+        elif href or count <= 2:
             print(count)
             ScraperForHotel.find_url_for_cities(url)
         else:
@@ -119,14 +129,16 @@ class ScraperForHotel():
         """
         url_for_all_cities = ScraperForHotel.find_url_for_cities(url)
         tree = self.request(url_for_all_cities)
-        cities = tree.xpath('//div[@class="catalog-name-region"]/following-sibling::ul/li/a[@class="regionSmallReg"]/text()')
-        hrefs = tree.xpath('//div[@class="catalog-name-region"]/following-sibling::ul/li/a[@class="regionSmallReg"]/@href')
+        cities = tree.xpath(
+            '//div[@class="catalog-name-region"]/following-sibling::ul/li/a[@class="regionSmallReg"]/text()')
+        hrefs = tree.xpath(
+            '//div[@class="catalog-name-region"]/following-sibling::ul/li/a[@class="regionSmallReg"]/@href')
         for index, city in enumerate(cities):
             if city == self.city:
                 return ScraperForHotel.add_domen(hrefs[index])
         else:
             raise CityNotExists("Such city doesn't exist")
-    
+
     @staticmethod
     def find_urls_for_hotels_in_city(url):
         """
@@ -147,11 +159,10 @@ class ScraperForHotel():
         with concurrent.futures.ThreadPoolExecutor(max_workers=25) as p:
             data = list(p.map(self.find_detail, urls))
         end = time.perf_counter()
-        print(end-start)
+        print(end - start)
         return json.dumps(data, ensure_ascii=False)
 
-    
+
 if __name__ == '__main__':
     city = 'Киев'
     ScraperForHotel(city).parse()
-  

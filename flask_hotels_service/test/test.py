@@ -1,7 +1,5 @@
-
-from main import create_app
+from flask_hotels_service.main import create_app
 import unittest
-
 
 
 class FlaskTest(unittest.TestCase):

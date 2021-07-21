@@ -1,5 +1,7 @@
 from django.urls import path
-from .views import *
+from .views import main_page, hotels_by_city, HotelDetailView, \
+    hotel_comment, create_rating
+
 
 app_name = 'hotels'
 urlpatterns = [
