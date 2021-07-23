@@ -21,7 +21,7 @@ def create_jwt_token(city):
 class CityHotels:
 
     def __init__(self, city):
-        self.city = city.capitalize()
+        self.city = city
         self.url = os.environ.get('HOTELS_API_GET_ALL_HOTELS')
 
     # get data from api response
@@ -37,12 +37,13 @@ class CityHotels:
     def create_city_and_hotels(self):
         city = City.objects.filter(name=self.city).first()
 
+
         if not city:
             try:
                 data = self.get_data_from_api()
+                print(data)
             except Exception:
                 return False
-
             city = City(name=self.city)
             city.save()
 

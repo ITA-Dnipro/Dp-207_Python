@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, abort
-from parser import ScraperForHotel
+from .parser import ScraperForHotel
 from marshmallow import Schema, fields, validate
-from utils.api_jwt import check_token
+from .utils.api_jwt import check_token
 
 
 # create schema for hotel responce
@@ -24,18 +24,19 @@ api_blu = Blueprint('api', __name__, url_prefix='/api')
 
 # create endpoint to get all hotels by city
 @api_blu.route('/get_all_hotels', methods=['POST'])
+@check_token
 def get_all_hotels():
     # check and validate jwt token
-    if check_token(request.headers['Authorization']):
-        if not request.get_json():
-            return abort(400)
 
-        # get data from parser
-        data = ScraperForHotel(request.get_json()['city']).parse()
-        result = hotels_schema.loads(data)
-        return jsonify(result), 200
-    else:
-        return jsonify({'msg': 'invalid token'}), 400
+    if not request.get_json():
+        return jsonify({'msg': 'wrong request'}), 403
+    print(request.get_json())
+
+    data = ScraperForHotel(request.get_json()['city']).parse()
+    result = hotels_schema.loads(data)
+    return jsonify(result), 200
+
+
 
 
 # @api_blu.route('/get_hotel', methods=['POST'])
