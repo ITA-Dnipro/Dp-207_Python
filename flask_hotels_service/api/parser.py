@@ -5,6 +5,7 @@ import time
 import concurrent.futures
 import json
 
+MSG = 'Some problem with parser. Try later'
 
 class CustomException(Exception):
     def __init__(self, msg):
@@ -14,6 +15,8 @@ class CustomException(Exception):
 class CityNotExists(CustomException):
     pass
 
+class SomeProblemWithParsing(CustomException):
+    pass
 
 class ScraperForHotel():
     """
@@ -67,10 +70,13 @@ class ScraperForHotel():
         """
         try:
             response = requests.get(url, headers=ScraperForHotel.random_headers())
-            tree = html.fromstring(response.text)
-            return tree
+            if response.status_code == 200:
+                tree = html.fromstring(response.text)
+                return tree
+            else:
+                raise SomeProblemWithParsing(MSG)
         except requests.exceptions.RequestException as e:
-            raise SystemExit(e)
+            raise SomeProblemWithParsing(MSG)
 
     @staticmethod
     def find_url_for_cities(url):
@@ -79,16 +85,11 @@ class ScraperForHotel():
         """
         tree = ScraperForHotel.request(url)
         href = tree.xpath('//div[@class = "panel active"]/ul/li/a/@href')
-        count = 0
         if href:
-            print(count)
             url = 'https:' + href[-1]
             return url
-        elif href or count <= 2:
-            print(count)
-            ScraperForHotel.find_url_for_cities(url)
         else:
-            return
+            raise SomeProblemWithParsing(MSG)
 
     @staticmethod
     def find_detail(url):
@@ -106,8 +107,7 @@ class ScraperForHotel():
         name = tree.xpath('//span[@class="fn"]/text()')
         city = tree.xpath('//div[@class="hotel-line"]/a/span/strong/text()')
         adress = ScraperForHotel.parse_adress(tree.xpath('//div[@class="hotel-line"]/a/span/text()'))
-        count = 0
-        if all([detail, contacts, prices_for_rooms, photo, name, city, adress]) and count <= 2:
+        if all([detail, contacts, prices_for_rooms, photo, name, city, adress]):
             data = {}
             data['detail'] = detail[0].strip().replace('\n', '').replace('  ', '')
             data['contacts'] = contacts[0]
@@ -117,11 +117,8 @@ class ScraperForHotel():
             data['city'] = city[0]
             data['adress'] = adress
             return data
-        elif any([detail, contacts, prices_for_rooms, photo, name, city, adress]) and count <= 2:
-            count += 1
-            ScraperForHotel.find_detail(url)
         else:
-            return
+            raise SomeProblemWithParsing(MSG)
 
     def find_city_url(self, url):
         """
@@ -129,15 +126,16 @@ class ScraperForHotel():
         """
         url_for_all_cities = ScraperForHotel.find_url_for_cities(url)
         tree = self.request(url_for_all_cities)
-        cities = tree.xpath(
-            '//div[@class="catalog-name-region"]/following-sibling::ul/li/a[@class="regionSmallReg"]/text()')
-        hrefs = tree.xpath(
-            '//div[@class="catalog-name-region"]/following-sibling::ul/li/a[@class="regionSmallReg"]/@href')
-        for index, city in enumerate(cities):
-            if city == self.city:
-                return ScraperForHotel.add_domen(hrefs[index])
+        cities = tree.xpath('//div[@class="catalog-name-region"]/following-sibling::ul/li/a[@class="regionSmallReg"]/text()')
+        hrefs = tree.xpath('//div[@class="catalog-name-region"]/following-sibling::ul/li/a[@class="regionSmallReg"]/@href')
+        if hrefs and cities:
+            for index, city in enumerate(cities):
+                if city == self.city:
+                    return ScraperForHotel.add_domen(hrefs[index])
+            else:
+                raise CityNotExists("Such city doesn't exist")
         else:
-            raise CityNotExists("Such city doesn't exist")
+            raise SomeProblemWithParsing(MSG)
 
     @staticmethod
     def find_urls_for_hotels_in_city(url):
@@ -154,12 +152,9 @@ class ScraperForHotel():
         """
         Get around urls for hotels and return json with detail info for hotels
         """
-        start = time.perf_counter()
         urls = ScraperForHotel.find_urls_for_hotels_in_city(self.find_city_url(ScraperForHotel.URL))
         with concurrent.futures.ThreadPoolExecutor(max_workers=25) as p:
             data = list(p.map(self.find_detail, urls))
-        end = time.perf_counter()
-        print(end - start)
         return json.dumps(data, ensure_ascii=False)
 
 
