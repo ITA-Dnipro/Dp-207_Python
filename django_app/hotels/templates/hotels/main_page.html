@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {%block content%}
-<form action="{% url 'hotels:hotels_list' %}" method="post">
+<form action="{% url 'hotels:main' %}" method="post">
     {% csrf_token %}
     <div class="row">
         <div class="col-8">

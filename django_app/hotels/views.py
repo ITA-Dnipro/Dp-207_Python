@@ -9,6 +9,8 @@ from .logic import CityHotels
 # create view for main page of hotels app
 def main_page(request):
     # get sorted hotels by rating
+    if request.method == 'POST':
+        return redirect('hotels:hotels_list', request.POST.get('name').capitalize())
     hotels = sorted(Hotel.objects.all(), key=lambda x: -x.get_avg_marks())
     if hotels:
         return render(request, 'hotels/main_page.html',
@@ -18,19 +20,16 @@ def main_page(request):
 
 
 # create view to get or create hotels by city search
-def hotels_by_city(request):
-    city_search = request.POST.get('name')
-    if city_search:
-        city_search = city_search.capitalize()
-    objects = CityHotels(city_search)
-
+def hotels_by_city(request, city_name):
+    print(city_name)
+    objects = CityHotels(city_name)
     # trying to get or create hotels raise warning if not
     if not objects.create_city_and_hotels():
         messages.warning(request, 'ТАКОГО ГОРОДА НЕТ')
         return redirect('hotels:main')
     else:
         objects.create_city_and_hotels()
-        city = City.objects.filter(name=city_search).first()
+        city = City.objects.filter(name=city_name).first()
         hotels = sorted(city.hotel_set.all(), key=lambda x: -x.get_avg_marks())
         context = {
             'hotels': hotels
@@ -90,3 +89,8 @@ def create_rating(request, pk):
     finally:
         return HttpResponseRedirect(hotel.get_absolute_url())
 
+def test(request):
+    city = CityHotels('Киев')
+    data = city.get_data_from_api()
+    print(data)
+    return render(request, 'hotels/test.html', {})
