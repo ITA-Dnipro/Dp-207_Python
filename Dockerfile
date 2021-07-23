@@ -15,24 +15,11 @@ python3-dev \
 musl-dev \
 libressl-dev \
 libffi-dev \
-zeromq-dev \
-libxml2-dev \
-libxslt-dev \
-g++ \
-unzip \
-rust \
-cargo \
---virtual build-deps \
-jpeg-dev \
-zlib-dev \
-libjpeg
-
-
-
+zeromq-dev 
 #
 COPY . /usr/src/app/
-#
+# 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-#
+# 
 ENTRYPOINT ["sh", "entrypoint.sh"]
