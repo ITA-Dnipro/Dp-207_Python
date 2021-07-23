@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{%block content%}
+<form action="{% url 'hotels:hotels_list' %}" method="post">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-8">
+            {{form.as_p}}
+
+        </div>
+        <div class="row">
+            {% for message in messages %}
+            <p class="text-danger">{{ message }}</p>
+            {% endfor %}
+        </div>
+
+        <input type="submit" value="find hotels" name="city_name" class="form-control btn btn-primary">
+    </div>
+</form>
+
+<br>
+<br>
+
+<h1 class="text-center text-primary">Top 5 Hotels in Ukraine</h1>
+<hr>
+{% for h in hotels %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h6><a href="{{ h.get_absolute_url }}" class="text-info">{{ h.name }}</a></h6>
+        </div>
+        <div class="col">
+            <h6>{{ h.city }}</h6>
+            <h5>Rating: {{ h.get_avg_marks }}</h5>
+
+        </div>
+    </div>
+    <div class="col-3">
+        <img src="{{ h.photo.url }}" class="img-fluid">
+        <h6>{{ h.adress }}</h6>
+    </div>
+</div>
+</div>
+<br>
+<br>
+<br>
+
+{% endfor %}
+
+{% endblock %}
