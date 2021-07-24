@@ -5,10 +5,11 @@ from django.core.files import File
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 from urllib.request import urlretrieve
-
 import pytz
 import os
 
+
+# rating choice options for hotels
 RATING_CHOICE = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)]
 
 
@@ -22,6 +23,9 @@ class City(models.Model):
 
 # create Hotel model
 class Hotel(models.Model):
+    """
+    Hotel model with it fields and has FK to City
+    """
     name = models.CharField(max_length=100, unique=True)
     adress = models.CharField(max_length=150)
     price = models.TextField()
@@ -29,6 +33,7 @@ class Hotel(models.Model):
     photo = models.ImageField(upload_to='media', blank=True)
     url = models.URLField(max_length=200)
     contacts = models.CharField(max_length=50)
+
     # relation with city
     city = models.ForeignKey(City, on_delete=models.CASCADE)
 
@@ -42,8 +47,9 @@ class Hotel(models.Model):
             )
         super(Hotel, self).save(*args, **kwargs)
 
+    # getting url for reverse
     def get_absolute_url(self):
-        return reverse('hotels:hotel_detail', args=(self.pk,))
+        return reverse('hotels:hotel_detail', args=(self.pk, ))
 
     def __str__(self):
         return f'{self.name}'
@@ -56,10 +62,17 @@ class Hotel(models.Model):
         return round(self.rating_set.all().aggregate(
             Avg('mark'))['mark__avg'], 1)
 
+    # get rooms from self.price field for better display in template
+    def get_rooms(self):
+        rooms = eval(str(self.price))
+        return rooms
+
 
 # create class for comment model
 class HotelComment(models.Model):
-    # relation with hotel
+    """
+    HottelComment class with it fields and has FK to Hotel model
+    """
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE,
                               related_name='comments')
     text = models.TextField()
@@ -88,3 +101,23 @@ class Rating(models.Model):
                                          MaxValueValidator(10)])
     # relation with hotel
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
+
+
+class Order(models.Model):
+    """
+    Order class with date fields and has FK to Hotel model
+    """
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
+    order_time = models.DateTimeField(default=timezone.now)
+    check_in = models.DateTimeField(default=timezone.now)
+    check_out = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        dt = self.get_localtime(self.date_time).strftime('%d.%m.%Y %H:%M')
+        return f'"Order made at {dt}'
+
+    @staticmethod
+    def get_localtime(utctime):
+        utc = utctime.replace(tzinfo=pytz.UTC)
+        localtz = utc.astimezone(timezone.get_current_timezone())
+        return localtz

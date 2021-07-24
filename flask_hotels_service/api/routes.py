@@ -26,11 +26,9 @@ api_blu = Blueprint('api', __name__, url_prefix='/api')
 @api_blu.route('/get_all_hotels', methods=['POST'])
 @check_token
 def get_all_hotels():
-    # check and validate jwt token
 
     if not request.get_json():
         return jsonify({'msg': 'wrong request'}), 403
-    print(request.get_json())
 
     data = ScraperForHotel(request.get_json()['city']).parse()
     result = hotels_schema.loads(data)
