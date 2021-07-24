@@ -1,2 +1,13 @@
 .env
 .vscode
+*jpg
+.idea
+**/venv
+**/__pycache__
+<<<<<<< HEAD
+__pycache__
+=======
+__pycache__
+__pycache__/
+*.jpg
+>>>>>>> eee1482e95cfba86893a92284dc156e29438b864

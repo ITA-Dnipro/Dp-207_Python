@@ -21,3 +21,10 @@ services:
             - .:/usr/src/app
         depends_on: 
             - postgres_server
+    flask_hotels:
+        build: ./flask_hotels_service
+        restart: always
+        ports:
+            - 5001:5001
+        volumes:
+            - .:/usr/src/app
