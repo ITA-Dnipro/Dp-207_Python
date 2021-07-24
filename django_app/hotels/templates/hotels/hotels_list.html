@@ -21,7 +21,9 @@
         <div class="col">
             <h6>адресс: {{ hotel.adress }}</h6>
             <h6>город: {{ hotel.city }}</h6>
-            <p>{{ hotel.price }}</p>
+            {% for room, price in hotel.get_rooms.items %}
+                <p>{{ room }}: {{ price }}</p>
+            {% endfor %}
             <p class="text-success">Комментарии: {{ hotel.comments.all|length }}</p>
             {% if hotel.get_avg_marks > 0 %}
             <p class="text-success text-center">RATING: {{ hotel.get_avg_marks }}</p>

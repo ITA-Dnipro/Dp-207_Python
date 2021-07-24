@@ -41,7 +41,6 @@ class CityHotels:
         if not city:
             try:
                 data = self.get_data_from_api()
-                print(data)
             except Exception:
                 return False
             city = City(name=self.city)

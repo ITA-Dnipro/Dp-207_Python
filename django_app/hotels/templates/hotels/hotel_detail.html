@@ -2,20 +2,56 @@
 
 {% block content %}
 
-{{ hotel.name }}
-<img src="{{ hotel.photo.url }}">
-<div class="text-success text-center">RATING: {{ hotel.get_avg_marks }}</div>
-        <form action="{% url 'hotels:rating_create' hotel.pk %}" method="post">
+<div class="text-dark text-center">
+    <h2>{{ hotel.name }}</h2>
+</div>
+<div class="row">
+    <div class="col">
+        <img src="{{ hotel.photo.url }}">
+    </div>
+    <div class="col">
+        {% for room, price in hotel.get_rooms.items %}
+        <h6>
+            <li>{{ room }}: {{ price }}</li>
+        </h6>
+        {% endfor %}
+        <hr>
+        <form action="{% url 'hotels:create_order' hotel.pk %}" method="post">
             {% csrf_token %}
-            {{ rate }}
-            <input type="submit" value="Rate"
-            class="btn btn-primary">
-        </form>
+            <div class="col">
+                <p>Check in:</p>
+            </div>
+            <div class="col-8">
+                {{ order_form.check_in }}
+
+            </div>
+            <br>
+            <div class="col">
+                <p>Check out:</p>
+            </div>
+            <div class="col-8">
+                {{ order_form.check_out }}
+
+            </div>
+
+            <input type="submit" value="check dates" name="check_dates" class="form-control btn btn-primary">
+    </div>
+    </form>
+</div>
+</div>
+
+<div class="text-success text-center"><h4>RATING: {{ hotel.get_avg_marks }}</h4></div>
+<form action="{% url 'hotels:rating_create' hotel.pk %}" method="post">
+    {% csrf_token %}
+    {{ rate }}
+    <input type="submit" value="Rate"
+           class="btn btn-primary">
+</form>
 
 <div class="row">
     <div class="col">
         {% if hotel.comments.all %}
-         <h3 class="text-center">Comments:</h3>
+        <h3 class="text-center">Comments:</h3>
         <ul class="list-group">
             {% for h in hotel.comments.all %}
             <li class="list-group-item">{{ h }}</li>
@@ -26,20 +62,18 @@
         {% endif %}
     </div>
     <hr>
-        <h3 class="text-center">Comment Form:</h3>
-        <form action="{% url 'hotels:hotel_comment' hotel.pk %}" method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Add Comment"
-            class="btn btn-primary">
-        </form>
-    </div>
+    <h3 class="text-center">Comment Form:</h3>
+    <form action="{% url 'hotels:hotel_comment' hotel.pk %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Add Comment"
+               class="btn btn-primary">
+    </form>
+</div>
 
 <div>
 </div>
 </div>
-
-
 
 
 {% endblock %}
