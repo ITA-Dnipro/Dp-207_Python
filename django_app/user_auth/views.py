@@ -8,7 +8,7 @@ def home_page(request):
     return render(request, 'base.html')
 
 
-def register_page(request):
+def sign_up(request):
     if request.user.is_authenticated:
         return redirect('home')
     else:
@@ -20,13 +20,13 @@ def register_page(request):
                 user = form.cleaned_data.get('username')
                 messages.success(request, f'Account was created for {user}')
 
-                return redirect('login')
+                return redirect('user_auth:sign_in')
 
         context = {'form': form}
         return render(request, 'sign_up.html', context)
 
 
-def login_page(request):
+def sign_in(request):
     if request.user.is_authenticated:
         return redirect('home')
     elif request.method == 'POST':
@@ -45,6 +45,6 @@ def login_page(request):
     return render(request, 'sign_in.html', context)
 
 
-def logout_page(request):
+def sign_out(request):
     logout(request)
-    return redirect('login')
+    return redirect('user_auth:sign_in')
