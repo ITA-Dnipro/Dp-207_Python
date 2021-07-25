@@ -283,9 +283,15 @@ def get_cars_db_data(payload):
         return db_response
     #
     db_response = model_to_dict(route)
+    #
+    now_utc = datetime.utcnow().replace(tzinfo=pytz.utc)
     cars = [
         car for car in Car.objects.filter(
             route_id=route,
+        ).filter(
+            departure_date__gte=now_utc
+        ).order_by(
+            'departure_date'
         ).all().values()
     ]
     db_response['trips'] = cars
