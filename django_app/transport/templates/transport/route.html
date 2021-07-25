@@ -9,14 +9,19 @@
         {{ form.departure_name }}
         {{ form.arrival_name }}
         {{ form.departure_date }}
-        {% if form.subject.errors %}
+        <input type="submit" class="btn btn-primary btn-sm" value="Search">
+        <div id="form_checkboxes">
+            {{ form.transport_types }}
+        </div>
+        {% if form.transport_types.errors %}
+        <div id="form_checkboxes_errors">
         <ol>
-        {% for error in form.subject.errors %}
-            <li><strong>{{ error|escape }}</strong></li>
+        {% for error in form.transport_types.errors %}
+            <li><strong>At least one checkbox is required.</strong></li>
         {% endfor %}
         </ol>
+        </div>
         {% endif %}
-        <input type="submit" class="btn btn-primary btn-sm" value="Search">
     </form>
 </div>
 <div class="mb-4 mb-md-12 container-md text-center" id="route_section">

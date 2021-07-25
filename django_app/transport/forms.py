@@ -2,6 +2,12 @@ from django import forms
 import datetime
 
 
+TRANSPORT_TYPES = [
+    ('car', 'Car'),
+    ('train', 'Train')
+]
+
+
 class RouteForm(forms.Form):
     departure_name = forms.CharField(
         max_length=300,
@@ -27,4 +33,14 @@ class RouteForm(forms.Form):
                 'type': 'date',
             }
         )
+    )
+    transport_types = forms.MultipleChoiceField(
+        required=True,
+        widget=forms.CheckboxSelectMultiple(
+            attrs={
+                'class': 'transport_types_input',
+                'checked': 'checked'
+            }
+        ),
+        choices=TRANSPORT_TYPES
     )

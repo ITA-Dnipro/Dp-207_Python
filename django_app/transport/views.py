@@ -59,3 +59,6 @@ def schedule_post_handler(request):
                         f'{payload["arrival_name"]}'
                     )
             )
+        return redirect(
+            'transport:main_view'
+        )
