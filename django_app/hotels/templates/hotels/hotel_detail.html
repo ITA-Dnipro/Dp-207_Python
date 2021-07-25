@@ -16,28 +16,29 @@
         </h6>
         {% endfor %}
         <hr>
-        <form action="{% url 'hotels:create_order' hotel.pk %}" method="post">
+        <form action="{{ hotel.get_absolute_url }}" method="post">
             {% csrf_token %}
-            <div class="col">
-                <p>Check in:</p>
-            </div>
             <div class="col-8">
-                {{ order_form.check_in }}
+                {% for field in order_form %}
+                <div class="form-group row">
+
+                    {{ field.label }}
+                    {{ field }}
+
+                </div>
+                {% endfor %}
+                {% if order_form.errors %}
+                <div class="alert alert-danger">
+                    {{ order_form.non_field_errors}}
+                </div>
+                {% endif %}
 
             </div>
             <br>
-            <div class="col">
-                <p>Check out:</p>
-            </div>
-            <div class="col-8">
-                {{ order_form.check_out }}
-
-            </div>
 
             <input type="submit" value="check dates" name="check_dates" class="form-control btn btn-primary">
+        </form>
     </div>
-    </form>
-</div>
 </div>
 
 <div class="text-success text-center"><h4>RATING: {{ hotel.get_avg_marks }}</h4></div>
@@ -63,14 +64,22 @@
     </div>
     <hr>
     <h3 class="text-center">Comment Form:</h3>
+    <div class="col-6">
     <form action="{% url 'hotels:hotel_comment' hotel.pk %}" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Add Comment"
-               class="btn btn-primary">
+        {% for f in form %}
+        <div class="form-control row">
+
+            {{ f.label }}
+            {{ f }}
+
+        </div>
+        {% endfor %}
+        <button type="submit" value="Add Comment"
+                class="btn btn-outline-primary">Add Comment</button>
     </form>
 </div>
-
+</div>
 <div>
 </div>
 </div>

@@ -28,3 +28,10 @@ services:
             - 5001:5001
         volumes:
             - .:/usr/src/app
+    flask_weather:
+        build: ./flask_weather_service
+        restart: always
+        ports:
+            - 5002:5002
+        volumes:
+            - .:/usr/src/app

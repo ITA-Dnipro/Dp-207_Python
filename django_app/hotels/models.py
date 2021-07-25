@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.core.files import File
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
+from django.utils.text import slugify
 from urllib.request import urlretrieve
 import pytz
 import os
@@ -26,30 +27,38 @@ class Hotel(models.Model):
     """
     Hotel model with it fields and has FK to City
     """
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=150, unique=True)
     adress = models.CharField(max_length=150)
     price = models.TextField()
     details = models.TextField()
     photo = models.ImageField(upload_to='media', blank=True)
     url = models.URLField(max_length=200)
-    contacts = models.CharField(max_length=50)
+    contacts = models.CharField(max_length=150)
+    slug = models.SlugField(unique=True, max_length=100)
 
     # relation with city
     city = models.ForeignKey(City, on_delete=models.CASCADE)
 
     # override save method to save images from url
+    # and save custom slug
     def save(self, *args, **kwargs):
+
+        # making slug
+        self.slug = slugify(self.name, allow_unicode=True)
+
+        # getting image
         if self.url and not self.photo:
             result = urlretrieve(str(self.url))
             self.photo.save(
                 os.path.basename(str(self.url)),
                 File(open(result[0], 'rb'))
             )
+
         super(Hotel, self).save(*args, **kwargs)
 
     # getting url for reverse
     def get_absolute_url(self):
-        return reverse('hotels:hotel_detail', args=(self.pk, ))
+        return reverse('hotels:hotel_detail', args=(self.pk, self.slug))
 
     def __str__(self):
         return f'{self.name}'
