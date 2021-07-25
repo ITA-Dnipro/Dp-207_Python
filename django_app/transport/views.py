@@ -2,10 +2,7 @@ import json
 from datetime import datetime
 
 from django.shortcuts import redirect, render
-from services.transport_app.api_utils.api_request_helpers import (
-    get_cars_api_data, get_trains_api_data)
-from services.transport_app.models_utils.models_helpers import (
-    get_cars_db_data, get_trains_db_data, is_route_exists)
+from services.transport_app.view_utils.view_helpers import get_route_data
 
 from .forms import RouteForm
 
@@ -14,37 +11,18 @@ def route_view(request, route_name):
     payload = json.loads(request.session.get('payload'))
     form = RouteForm()
     #
-    route = is_route_exists(payload)
-    if not route:
-        api_cars_data = get_cars_api_data(payload)
-        api_trains_data = get_trains_api_data(payload)
-        #
-        context = {
-            'form': form,
-            'cars_data': api_cars_data,
-            'trains_data': api_trains_data,
-        }
-        #
-        return render(
-            request,
-            'transport/route.html',
-            context=context
-        )
-    else:
-        db_cars_data = get_cars_db_data(payload)
-        db_trains_data = get_trains_db_data(payload)
-        #
-        context = {
-            'form': form,
-            'cars_data': db_cars_data,
-            'trains_data': db_trains_data,
-        }
-        #
-        return render(
-            request,
-            'transport/route.html',
-            context=context
-        )
+    route_data = get_route_data(payload)
+    context = {
+        'form': form,
+        'cars_data': route_data['cars_data'],
+        # 'trains_data': route_data['trains_data'],
+    }
+    #
+    return render(
+        request,
+        'transport/route.html',
+        context=context
+    )
 
 
 def main_view(request):

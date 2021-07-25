@@ -30,6 +30,9 @@
     <h4>TRAINS {{trains_data.departure_name}} - {{trains_data.arrival_name}}</h4>
 {% elif cars_data.result is True and trains_data.result is True %}
     <h4>CARS and TRAINS {{cars_data.departure_name}} - {{cars_data.arrival_name}}</h4>
+{% elif cars_data.result is True or trains_data.result is True %}
+    <h4>CARS OR TRAINS {{cars_data.departure_name}} - {{cars_data.arrival_name}} {{cars_data.departure_date|date:"d-m-Y"}}</h4>
+    <h3>{{cars_data.parsed_time|date:"d-m-Y H:i:s"}}</h3>
 {% endif %}
 </div>
 {% if cars_data.trips %}

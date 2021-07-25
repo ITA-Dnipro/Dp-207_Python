@@ -4,12 +4,7 @@ import os
 from .jwt_helpers import create_jwt_token
 from dotenv import load_dotenv
 import json
-from services.transport_app.models_utils.models_helpers import (
-    save_api_response_in_route_and_train_models,
-    save_api_response_in_route_and_car_models
-)
-from .api_response_helpers import (
-    car_api_response_time_converter,
+from services.transport_app.api_utils.api_response_helpers import (
     train_api_response_time_converter
 )
 load_dotenv()
@@ -51,7 +46,7 @@ def get_trains_api_data(payload):
     if api_response['result'] is False:
         return api_response
     #
-    save_api_response_in_route_and_train_models(api_response)
+    # save_api_response_in_route_and_train_models(api_response)
     #
     api_response = train_api_response_time_converter(api_response)
     return api_response
@@ -68,7 +63,4 @@ def get_cars_api_data(payload):
     if api_response['result'] is False:
         return api_response
     #
-    save_api_response_in_route_and_car_models(api_response)
-    #
-    api_response = car_api_response_time_converter(api_response)
     return api_response

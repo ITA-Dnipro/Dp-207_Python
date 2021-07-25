@@ -1,7 +1,4 @@
 from django.db import models
-# from django.utils import timezone
-from datetime import datetime
-import pytz
 
 
 class Route(models.Model):
@@ -17,33 +14,6 @@ class Route(models.Model):
             f'{self.pk} - {self.departure_name} - {self.arrival_name} - '
             f'{self.source_name} - {self.departure_date}'
         )
-
-    def save(self, *args, **kwargs):
-        '''
-        Saving Route model method
-        '''
-        if self.departure_date:
-            self.departure_date = datetime.strptime(
-                self.departure_date, '%d.%m.%Y'
-            )
-            self.departure_date = pytz.timezone('Europe/Kiev').localize(
-                self.departure_date, is_dst=True
-            )
-            self.departure_date = (
-                self.departure_date.astimezone(pytz.timezone('UTC'))
-            )
-        if self.parsed_time:
-            self.parsed_time = datetime.strptime(
-                self.parsed_time, '%d-%m-%Y %H:%M:%S'
-            )
-            #
-            self.parsed_time = pytz.timezone('Europe/Kiev').localize(
-                self.parsed_time, is_dst=True
-            )
-            self.parsed_time = (
-                self.parsed_time.astimezone(pytz.timezone('UTC'))
-            )
-        super(Route, self).save(*args, **kwargs)
 
 
 class Car(models.Model):
@@ -65,33 +35,6 @@ class Car(models.Model):
             f'{self.pk} - {self.departure_name} - {self.arrival_name} - '
             f'{self.departure_date}'
         )
-
-    def save(self, *args, **kwargs):
-        '''
-        Saving Car model method
-        '''
-        if self.departure_date:
-            self.departure_date = datetime.strptime(
-                self.departure_date, '%d/%m/%Y %H:%M:%S'
-            )
-            self.departure_date = pytz.timezone('Europe/Kiev').localize(
-                self.departure_date, is_dst=True
-            )
-            self.departure_date = (
-                self.departure_date.astimezone(pytz.timezone('UTC'))
-            )
-        if self.parsed_time:
-            self.parsed_time = datetime.strptime(
-                self.parsed_time, '%d-%m-%Y %H:%M:%S'
-            )
-            #
-            self.parsed_time = pytz.timezone('Europe/Kiev').localize(
-                self.parsed_time, is_dst=True
-            )
-            self.parsed_time = (
-                self.parsed_time.astimezone(pytz.timezone('UTC'))
-            )
-        super(Car, self).save(*args, **kwargs)
 
 
 class Train(models.Model):
@@ -118,40 +61,3 @@ class Train(models.Model):
             f'{self.pk} - {self.train_number} - {self.departure_name} - '
             f'{self.arrival_name} - {self.departure_date}'
         )
-
-    def save(self, *args, **kwargs):
-        '''
-        Saving Train model method
-        '''
-        if self.departure_date:
-            self.departure_date = datetime.strptime(
-                self.departure_date, '%Y-%m-%d %H:%M:%S'
-            )
-            self.departure_date = pytz.timezone('Europe/Kiev').localize(
-                self.departure_date, is_dst=True
-            )
-            self.departure_date = (
-                self.departure_date.astimezone(pytz.timezone('UTC'))
-            )
-        if self.arrival_date:
-            self.arrival_date = datetime.strptime(
-                self.arrival_date, '%Y-%m-%d %H:%M:%S'
-            )
-            self.arrival_date = pytz.timezone('Europe/Kiev').localize(
-                self.arrival_date, is_dst=True
-            )
-            self.arrival_date = (
-                self.arrival_date.astimezone(pytz.timezone('UTC'))
-            )
-        if self.parsed_time:
-            self.parsed_time = datetime.strptime(
-                self.parsed_time, '%d-%m-%Y %H:%M:%S'
-            )
-            #
-            self.parsed_time = pytz.timezone('Europe/Kiev').localize(
-                self.parsed_time, is_dst=True
-            )
-            self.parsed_time = (
-                self.parsed_time.astimezone(pytz.timezone('UTC'))
-            )
-        super(Train, self).save(*args, **kwargs)
