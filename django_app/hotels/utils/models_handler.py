@@ -13,7 +13,7 @@ class CityModel:
             city = City(name=self.city_name)
             city.save()
             return city
-        return True
+        return city
 
     def get_city_by_name(self):
         city = City.objects.filter(name=self.city_name).first()

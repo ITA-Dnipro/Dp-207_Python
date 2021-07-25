@@ -47,6 +47,8 @@ def hotels_by_city(request, city_name):
 # hotel detail view
 class HotelDetailView(DetailView):
     model = Hotel
+    slug_url_kwarg = 'the_slug'
+    slug_field = 'slug'
 
     # get forms to context data
     def get_context_data(self, **kwargs):
@@ -55,6 +57,24 @@ class HotelDetailView(DetailView):
         context['rate'] = RatingCreateForm()
         context['order_form'] = OrderCreateForm()
         return context
+
+    # override post method for check dates form validation
+    def post(self, request, *args, **kwargs):
+        order_form = OrderCreateForm(request.POST)
+        if order_form.is_valid():
+            self.object = self.get_object()
+            context = super(HotelDetailView, self).get_context_data(**kwargs)
+            context['order_form'] = OrderCreateForm
+            context['form'] = HotelCommentCreateForm()
+            context['rate'] = RatingCreateForm()
+            return self.render_to_response(context=context)
+        else:
+            self.object = self.get_object()
+            context = super(HotelDetailView, self).get_context_data(**kwargs)
+            context['order_form'] = order_form
+            context['form'] = HotelCommentCreateForm()
+            context['rate'] = RatingCreateForm()
+            return self.render_to_response(context=context)
 
 
 # create comments view
@@ -67,16 +87,3 @@ def hotel_comment(request, pk):
 def create_rating(request, pk):
     new_rating = CreateRating(pk=pk, request=request)
     return HttpResponseRedirect(new_rating.create_rating().get_absolute_url())
-
-
-def create_order(request, pk):
-    # get requested hotel by pk
-    hotel = Hotel.objects.get(pk=pk)
-    try:
-        check_in = request.POST.get('check_in')
-        check_out = request.POST.get('check_out')
-        print(check_in, check_out)
-    except TypeError:
-        print('Problem with creating new comment')
-    finally:
-        return HttpResponseRedirect(hotel.get_absolute_url())
