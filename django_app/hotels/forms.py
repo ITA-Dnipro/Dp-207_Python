@@ -1,5 +1,7 @@
 from django.forms import Form, Textarea, CharField, ModelForm, \
     DateTimeInput, DateTimeField
+from django.core.exceptions import ValidationError
+import datetime
 from .models import City, Rating, Order
 
 
@@ -40,3 +42,11 @@ class OrderCreateForm(ModelForm):
     class Meta:
         model = Order
         fields = ['check_in', 'check_out']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        check_in = cleaned_data.get("check_in")
+        check_out = cleaned_data.get("check_out")
+
+        if check_in < datetime.date.today():
+            raise ValidationError('YOU CANT GO TO PAST')

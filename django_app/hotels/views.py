@@ -5,6 +5,7 @@ from .models import City, Hotel, HotelComment, Rating
 from .forms import CityModelForm, HotelCommentCreateForm, RatingCreateForm, OrderCreateForm
 from .utils.logic import CityAndHotelsHandler, CreateComment, CreateRating
 from .utils.models_handler import HotelModel
+import datetime
 
 
 # create view for main page of hotels app
@@ -47,6 +48,8 @@ def hotels_by_city(request, city_name):
 # hotel detail view
 class HotelDetailView(DetailView):
     model = Hotel
+    slug_url_kwarg = 'the_slug'
+    slug_field = 'slug'
 
     # get forms to context data
     def get_context_data(self, **kwargs):
@@ -76,6 +79,7 @@ def create_order(request, pk):
         check_in = request.POST.get('check_in')
         check_out = request.POST.get('check_out')
         print(check_in, check_out)
+        print(datetime.date.today())
     except TypeError:
         print('Problem with creating new comment')
     finally:
