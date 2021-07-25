@@ -21,5 +21,6 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hotels/', include('hotels.urls'), name='hotels')
+    path('hotels/', include('hotels.urls'), name='hotels'),
+    path('weather/', include('weather.urls'), name='weather')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
