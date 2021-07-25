@@ -1,8 +1,9 @@
 from django.forms import Form, Textarea, CharField, ModelForm, \
-    DateTimeInput, DateTimeField
+    DateTimeInput, DateTimeField, SelectDateWidget
 from django.core.exceptions import ValidationError
-import datetime
-from .models import City, Rating, Order
+from datetime import datetime
+from django.utils import timezone
+from .models import City, Rating
 
 
 # city model form to get city from main page
@@ -35,18 +36,18 @@ class DateInput(DateTimeInput):
 
 
 # OrderCreateForm for HotelDetails
-class OrderCreateForm(ModelForm):
-    check_in = DateTimeField(input_formats=['%m-%d-%Y'], widget=DateInput())
-    check_out = DateTimeField(input_formats=['%m-%d-%Y'], widget=DateInput())
+class OrderCreateForm(Form):
+    check_in = DateTimeField(widget=DateInput, initial=datetime.utcnow().date())
+    check_out = DateTimeField(widget=DateInput, initial=datetime.utcnow().date())
 
-    class Meta:
-        model = Order
-        fields = ['check_in', 'check_out']
-
+    # override clean method to validate fields
     def clean(self):
         cleaned_data = super().clean()
         check_in = cleaned_data.get("check_in")
         check_out = cleaned_data.get("check_out")
-
-        if check_in < datetime.date.today():
-            raise ValidationError('YOU CANT GO TO PAST')
+        today = timezone.now()
+        if check_in.date() < today.date() or check_in.month < today.month:
+            raise ValidationError('You cant order past date')
+        if check_out.date() < check_in.date():
+            raise ValidationError('Incorrect date')
+        return cleaned_data

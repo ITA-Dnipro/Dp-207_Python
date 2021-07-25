@@ -1,6 +1,7 @@
 from .api_handler import get_data_for_hotels_by_city
 from .models_handler import CityModel, HotelModel, HotelCommentModel, RatingModel
 
+
 # creates cities and hotels in db
 class CityAndHotelsHandler:
     def __init__(self, city_name):
