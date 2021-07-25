@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center">
+    <h1>Trasport app Transport view</h1>
+    <br>
+    <form class="form-inline" action="{% url 'transport:schedule_post_handler' %}" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        {{ form.departure_name }}
+        {{ form.arrival_name }}
+        {{ form.departure_date }}
+        {% if form.subject.errors %}
+        <ol>
+        {% for error in form.subject.errors %}
+            <li><strong>{{ error|escape }}</strong></li>
+        {% endfor %}
+        </ol>
+        {% endif %}
+        <input type="submit" class="btn btn-primary btn-sm" value="Search">
+    </form>
+</div>
+<div class="mb-4 mb-md-12 container-md text-center" id="route_section">
+    <br>
+{% if cars_data.result is False and trains_data.result is False %}
+    <h3>Transport for this route not found</h3>
+{% elif cars_data.result is True and trains_data.result is False %}
+    <h4>CARS {{cars_data.departure_name}} - {{cars_data.arrival_name}} {{cars_data.departure_date|date:"d-m-Y"}}</h4>
+    <h3>{{cars_data.parsed_time|date:"d-m-Y H:i:s"}}</h3>
+{% elif cars_data.result is False and trains_data.result is True %}
+    <h4>TRAINS {{trains_data.departure_name}} - {{trains_data.arrival_name}}</h4>
+{% elif cars_data.result is True and trains_data.result is True %}
+    <h4>CARS and TRAINS {{cars_data.departure_name}} - {{cars_data.arrival_name}}</h4>
+{% endif %}
+</div>
+{% if cars_data.trips %}
+<div class="mb-4 mb-md-12 container-md text-center" id="cars_section">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Number</th>
+                <th>Route</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>In route time</th>
+                <th>Price</th>
+                <th>Link</th>
+                <th>Parsed Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for car in cars_data.trips %}
+                <tr>
+                    <th><img src="https://poezdato.net/img/trip.png" alt="poezdato.jpg"></th>
+                    <th><img src="https://poezdato.net/img/new_logo.png" alt="blalogo.jpg"></th>
+                    <th>{{car.departure_name}} - {{ car.arrival_name }}</th>
+                    <th>{{car.departure_date|date:"d-m-Y H:i:s"}}</th>
+                    <th>{{car.car_model}}</th>
+                    <th></th>
+                    <th>{{car.price}}</th>
+                    <th><a href="{{car.blablacar_url}}" target="_blank">Reserve</a></th>
+                    <th>{{car.parsed_time|date:"d-m-Y H:i:s"}}</th>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,10 +1,30 @@
 from django import forms
+import datetime
 
-from django.forms.widgets import NumberInput
 
-
-class JourneyDetailsForm(forms.Form):
-    departure_name = forms.CharField(label='From', max_length=30)
-    arrival_name = forms.CharField(label='To', max_length=30)
-    departure_date = forms.DateField(widget=NumberInput(attrs={'type': 'date'}))
-
+class RouteForm(forms.Form):
+    departure_name = forms.CharField(
+        max_length=300,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Departure name'
+            }
+        )
+    )
+    arrival_name = forms.CharField(
+        max_length=300,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Arrival name'
+            }
+        )
+    )
+    departure_date = forms.DateField(
+        initial=datetime.date.today,
+        input_formats=['%d.%m.%Y', '%Y-%m-%d'],
+        widget=forms.DateInput(
+            attrs={
+                'type': 'date',
+            }
+        )
+    )

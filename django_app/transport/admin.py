@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Route, Train, Car
 
-# Register your models here.
+admin.site.register(Route)
+admin.site.register(Train)
+admin.site.register(Car)
