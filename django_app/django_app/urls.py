@@ -23,5 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', views.home_page, name='home'),
     path('user_auth/', include('user_auth.urls')),
-    path('hotels/', include('hotels.urls'), name='hotels')
+    path('hotels/', include('hotels.urls'), name='hotels'),
+    path('weather/', include('weather.urls'), name='weather')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
