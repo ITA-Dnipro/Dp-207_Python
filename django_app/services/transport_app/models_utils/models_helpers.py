@@ -8,7 +8,7 @@ from services.transport_app.api_utils.api_response_helpers import (
 )
 
 
-def is_route_exists(payload):
+def is_route_exists(payload, source_name):
     '''
     Return True if route exists
     '''
@@ -17,14 +17,15 @@ def is_route_exists(payload):
     route = Route.objects.filter(
         departure_name=db_payload['departure_name'],
         departure_date=db_payload['departure_date'],
-        arrival_name=db_payload['arrival_name']
+        arrival_name=db_payload['arrival_name'],
+        source_name=source_name
     ).first()
     if route:
         return True
     return False
 
 
-def is_route_parsed_1_hour_ago(payload):
+def is_route_parsed_1_hour_ago(payload, source_name):
     '''
     Return True if route parsed_time <= than 1 hour
     '''
@@ -33,7 +34,8 @@ def is_route_parsed_1_hour_ago(payload):
     route = Route.objects.filter(
         departure_name=db_payload['departure_name'],
         departure_date=db_payload['departure_date'],
-        arrival_name=db_payload['arrival_name']
+        arrival_name=db_payload['arrival_name'],
+        source_name=source_name
     ).first()
     #
     one_hour_delta = timedelta(hours=1)

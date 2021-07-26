@@ -14,8 +14,8 @@ def route_view(request, route_name):
     route_data = get_route_data(payload)
     context = {
         'form': form,
-        'cars_data': route_data['cars_data'],
-        # 'trains_data': route_data['trains_data'],
+        'cars_data': route_data.get('cars_data'),
+        'trains_data': route_data.get('trains_data'),
     }
     #
     return render(
@@ -47,6 +47,7 @@ def schedule_post_handler(request):
                 "departure_name": form.cleaned_data['departure_name'],
                 "departure_date": form.cleaned_data['departure_date'],
                 "arrival_name": form.cleaned_data['arrival_name'],
+                "transport_types": form.cleaned_data['transport_types'],
             }
             payload['departure_date'] = datetime.strftime(
                 payload['departure_date'], '%d.%m.%Y'
