@@ -1,5 +1,5 @@
 from django.forms import Form, Textarea, CharField, ModelForm, \
-    DateTimeInput, DateTimeField, SelectDateWidget
+    DateTimeInput, DateTimeField
 from django.core.exceptions import ValidationError
 from datetime import datetime
 from django.utils import timezone

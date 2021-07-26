@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect, HttpResponseRedirect, get_object_or_404
+from django.shortcuts import render, redirect, HttpResponseRedirect, reverse
+from urllib.parse import urlencode
 from django.contrib import messages
 from django.views.generic.detail import DetailView
+from django.core.paginator import Paginator
 from .models import City, Hotel, HotelComment, Rating
 from .forms import CityModelForm, HotelCommentCreateForm, RatingCreateForm, OrderCreateForm
 from .utils.logic import CityAndHotelsHandler, CreateComment, CreateRating
@@ -38,8 +40,12 @@ def hotels_by_city(request, city_name):
     hotels_in_city = HotelModel().get_all_hotels_by_city(city=city_name)
     sorted_hotels = HotelModel().sort_hotels_by_avg_rating(reverse=True,
                                                            hotels=hotels_in_city)
+    p = Paginator(sorted_hotels, 5)
+    page_num = request.GET.get('page', 1)
+    page = p.page(page_num)
+
     context = {
-        'hotels': sorted_hotels
+        'hotels': page
     }
     return render(request, 'hotels/hotels_list.html', context)
 
@@ -49,6 +55,7 @@ class HotelDetailView(DetailView):
     model = Hotel
     slug_url_kwarg = 'the_slug'
     slug_field = 'slug'
+    pk_url_kwarg = 'pk'
 
     # get forms to context data
     def get_context_data(self, **kwargs):
@@ -63,11 +70,9 @@ class HotelDetailView(DetailView):
         order_form = OrderCreateForm(request.POST)
         if order_form.is_valid():
             self.object = self.get_object()
-            context = super(HotelDetailView, self).get_context_data(**kwargs)
-            context['order_form'] = OrderCreateForm
-            context['form'] = HotelCommentCreateForm()
-            context['rate'] = RatingCreateForm()
-            return self.render_to_response(context=context)
+            check_in = order_form.cleaned_data['check_in'].date()
+            check_out = order_form.cleaned_data['check_out'].date()
+            return redirect('hotels:free_rooms', self.object.slug, check_in, check_out)
         else:
             self.object = self.get_object()
             context = super(HotelDetailView, self).get_context_data(**kwargs)
@@ -87,3 +92,10 @@ def hotel_comment(request, pk):
 def create_rating(request, pk):
     new_rating = CreateRating(pk=pk, request=request)
     return HttpResponseRedirect(new_rating.create_rating().get_absolute_url())
+
+
+def get_free_rooms_for_hotels(request, slug, check_in, check_out):
+    hotel = HotelModel().get_hotel_by_slug(slug)
+    print(check_in)
+    print(check_out)
+    return render(request, 'hotels/free_rooms.html', {'hotel': hotel})
