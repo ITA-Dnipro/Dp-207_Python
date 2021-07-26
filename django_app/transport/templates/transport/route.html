@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="text-center">
-    <h1>Trasport app Transport view</h1>
+    <h3>Welcome to the Transport search</h3>
     <br>
     <form class="form-inline" action="{% url 'transport:schedule_post_handler' %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
@@ -24,54 +24,57 @@
         {% endif %}
     </form>
 </div>
-<div class="mb-4 mb-md-12 container-md text-center" id="route_section">
+<div class="mb-4 mb-md-12 container-md text-left" id="route_section">
     <br>
 {% if cars_data.result is False and trains_data.result is False %}
-    <h3>Transport for this route not found</h3>
-{% elif cars_data.result is True and trains_data.result is False %}
-    <h4>CARS {{cars_data.departure_name}} - {{cars_data.arrival_name}} {{cars_data.departure_date|date:"d-m-Y"}}</h4>
-    <h3>{{cars_data.parsed_time|date:"d-m-Y H:i:s"}}</h3>
-{% elif cars_data.result is False and trains_data.result is True %}
-    <h4>TRAINS {{trains_data.departure_name}} - {{trains_data.arrival_name}}</h4>
+    <div class="text-center">
+        <h3>Route not found</h3>
+    </div>
 {% elif cars_data.result is True and trains_data.result is True %}
-    <h4>CARS and TRAINS {{cars_data.departure_name}} - {{cars_data.arrival_name}}</h4>
+    <h4>{{cars_data.departure_name}} - {{cars_data.arrival_name}}</h4>
+    <h5> {{cars_data.departure_date|date:"d-m-Y"}}</h3>
+    <h5>Parsed Time: {{cars_data.parsed_time|date:"d-m-Y H:i:s"}}</h3>
 {% elif cars_data.result is True or trains_data.result is True %}
-    <h4>CARS OR TRAINS {{cars_data.departure_name}} - {{cars_data.arrival_name}} {{cars_data.departure_date|date:"d-m-Y"}}</h4>
-    <h3>{{cars_data.parsed_time|date:"d-m-Y H:i:s"}}</h3>
+    {% if cars_data.result is True %}
+        <a href="{{cars_data.source_url}}" target="_blank"><h4>{{cars_data.departure_name}} - {{cars_data.arrival_name}}</h4></a>
+        <h5> {{cars_data.departure_date|date:"d-m-Y"}}</h3>
+        <h5>Parsed Time: {{cars_data.parsed_time|date:"d-m-Y H:i:s"}}</h3>
+    {% elif trains_data.result is True %}
+        <h4>{{trains_data.departure_name}} - {{trains_data.arrival_name}}</h4>
+        <h5>{{trains_data.departure_date|date:"d-m-Y"}}</h5>
+        <h5>Parsed Time: {{trains_data.parsed_time|date:"d-m-Y H:i:s"}}</h3>
+    {% endif %}
 {% endif %}
 </div>
+{% if cars_data.trips or trains_data.trips %}
+<div class="mb-4 mb-md-12 container-md text-center" id="trips_section">
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Type</th>
+            <th>Number</th>
+            <th>Route</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>In route time</th>
+            <th>Price</th>
+            <th>Link</th>
+            <th>Parsed Time</th>
+        </tr>
+    </thead>
+    <tbody>
+{% if trains_data.trips %}
+    {% include 'transport/route_trains.html' %}
+{% endif %}
 {% if cars_data.trips %}
-<div class="mb-4 mb-md-12 container-md text-center" id="cars_section">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Type</th>
-                <th>Number</th>
-                <th>Route</th>
-                <th>Departure</th>
-                <th>Arrival</th>
-                <th>In route time</th>
-                <th>Price</th>
-                <th>Link</th>
-                <th>Parsed Time</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for car in cars_data.trips %}
-                <tr>
-                    <th><img src="https://poezdato.net/img/trip.png" alt="poezdato.jpg"></th>
-                    <th><img src="https://poezdato.net/img/new_logo.png" alt="blalogo.jpg"></th>
-                    <th>{{car.departure_name}} - {{ car.arrival_name }}</th>
-                    <th>{{car.departure_date|date:"d-m-Y H:i:s"}}</th>
-                    <th>{{car.car_model}}</th>
-                    <th></th>
-                    <th>{{car.price}}</th>
-                    <th><a href="{{car.blablacar_url}}" target="_blank">Reserve</a></th>
-                    <th>{{car.parsed_time|date:"d-m-Y H:i:s"}}</th>
-                </tr>
-            {% endfor %}
-        </tbody>
+    {% include 'transport/route_cars.html' %}
+{% endif %}
+    </tbody>
     </table>
+{% else %}
+<div class="text-center">
+    <h3>Transport for this route not found</h3>
+</div>
 </div>
 {% endif %}
 {% endblock %}

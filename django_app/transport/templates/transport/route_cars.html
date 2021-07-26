@@ -1,0 +1,18 @@
+{% for car in cars_data.trips %}
+    <tr class="">
+        <th><img src="https://poezdato.net/img/trip.png" alt="poezdato.jpg"></th>
+        <th><img src="https://poezdato.net/img/new_logo.png" alt="blalogo.jpg"></th>
+        <th>{{car.departure_name}} - {{ car.arrival_name }}</th>
+        <th>{{car.departure_date|date:"d-m-Y H:i:s"}}</th>
+        {% if car.car_model %}
+            <th>{{car.car_model}}</th>
+        {% else %}
+            <th></th>
+        {% endif %}
+        <th></th>
+        <th>{{car.price}}</th>
+        <th><a href="{{car.blablacar_url}}" target="_blank">Reserve</a></th>
+        <th>{{car.parsed_time|date:"d-m-Y H:i:s"}}</th>
+    </tr>
+{% endfor %}
+
