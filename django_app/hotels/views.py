@@ -1,5 +1,4 @@
-from django.shortcuts import render, redirect, HttpResponseRedirect, reverse
-from urllib.parse import urlencode
+from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.contrib import messages
 from django.views.generic.detail import DetailView
 from django.core.paginator import Paginator
@@ -63,6 +62,8 @@ class HotelDetailView(DetailView):
         context['form'] = HotelCommentCreateForm()
         context['rate'] = RatingCreateForm()
         context['order_form'] = OrderCreateForm()
+        context['user'] = self.request.user
+        context['check_rating'] = CreateRating(pk=self.object.pk, request=self.request)
         return context
 
     # override post method for check dates form validation
@@ -96,6 +97,4 @@ def create_rating(request, pk):
 
 def get_free_rooms_for_hotels(request, slug, check_in, check_out):
     hotel = HotelModel().get_hotel_by_slug(slug)
-    print(check_in)
-    print(check_out)
     return render(request, 'hotels/free_rooms.html', {'hotel': hotel})

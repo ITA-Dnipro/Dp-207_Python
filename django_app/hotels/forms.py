@@ -3,7 +3,8 @@ from django.forms import Form, Textarea, CharField, ModelForm, \
 from django.core.exceptions import ValidationError
 from datetime import datetime
 from django.utils import timezone
-from .models import City, Rating
+from .models import City, Rating, Hotel
+from django.contrib.auth.models import User
 
 
 # city model form to get city from main page
@@ -25,6 +26,7 @@ class HotelCommentCreateForm(Form):
 
 # Hotel rating create form for HotelDetails
 class RatingCreateForm(ModelForm):
+
     class Meta:
         model = Rating
         fields = ['mark']

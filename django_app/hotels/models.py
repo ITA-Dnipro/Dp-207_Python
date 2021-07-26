@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Avg
 from django.urls import reverse
 from django.core.files import File
+from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 from django.utils.text import slugify
@@ -110,6 +111,7 @@ class Rating(models.Model):
                                          MaxValueValidator(10)])
     # relation with hotel
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
 
 class Order(models.Model):
