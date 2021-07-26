@@ -1,4 +1,5 @@
 """django_app URL Configuration
+
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
 Examples:
@@ -12,17 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
-from user_auth import views
-from django.conf.urls.static import static
-from django.conf import settings
+from django.urls import path
+from . import views
 
 
+app_name = 'user_auth'
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('home/', views.home_page, name='home'),
-    path('user_auth/', include('user_auth.urls')),
-    path('hotels/', include('hotels.urls'), name='hotels'),
-    path('weather/', include('weather.urls'), name='weather')
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('sign_up/', views.sign_up, name='sign_up'),
+    path('sign_in/', views.sign_in, name='sign_in'),
+    path('sign_out/', views.sign_out, name='sign_out')
+]
