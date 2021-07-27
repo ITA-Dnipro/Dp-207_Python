@@ -116,7 +116,7 @@ def save_api_response_in_route_and_train_models(api_response):
         )
 
 
-def update_api_response_in_route_and_train_models(api_response):
+def update_api_response_in_route_and_train_models(api_response, source_name):
     '''
     Update Route and Train models rows
     '''
@@ -125,6 +125,7 @@ def update_api_response_in_route_and_train_models(api_response):
         departure_name=api_response['departure_name'],
         departure_date=api_response['departure_date'],
         arrival_name=api_response['arrival_name'],
+        source_name=source_name
     ).update(
         departure_name=api_response['departure_name'],
         departure_date=api_response['departure_date'],
@@ -138,14 +139,10 @@ def update_api_response_in_route_and_train_models(api_response):
         departure_name=api_response['departure_name'],
         departure_date=api_response['departure_date'],
         arrival_name=api_response['arrival_name'],
+        source_name=source_name
     ).first()
     for train in api_response['trips']:
-        Train.objects.filter(
-            departure_name=train['departure_name'],
-            departure_date=train['departure_date'],
-            arrival_name=train['arrival_name'],
-        ).update(
-            route_id=route,
+        db_train = Train.objects.filter(
             train_name=train['train_name'],
             train_number=train['train_number'],
             train_uid=train['train_number'],
@@ -156,10 +153,43 @@ def update_api_response_in_route_and_train_models(api_response):
             arrival_code=train['arrival_code'],
             arrival_date=train['arrival_date'],
             in_route_time=train['in_route_time'],
-            parsed_time=train['parsed_time'],
             source_name=train['source_name'],
             source_url=train['source_url'],
         )
+        if db_train.exists():
+            db_train.update(
+                route_id=route,
+                train_name=train['train_name'],
+                train_number=train['train_number'],
+                train_uid=train['train_number'],
+                departure_name=train['departure_name'],
+                departure_code=train['departure_code'],
+                departure_date=train['departure_date'],
+                arrival_name=train['arrival_name'],
+                arrival_code=train['arrival_code'],
+                arrival_date=train['arrival_date'],
+                in_route_time=train['in_route_time'],
+                parsed_time=train['parsed_time'],
+                source_name=train['source_name'],
+                source_url=train['source_url'],
+            )
+        else:
+            db_train.create(
+                route_id=route,
+                train_name=train['train_name'],
+                train_number=train['train_number'],
+                train_uid=train['train_number'],
+                departure_name=train['departure_name'],
+                departure_code=train['departure_code'],
+                departure_date=train['departure_date'],
+                arrival_name=train['arrival_name'],
+                arrival_code=train['arrival_code'],
+                arrival_date=train['arrival_date'],
+                in_route_time=train['in_route_time'],
+                parsed_time=train['parsed_time'],
+                source_name=train['source_name'],
+                source_url=train['source_url'],
+            )
 
 
 def save_api_response_in_route_and_car_models(api_response):

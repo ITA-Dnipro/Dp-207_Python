@@ -46,8 +46,6 @@ def get_trains_api_data(payload):
     if api_response['result'] is False:
         return api_response
     #
-    # save_api_response_in_route_and_train_models(api_response)
-    #
     api_response = train_api_response_time_converter(api_response)
     return api_response
 

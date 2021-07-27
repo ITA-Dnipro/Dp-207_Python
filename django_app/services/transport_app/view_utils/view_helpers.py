@@ -113,11 +113,20 @@ def get_trains_data(payload):
             if api_trains_data.get('result') is False:
                 return {'trains_data': api_trains_data}
             #
-            update_api_response_in_route_and_train_models(api_trains_data)
+            update_api_response_in_route_and_train_models(
+                api_trains_data,
+                TRAINS_SOURCE_NAME
+            )
+            #
+            db_trains_data = get_trains_db_data(
+                payload,
+                TRAINS_SOURCE_NAME
+            )
             #
             result = {
-                'trains_data': api_trains_data,
+                'trains_data': db_trains_data,
             }
+            #
             return result
     elif not route:
         #
@@ -128,7 +137,13 @@ def get_trains_data(payload):
         #
         save_api_response_in_route_and_train_models(api_trains_data)
         #
+        db_trains_data = get_trains_db_data(
+                payload,
+                TRAINS_SOURCE_NAME
+            )
+        #
         result = {
-            'trains_data': api_trains_data,
+            'trains_data': db_trains_data,
         }
+        #
         return result
