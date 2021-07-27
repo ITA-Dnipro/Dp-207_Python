@@ -13,13 +13,17 @@
         <div id="form_checkboxes">
             {{ form.transport_types }}
         </div>
-        {% if form.transport_types.errors %}
+        {% if form.errors %}
         <div id="form_checkboxes_errors">
-        <ol>
-        {% for error in form.transport_types.errors %}
-            <li><strong>At least one checkbox is required.</strong></li>
-        {% endfor %}
-        </ol>
+            <ul>
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                <li>
+                    {{ field }} - {{error}}
+                </li>
+                {% endfor %}
+            {% endfor %}
+            </ul>
         </div>
         {% endif %}
     </form>
