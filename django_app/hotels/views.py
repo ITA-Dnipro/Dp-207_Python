@@ -6,6 +6,7 @@ from .models import City, Hotel, HotelComment, Rating
 from .forms import CityModelForm, HotelCommentCreateForm, RatingCreateForm, OrderCreateForm
 from .utils.logic import CityAndHotelsHandler, CreateComment, CreateRating
 from .utils.models_handler import HotelModel
+from .utils.api_handler import get_for_hotel_rooms
 
 
 # create view for main page of hotels app
@@ -97,4 +98,11 @@ def create_rating(request, pk):
 
 def get_free_rooms_for_hotels(request, slug, check_in, check_out):
     hotel = HotelModel().get_hotel_by_slug(slug)
+    print(type(hotel.city.name))
+
+    check_in = '.'.join(check_in.split('-')[::-1])
+    check_out = '.'.join(check_out.split('-')[::-1])
+    print(check_in)
+    data = get_for_hotel_rooms(hotel.city.name, hotel.name, check_in, check_out)
+    print(data)
     return render(request, 'hotels/free_rooms.html', {'hotel': hotel})
