@@ -173,8 +173,13 @@ class ScraperForCityHotels():
         """
         Go around urls for hotels and return json with detail info for hotels
         """
+<<<<<<< Updated upstream
         urls = self.find_urls_for_hotels_in_city(self.find_city_url(ScraperForCityHotels.URL))
         with concurrent.futures.ThreadPoolExecutor(max_workers=25) as p:
+=======
+        urls = ScraperForHotel.find_urls_for_hotels_in_city(self.find_city_url(ScraperForHotel.URL))
+        with concurrent.futures.ThreadPoolExecutor(max_workers=40) as p:
+>>>>>>> Stashed changes
             data = list(p.map(self.find_detail, urls))
         return json.dumps(data, ensure_ascii=False)
 
