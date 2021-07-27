@@ -6,8 +6,9 @@ import concurrent.futures
 import json
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.firefox.options import Options
-from webdriver_manager.firefox import GeckoDriverManager
+# from selenium.webdriver.firefox.options import Options
+# from webdriver_manager.firefox import GeckoDriverManager
+import chromedriver_binary
 
 MSG = 'Some problem with parser. Try later'
 
@@ -173,13 +174,9 @@ class ScraperForCityHotels():
         """
         Go around urls for hotels and return json with detail info for hotels
         """
-<<<<<<< Updated upstream
         urls = self.find_urls_for_hotels_in_city(self.find_city_url(ScraperForCityHotels.URL))
-        with concurrent.futures.ThreadPoolExecutor(max_workers=25) as p:
-=======
-        urls = ScraperForHotel.find_urls_for_hotels_in_city(self.find_city_url(ScraperForHotel.URL))
         with concurrent.futures.ThreadPoolExecutor(max_workers=40) as p:
->>>>>>> Stashed changes
+
             data = list(p.map(self.find_detail, urls))
         return json.dumps(data, ensure_ascii=False)
 
@@ -197,10 +194,12 @@ class ScrapperForHotel(ScraperForCityHotels):
         """
         Find appropriate url for the given hotel
         """
-        options = Options()
+        options = webdriver.ChromeOptions()
         options.headless = True
         options.add_argument('--disable-blink-features=AutomationControlled')
-        driver = webdriver.Firefox(executable_path = GeckoDriverManager().install(), options=options)
+        options.add_argument('--disable-gpu')
+        options.add_argument("--no-sandbox")
+        driver = webdriver.Chrome(options=options)
         driver.get(self.__class__.URL)
         input_for_hotel = driver.find_element_by_xpath('//input[@id="search_field"]')
         input_for_hotel.clear()
@@ -210,6 +209,7 @@ class ScrapperForHotel(ScraperForCityHotels):
         time.sleep(2)
         url = driver.current_url
         driver.close()
+        print(url)
         return url
     
     def prepare_url(self, url):
@@ -259,4 +259,4 @@ class ScrapperForHotel(ScraperForCityHotels):
 if __name__ == '__main__':
     d= {'hotel': "Отель \"Favor Sport Hotel\"", 'date_of_departure': '3.08.2021', 'date_of_arrival': '27.07.2021'}
     a = {'city': 'Киев'}
-    print(Scraper(**a).parse())
+    print(Scraper(**d).parse())
