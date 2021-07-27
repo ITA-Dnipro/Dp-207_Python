@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect, HttpResponseRedirect, get_object_or_404
+from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.contrib import messages
 from django.views.generic.detail import DetailView
+from django.core.paginator import Paginator
 from .models import City, Hotel, HotelComment, Rating
 from .forms import CityModelForm, HotelCommentCreateForm, RatingCreateForm, OrderCreateForm
 from .utils.logic import CityAndHotelsHandler, CreateComment, CreateRating
@@ -38,8 +39,12 @@ def hotels_by_city(request, city_name):
     hotels_in_city = HotelModel().get_all_hotels_by_city(city=city_name)
     sorted_hotels = HotelModel().sort_hotels_by_avg_rating(reverse=True,
                                                            hotels=hotels_in_city)
+    p = Paginator(sorted_hotels, 5)
+    page_num = request.GET.get('page', 1)
+    page = p.page(page_num)
+
     context = {
-        'hotels': sorted_hotels
+        'hotels': page
     }
     return render(request, 'hotels/hotels_list.html', context)
 
@@ -47,6 +52,9 @@ def hotels_by_city(request, city_name):
 # hotel detail view
 class HotelDetailView(DetailView):
     model = Hotel
+    slug_url_kwarg = 'the_slug'
+    slug_field = 'slug'
+    pk_url_kwarg = 'pk'
 
     # get forms to context data
     def get_context_data(self, **kwargs):
@@ -54,7 +62,25 @@ class HotelDetailView(DetailView):
         context['form'] = HotelCommentCreateForm()
         context['rate'] = RatingCreateForm()
         context['order_form'] = OrderCreateForm()
+        context['user'] = self.request.user
+        context['check_rating'] = CreateRating(pk=self.object.pk, request=self.request)
         return context
+
+    # override post method for check dates form validation
+    def post(self, request, *args, **kwargs):
+        order_form = OrderCreateForm(request.POST)
+        if order_form.is_valid():
+            self.object = self.get_object()
+            check_in = order_form.cleaned_data['check_in'].date()
+            check_out = order_form.cleaned_data['check_out'].date()
+            return redirect('hotels:free_rooms', self.object.slug, check_in, check_out)
+        else:
+            self.object = self.get_object()
+            context = super(HotelDetailView, self).get_context_data(**kwargs)
+            context['order_form'] = order_form
+            context['form'] = HotelCommentCreateForm()
+            context['rate'] = RatingCreateForm()
+            return self.render_to_response(context=context)
 
 
 # create comments view
@@ -69,14 +95,6 @@ def create_rating(request, pk):
     return HttpResponseRedirect(new_rating.create_rating().get_absolute_url())
 
 
-def create_order(request, pk):
-    # get requested hotel by pk
-    hotel = Hotel.objects.get(pk=pk)
-    try:
-        check_in = request.POST.get('check_in')
-        check_out = request.POST.get('check_out')
-        print(check_in, check_out)
-    except TypeError:
-        print('Problem with creating new comment')
-    finally:
-        return HttpResponseRedirect(hotel.get_absolute_url())
+def get_free_rooms_for_hotels(request, slug, check_in, check_out):
+    hotel = HotelModel().get_hotel_by_slug(slug)
+    return render(request, 'hotels/free_rooms.html', {'hotel': hotel})

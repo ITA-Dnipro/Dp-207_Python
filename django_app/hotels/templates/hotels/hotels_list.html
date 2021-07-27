@@ -15,14 +15,14 @@
 
         </div>
         <div class="col">
-            <h1><a href="{{ hotel.get_absolute_url }}" class="text-info">{{  hotel.name }}</a></h1>
+            <h1><a href="{{ hotel.get_absolute_url }}" class="text-info">{{ hotel.name }}</a></h1>
             <p>{{ hotel.details }}</p>
         </div>
         <div class="col">
             <h6>адресс: {{ hotel.adress }}</h6>
             <h6>город: {{ hotel.city }}</h6>
             {% for room, price in hotel.get_rooms.items %}
-                <p>{{ room }}: {{ price }}</p>
+            <p>{{ room }}: {{ price }}</p>
             {% endfor %}
             <p class="text-success">Комментарии: {{ hotel.comments.all|length }}</p>
             {% if hotel.get_avg_marks > 0 %}
@@ -32,10 +32,20 @@
             {% endif %}
         </div>
     </div>
-        </div>
+</div>
 {% endfor %}
 
 
-</div>
+
+{% if hotels.has_previous %}
+<a class="btn btn-outline-info mb-4" href="?page={{ hotels.previous_page_number }}">Previous Page</a>
+{% endif %}
+
+
+{% if hotels.has_next %}
+<a class="btn btn-outline-info mb-4" href="?page={{ hotels.next_page_number }}">Next Page</a>
+{% endif %}
+
+
 
 {% endblock %}

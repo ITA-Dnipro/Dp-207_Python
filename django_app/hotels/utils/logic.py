@@ -1,5 +1,8 @@
 from .api_handler import get_data_for_hotels_by_city
 from .models_handler import CityModel, HotelModel, HotelCommentModel, RatingModel
+from django.contrib.auth.models import User
+from ..models import Rating
+
 
 # creates cities and hotels in db
 class CityAndHotelsHandler:
@@ -64,12 +67,25 @@ class CreateRating:
     # create rating for object
     def create_rating(self):
         hotel = self.object.get_hotel_by_pk(self.pk)
+        user = User.objects.filter(pk=self.request.user.pk).first()
         try:
             mark = self.request.POST.get('mark')
             if mark:
                 rate = RatingModel()
                 rate.create_rating(hotel=hotel,
-                                   mark=mark)
+                                   mark=mark,
+                                   user=user)
                 return hotel
         except TypeError:
             print('Problem with creating new comment')
+
+    # we check here if authenticated user already rated this hotel
+    def check_is_hotel_rated_by_user(self):
+        hotel = self.object.get_hotel_by_pk(self.pk)
+        user = User.objects.filter(pk=self.request.user.pk).first()
+        is_rated = Rating.objects.filter(hotel=hotel).filter(user=user).first()
+
+        if is_rated:
+            return True
+
+        return False

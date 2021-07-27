@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <div class="text-dark text-center">
     <h2>{{ hotel.name }}</h2>
 </div>
@@ -16,36 +15,57 @@
         </h6>
         {% endfor %}
         <hr>
-        <form action="{% url 'hotels:create_order' hotel.pk %}" method="post">
+        <form action="{{ hotel.get_absolute_url }}" method="post">
             {% csrf_token %}
-            <div class="col">
-                <p>Check in:</p>
-            </div>
             <div class="col-8">
-                {{ order_form.check_in }}
+                {% for field in order_form %}
+                <div class="form-group row">
+
+                    {{ field.label }}
+                    {{ field }}
+
+                </div>
+                {% endfor %}
+                {% if order_form.errors %}
+                <div class="alert alert-danger">
+                    {{ order_form.non_field_errors}}
+                </div>
+                {% endif %}
 
             </div>
             <br>
-            <div class="col">
-                <p>Check out:</p>
-            </div>
-            <div class="col-8">
-                {{ order_form.check_out }}
-
-            </div>
 
             <input type="submit" value="check dates" name="check_dates" class="form-control btn btn-primary">
+        </form>
     </div>
-    </form>
-</div>
 </div>
 
 <div class="text-success text-center"><h4>RATING: {{ hotel.get_avg_marks }}</h4></div>
 <form action="{% url 'hotels:rating_create' hotel.pk %}" method="post">
     {% csrf_token %}
-    {{ rate }}
-    <input type="submit" value="Rate"
+    {% if user.is_authenticated %}
+
+        {% if check_rating.check_is_hotel_rated_by_user %}
+            <fieldset disabled>
+        {{ rate }}
+    <input type="submit" id="disabledInput" value="Rate"
            class="btn btn-primary">
+        <p class="text-danger">Dear, {{ user}}, you have rated this hotel already</p>
+        </fieldset>
+        {% else %}
+
+            {{ rate }}
+        <input type="submit" value="Rate"
+               class="btn btn-primary">
+            {% endif %}
+    {% else %}
+    <fieldset disabled>
+        {{ rate }}
+    <input type="submit" id="disabledInput" value="Rate"
+           class="btn btn-primary">
+        <p class="text-danger">You should be registered to make a Rate</p>
+        </fieldset>
+    {% endif %}
 </form>
 
 <div class="row">
@@ -63,14 +83,22 @@
     </div>
     <hr>
     <h3 class="text-center">Comment Form:</h3>
+    <div class="col-6">
     <form action="{% url 'hotels:hotel_comment' hotel.pk %}" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Add Comment"
-               class="btn btn-primary">
+        {% for f in form %}
+        <div class="form-control row">
+
+            {{ f.label }}
+            {{ f }}
+
+        </div>
+        {% endfor %}
+        <button type="submit" value="Add Comment"
+                class="btn btn-outline-primary">Add Comment</button>
     </form>
 </div>
-
+</div>
 <div>
 </div>
 </div>
