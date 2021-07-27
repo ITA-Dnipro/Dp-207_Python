@@ -1,7 +1,7 @@
 from django.db import models
+from django.utils import timezone
 
 
-# Create your models here.
 class Weather(models.Model):
     temperature = models.FloatField()
     feels_like = models.FloatField()
@@ -9,4 +9,5 @@ class Weather(models.Model):
     humidity = models.FloatField()
     wind = models.FloatField()
     clouds = models.FloatField()
-    city = models.ForeignKey("hotels.City", on_delete=models.CASCADE)
+    city = models.CharField(max_length=100, unique=True)
+    created = models.DateTimeField(auto_now_add=True)
