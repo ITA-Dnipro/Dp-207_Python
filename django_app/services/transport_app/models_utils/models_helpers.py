@@ -232,7 +232,7 @@ def save_api_response_in_route_and_car_models(api_response):
             )
 
 
-def update_api_response_in_route_and_car_models(api_response):
+def update_api_response_in_route_and_car_models(api_response, source_name):
     '''
     Update Route and Car models rows
     '''
@@ -242,6 +242,7 @@ def update_api_response_in_route_and_car_models(api_response):
         departure_name=api_response['departure_name'],
         departure_date=api_response['departure_date'],
         arrival_name=api_response['arrival_name'],
+        source_name=source_name,
     ).update(
         departure_name=api_response['departure_name'],
         departure_date=api_response['departure_date'],
@@ -255,6 +256,7 @@ def update_api_response_in_route_and_car_models(api_response):
         departure_name=api_response['departure_name'],
         departure_date=api_response['departure_date'],
         arrival_name=api_response['arrival_name'],
+        source_name=source_name,
     ).first()
     for one_car in api_response['trips']:
         same_car_and_route_derarture_date = (
@@ -264,23 +266,45 @@ def update_api_response_in_route_and_car_models(api_response):
             )
         )
         if same_car_and_route_derarture_date:
+            #
             one_car = api_cars_time_converter(one_car)
-            Car.objects.filter(
-                departure_name=one_car['departure_name'],
-                departure_date=one_car['departure_date'],
-                arrival_name=one_car['arrival_name'],
-            ).update(
-                route_id=route,
+            #
+            db_car = Car.objects.filter(
                 departure_name=one_car['departure_name'],
                 departure_date=one_car['departure_date'],
                 arrival_name=one_car['arrival_name'],
                 price=one_car['price'],
                 car_model=one_car['car_model'],
                 blablacar_url=one_car['blablacar_url'],
-                parsed_time=one_car['parsed_time'],
                 source_name=one_car['source_name'],
                 source_url=one_car['source_url'],
             )
+            if db_car.exists():
+                db_car.update(
+                    route_id=route,
+                    departure_name=one_car['departure_name'],
+                    departure_date=one_car['departure_date'],
+                    arrival_name=one_car['arrival_name'],
+                    price=one_car['price'],
+                    car_model=one_car['car_model'],
+                    blablacar_url=one_car['blablacar_url'],
+                    parsed_time=one_car['parsed_time'],
+                    source_name=one_car['source_name'],
+                    source_url=one_car['source_url'],
+                )
+            else:
+                db_car.create(
+                    route_id=route,
+                    departure_name=one_car['departure_name'],
+                    departure_date=one_car['departure_date'],
+                    arrival_name=one_car['arrival_name'],
+                    price=one_car['price'],
+                    car_model=one_car['car_model'],
+                    blablacar_url=one_car['blablacar_url'],
+                    parsed_time=one_car['parsed_time'],
+                    source_name=one_car['source_name'],
+                    source_url=one_car['source_url'],
+                )
 
 
 def model_query_time_converter(db_payload):

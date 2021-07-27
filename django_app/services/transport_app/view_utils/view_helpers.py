@@ -64,10 +64,18 @@ def get_cars_data(payload):
             if api_cars_data.get('result') is False:
                 return {'cars_data': api_cars_data}
             #
-            update_api_response_in_route_and_car_models(api_cars_data)
+            update_api_response_in_route_and_car_models(
+                api_cars_data,
+                CARS_SOURCE_NAME
+            )
+            #
+            db_cars_data = get_cars_db_data(
+                payload,
+                CARS_SOURCE_NAME
+            )
             #
             result = {
-                'cars_data': api_cars_data,
+                'cars_data': db_cars_data,
             }
             return result
     elif not route:
@@ -78,8 +86,13 @@ def get_cars_data(payload):
         #
         save_api_response_in_route_and_car_models(api_cars_data)
         #
+        db_cars_data = get_cars_db_data(
+                payload,
+                CARS_SOURCE_NAME
+            )
+        #
         result = {
-            'cars_data': api_cars_data,
+            'cars_data': db_cars_data,
         }
         return result
 
