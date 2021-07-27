@@ -35,6 +35,7 @@ def get_all_hotels():
     return jsonify(result), 200
 
 
+# create endpoint to get data for free rooms in hotel by date
 @api_blu.route('/get_hotel_rooms', methods=['POST'])
 @check_token
 def get_hotel_rooms():
@@ -44,21 +45,4 @@ def get_hotel_rooms():
 
     data = Scraper(**request.get_json()).parse()
     result = hotel_schema.loads(data)
-    print('HELLO')
-    return jsonify(result), 200
-
-# @api_blu.route('/get_hotel', methods=['POST'])
-# def get_hotel():
-#     print(request.get_json())
-#     if not request.get_json() or not 'title' in request.get_json():
-#         return abort(400)
-#     hotels = [
-#         {"title": "Kreshatik", "city": "Kiev"},
-#         {"title": "Palace", "city": "Dnipro"},
-#         {"title": "Owel", "city": "Dnipro"}]
-#
-#     for data in hotels:
-#         if request.get_json()['title'] == data['title']:
-#             hotel_result = {"title": data['title'], "city": data['city']}
-#             result = hotel_schema.dump(hotel_result)
-#             return jsonify({'hotel': result})
+    return result, 200
