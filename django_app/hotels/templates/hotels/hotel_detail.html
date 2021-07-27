@@ -67,9 +67,10 @@
         </fieldset>
     {% endif %}
 </form>
-
+<div class="container">
 <div class="row">
-    <div class="col">
+    <div class="col-4">
+
         {% if hotel.comments.all %}
         <h3 class="text-center">Comments:</h3>
         <ul class="list-group">
@@ -80,10 +81,11 @@
         {% else %}
         <h5>NO COMMENTS YET</h5>
         {% endif %}
-    </div>
+
     <hr>
+
+
     <h3 class="text-center">Comment Form:</h3>
-    <div class="col-6">
     <form action="{% url 'hotels:hotel_comment' hotel.pk %}" method="post">
         {% csrf_token %}
         {% for f in form %}
@@ -96,12 +98,14 @@
         {% endfor %}
         <button type="submit" value="Add Comment"
                 class="btn btn-outline-primary">Add Comment</button>
+
     </form>
-</div>
-</div>
-<div>
-</div>
-</div>
+        </div>
+        <div class="col">
+            <h3><span class="badge rounded-pill bg-info text-dark">tel. : {{ hotel.contacts }}</span></h3>
+            <p class="text-center fst-italic fs-5">{{ hotel.details }}</p>
+        </div>
 
-
+</div>
+</div>
 {% endblock %}

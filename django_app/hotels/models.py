@@ -127,6 +127,7 @@ class Order(models.Model):
         dt = self.get_localtime(self.date_time).strftime('%d.%m.%Y %H:%M')
         return f'"Order made at {dt}'
 
+    # get local time
     @staticmethod
     def get_localtime(utctime):
         utc = utctime.replace(tzinfo=pytz.UTC)
