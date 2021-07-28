@@ -1,0 +1,12 @@
+{% for train in trains_data.trips %}
+    <tr>
+        <th><img src="https://poezdato.net/img/only_trains.png" alt="poezdato_train.jpg"></th>
+        <th>{{train.train_number}}</th>
+        <th>{{train.departure_name}} - {{ train.arrival_name }}</th>
+        <th>{{train.departure_date|date:"d-m-Y H:i:s"}}</th>
+        <th>{{train.arrival_date|date:"d-m-Y H:i:s"}}</th>
+        <th>{{train.in_route_time}}</th>
+        <th></th>
+        <th></th>
+    </tr>
+{% endfor %}
