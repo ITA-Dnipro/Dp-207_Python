@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<head>
+	<style>
+        .icon-img {
+            background-color: rgb(29, 29, 29);
+            color: white;
+            font-size: 10rem;
+
+        }
+        .icon-img::after {
+            content: "";
+            padding-top: 100%;
+            display: block;
+        }
+        .name-mail h3, p {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+
+    {% csrf_token %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 icon-img d-flex justify-content-center"> {{request.user.username|first|capfirst}} </div>
+            <div class="col-md-9 name-mail">
+                <div class="elements">
+                    <h3> {{request.user.username}}</h3>
+                    <p> {{ request.user.email}} </p>
+                </div>
+                <div class="forms">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <br>
+                        <button type="submit" class="btn btn-success">Change Email</button>
+                        {{form.email}}
+                    </form>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <br>
+                        <button type="submit" class="btn btn-success">Change Nickname</button>
+                        {{form.username}}
+                        
+                    </form>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <br>
+                        <button type="submit" class="btn btn-success">Change Password</button>
+                        {{form.password}}
+                    </form>
+                </div>
+            </div>
+        </div> 
+    </div>
+    
+{% endblock %}
