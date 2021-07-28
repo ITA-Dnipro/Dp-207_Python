@@ -3,8 +3,8 @@ from django.forms import Form, Textarea, CharField, ModelForm, \
 from django.core.exceptions import ValidationError
 from datetime import datetime
 from django.utils import timezone
-from .models import City, Rating, Hotel
-from django.contrib.auth.models import User
+from .models import City, Rating
+
 
 
 # city model form to get city from main page

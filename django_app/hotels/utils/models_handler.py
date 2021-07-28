@@ -1,4 +1,4 @@
-from ..models import City, Hotel, HotelComment, Rating
+from ..models import City, Hotel, HotelComment, Rating, Order
 
 
 class CityModel:
@@ -85,3 +85,11 @@ class RatingModel:
     def create_rating(self, **kwargs):
         new_rate = Rating(**kwargs)
         new_rate.save()
+
+
+class OrderModel:
+
+    def create_order(self, **kwargs):
+        new_order = Order(**kwargs)
+        new_order.save()
+        return new_order

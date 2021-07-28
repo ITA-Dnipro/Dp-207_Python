@@ -25,6 +25,11 @@ def get_for_hotel_rooms(city, hotel, date_of_departure, date_of_arrival):
         "date_of_arrival": date_of_arrival
              }
     res = requests.post(url, json=query, headers=headers)
-    data_js = res.json()
-    data = json.loads(json.dumps(data_js))
-    return data
+    try:
+        data_js = res.json()
+        data = json.loads(json.dumps(data_js))
+        return data
+    except Exception:
+        data = {'msg': 'error'}
+        return data
+
