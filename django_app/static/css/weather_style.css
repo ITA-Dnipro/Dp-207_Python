@@ -10,7 +10,7 @@
        {
            display: flex;
            flex-flow: row wrap;
-           background-image: url("/static/images/1.jpg");
+           background-image: url("/static/images/1.jpeg");
            background-repeat: no-repeat;
            color: white;
            padding: 20px;
