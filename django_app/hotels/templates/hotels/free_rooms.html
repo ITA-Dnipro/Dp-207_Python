@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% for room, price in data.prices.items %}
+<div class="card text-center">
+  <div class="card-header">
+    {{ hotel.name }}
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{ room }}</h5>
+    <p class="card-text">{{ price }} за {{ delta_days }} days</p>
+    <a href="#" class="btn btn-primary">забронировать</a>
+  </div>
+  <div class="card-footer text-muted">
+    <h6><span class="badge rounded-pill bg-info text-dark">tel. : {{ hotel.contacts }}</span></h6>
+  </div>
+</div>
+<br>
+{% endfor %}
+{% endblock %}

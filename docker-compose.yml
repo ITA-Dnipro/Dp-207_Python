@@ -30,3 +30,17 @@ services:
         depends_on:
             - postgres_server
             - django_server
+    flask_hotels:
+        build: ./flask_hotels_service
+        restart: always
+        ports:
+            - 5001:5001
+        volumes:
+            - .:/usr/src/app
+    flask_weather:
+        build: ./flask_weather_service
+        restart: always
+        ports:
+            - 5002:5002
+        volumes:
+            - .:/usr/src/app

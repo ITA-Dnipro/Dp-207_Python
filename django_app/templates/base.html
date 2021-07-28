@@ -23,17 +23,26 @@
               <a class="nav-link" href="#">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Hotels</a>
+              <a class="nav-link" href="{% url 'hotels:main' %}">Hotels</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'transport:main_view' %}">Transport</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Sign up</a>
+              <a class="nav-link" href="{% url 'weather:main' %}">Weather</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Sign in</a>
+            {% if not request.user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'user_auth:sign_up' %}">Sign up</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'user_auth:sign_in' %}">Sign in</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'user_auth:sign_out' %}">Sign out</a>
             </li>
+            {% endif %}
           </ul>
         </div>
     </nav>

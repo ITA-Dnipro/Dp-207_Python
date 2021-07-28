@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<body>
+
+    <div class="row">
+            {% for message in messages %}
+            <p class="text-danger">{{ message }}</p>
+            {% endfor %}
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-5 offset-1">
+                <h1>Weather in your city</h1>
+                <form action="{% url 'weather:weather_info' %}" method="post">
+                    {% csrf_token %}
+                    <label for="city">City</label>
+                    {{ form.city }}
+                    <input type="text" id="city" class="form-control" name="city" placeholder="Enter city">
+                    <input type="submit" name="send" class="mt-2 btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

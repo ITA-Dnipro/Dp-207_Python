@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-dark text-center">
+    <h2>{{ hotel.name }}</h2>
+</div>
+<div class="row">
+    <div class="col">
+        <img src="{{ hotel.photo.url }}">
+    </div>
+    <div class="col">
+        {% for room, price in hotel.get_rooms.items %}
+        <h6>
+            <li>{{ room }}: {{ price }}</li>
+        </h6>
+        {% endfor %}
+        <hr>
+        <form action="{{ hotel.get_absolute_url }}" method="post">
+            {% csrf_token %}
+            <div class="col-8">
+                {% for field in order_form %}
+                <div class="form-group row">
+
+                    {{ field.label }}
+                    {{ field }}
+
+                </div>
+                {% endfor %}
+                {% if order_form.errors %}
+                <div class="alert alert-danger">
+                    {{ order_form.non_field_errors}}
+                </div>
+                {% endif %}
+
+            </div>
+            <br>
+
+            <input type="submit" value="check dates" name="check_dates" class="form-control btn btn-primary">
+        </form>
+    </div>
+</div>
+
+<div class="text-success text-center"><h4>RATING: {{ hotel.get_avg_marks }}</h4></div>
+<form action="{% url 'hotels:rating_create' hotel.pk %}" method="post">
+    {% csrf_token %}
+    {% if user.is_authenticated %}
+
+        {% if check_rating.check_is_hotel_rated_by_user %}
+            <fieldset disabled>
+        {{ rate }}
+    <input type="submit" id="disabledInput" value="Rate"
+           class="btn btn-primary">
+        <p class="text-danger">Dear, {{ user}}, you have rated this hotel already</p>
+        </fieldset>
+        {% else %}
+
+            {{ rate }}
+        <input type="submit" value="Rate"
+               class="btn btn-primary">
+            {% endif %}
+    {% else %}
+    <fieldset disabled>
+        {{ rate }}
+    <input type="submit" id="disabledInput" value="Rate"
+           class="btn btn-primary">
+        <p class="text-danger">You should be registered to make a Rate</p>
+        </fieldset>
+    {% endif %}
+</form>
+<div class="container">
+<div class="row">
+    <div class="col-4">
+
+        {% if hotel.comments.all %}
+        <h3 class="text-center">Comments:</h3>
+        <ul class="list-group">
+            {% for h in hotel.comments.all %}
+            <li class="list-group-item">{{ h }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <h5>NO COMMENTS YET</h5>
+        {% endif %}
+
+    <hr>
+
+
+    <h3 class="text-center">Comment Form:</h3>
+    <form action="{% url 'hotels:hotel_comment' hotel.pk %}" method="post">
+        {% csrf_token %}
+        {% for f in form %}
+        <div class="form-control row">
+
+            {{ f.label }}
+            {{ f }}
+
+        </div>
+        {% endfor %}
+        <button type="submit" value="Add Comment"
+                class="btn btn-outline-primary">Add Comment</button>
+
+    </form>
+        </div>
+        <div class="col">
+            <h3><span class="badge rounded-pill bg-info text-dark">tel. : {{ hotel.contacts }}</span></h3>
+            <p class="text-center fst-italic fs-5">{{ hotel.details }}</p>
+        </div>
+
+</div>
+</div>
+{% endblock %}

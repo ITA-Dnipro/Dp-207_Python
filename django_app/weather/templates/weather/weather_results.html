@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'weather/weather.css' %}">
+
+{% block content %}
+<body>
+   <div class="container-fluid px-1 px-md-4 py-5 mx-auto">
+    <div class="row d-flex justify-content-center px-3">
+        <div class="card">
+            <h4>City: {{ weather_info.city }}</h4><br>
+             <b>Temperature: {{ weather_info.temperature }}° C</b><br>
+             <b>Feels like: {{ weather_info.feels_like }}° C</b><br>
+             <b>Description: {{ weather_info.description }}</b><br>
+             <b>Humidity: {{ weather_info.humidity }}</b><br>
+             <b>Wind: {{ weather_info.wind }}</b><br>
+             <b>Clouds: {{ weather_info.clouds }}</b><br>
+             <p class="time-font mb-0 ml-4 mt-auto">{{ current_date }} </p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
