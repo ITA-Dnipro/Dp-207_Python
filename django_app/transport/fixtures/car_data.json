@@ -1,0 +1,57 @@
+[
+  {
+    "model": "transport.Route",
+    "pk": 1,
+    "fields": {
+      "departure_name": "Сумы",
+      "arrival_name": "Киев",
+      "departure_date": "2021-07-19 01:18:09.184106+01:00",
+      "parsed_time": "2031-07-17 11:16:09.184106+01:00",
+      "source_name": "poezdato/blablacar",
+      "source_url": "https://poezdato.net/search/get-trips2?src=%D0%A1%D1%83%D0%BC%D1%8B|50.926632,34.809341&dst=%D0%9A%D0%B8%D0%B5%D0%B2|50.413415,30.432892&date=19.07.2021&country=2&notrains=1&details=1&country_dst=2"
+    }
+  },
+
+  {
+    "model": "transport.Car",
+    "pk": 1,
+    "fields": {
+      "departure_name": "Сумы",
+      "departure_date": "2021-07-19 01:18:09.184106+01:00",
+      "arrival_name": "Киев",
+      "price": "250.00 UAH",
+      "car_model": "GEELY MK",
+      "blablacar_url": "https://www.blablacar.com.ua/trip?source=CARPOOLING&id=2235503981-ua-ua-13&utm_source=POEZDATO&utm_medium=API&utm_campaign=UA_POEZDATO_PSGR_TRIPLOGIN_NOTRAINS&comuto_cmkt=UA_POEZDATO_PSGR_TRIPLOGIN_NOTRAINS&utm_content=%D0%A1%D1%83%D0%BC%D1%8B-%D0%9A%D0%B8%D0%B5%D0%B2",
+      "parsed_time": "2021-07-17 11:16:09.184106+01:00",
+      "source_name": "poezdato/blablacar",
+      "source_url": "https://poezdato.net/search/get-trips2?src=%D0%A1%D1%83%D0%BC%D1%8B|50.926632,34.809341&dst=%D0%9A%D0%B8%D0%B5%D0%B2|50.413415,30.432892&date=19.07.2021&country=2&notrains=1&details=1&country_dst=2"
+    }
+  },
+  {
+    "model": "transport.Route",
+    "pk": 2,
+    "fields": {
+      "departure_name": "Сумы",
+      "arrival_name": "Киев",
+      "departure_date": "2021-01-19 04:30:00.184106+01:00",
+      "parsed_time": "2021-07-17 11:16:09.184106+01:00",
+      "source_name": "poezdato/blablacar",
+      "source_url": "https://www.blablacar.com.ua/trip?source=CARPOOLING&id=2235245211-ua-ua&utm_source=POEZDATO&utm_medium=API&utm_campaign=UA_POEZDATO_PSGR_TRIPLOGIN_NOTRAINS&comuto_cmkt=UA_POEZDATO_PSGR_TRIPLOGIN_NOTRAINS&utm_content=%D0%A1%D1%83%D0%BC%D1%8B-%D0%9A%D0%B8%D0%B5%D0%B2"
+    }
+  },
+  {
+    "model": "transport.Car",
+    "pk": 2,
+    "fields": {
+      "departure_name": "Сумы",
+      "departure_date": "2021-01-19 04:30:00.184106+01:00",
+      "arrival_name": "Киев",
+      "price": "220.00 UAH",
+      "car_model": "CHEVROLET CAPTIVA",
+      "blablacar_url": "https://www.blablacar.com.ua/trip?source=CARPOOLING&id=2235245211-ua-ua&utm_source=POEZDATO&utm_medium=API&utm_campaign=UA_POEZDATO_PSGR_TRIPLOGIN_NOTRAINS&comuto_cmkt=UA_POEZDATO_PSGR_TRIPLOGIN_NOTRAINS&utm_content=%D0%A1%D1%83%D0%BC%D1%8B-%D0%9A%D0%B8%D0%B5%D0%B2",
+      "parsed_time": "2021-07-17 11:16:09.184106+01:00",
+      "source_name": "poezdato/blablacar",
+      "source_url": "https://www.blablacar.com.ua/trip?source=CARPOOLING&id=2235245211-ua-ua&utm_source=POEZDATO&utm_medium=API&utm_campaign=UA_POEZDATO_PSGR_TRIPLOGIN_NOTRAINS&comuto_cmkt=UA_POEZDATO_PSGR_TRIPLOGIN_NOTRAINS&utm_content=%D0%A1%D1%83%D0%BC%D1%8B-%D0%9A%D0%B8%D0%B5%D0%B2"
+    }
+  }
+]

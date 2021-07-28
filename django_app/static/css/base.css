@@ -1,0 +1,13 @@
+/* styling for forms in transport app */
+#form_checkboxes ul li{
+    list-style: none;
+}
+.transport_types_input{
+    display: inline-flex;
+    align-items: center;
+    user-select: none;
+    margin-left: 20px;
+}
+#form_checkboxes_errors ol li{
+    list-style: none;
+}
