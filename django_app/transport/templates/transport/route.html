@@ -32,17 +32,14 @@
     </div>
 {% elif cars_data.result is True and trains_data.result is True %}
     <h4>{{cars_data.departure_name}} - {{cars_data.arrival_name}}</h4>
-    <h5> {{cars_data.departure_date|date:"d-m-Y"}}</h3>
-    <h5>Parsed Time: {{cars_data.parsed_time|date:"d-m-Y H:i:s"}}</h3>
+    <h5>{{cars_data.departure_date|date:"d-m-Y"}}</h3>
 {% elif cars_data.result is True or trains_data.result is True %}
     {% if cars_data.result is True %}
         <a href="{{cars_data.source_url}}" target="_blank"><h4>{{cars_data.departure_name}} - {{cars_data.arrival_name}}</h4></a>
-        <h5> {{cars_data.departure_date|date:"d-m-Y"}}</h3>
-        <h5>Parsed Time: {{cars_data.parsed_time|date:"d-m-Y H:i:s"}}</h3>
+        <h5>{{cars_data.departure_date|date:"d-m-Y"}}</h3>
     {% elif trains_data.result is True %}
         <h4>{{trains_data.departure_name}} - {{trains_data.arrival_name}}</h4>
         <h5>{{trains_data.departure_date|date:"d-m-Y"}}</h5>
-        <h5>Parsed Time: {{trains_data.parsed_time|date:"d-m-Y H:i:s"}}</h3>
     {% endif %}
 {% endif %}
 </div>
@@ -59,7 +56,6 @@
             <th>In route time</th>
             <th>Price</th>
             <th>Link</th>
-            <th>Parsed Time</th>
         </tr>
     </thead>
     <tbody>
