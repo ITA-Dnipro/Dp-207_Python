@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.contrib import messages
 from django.views.generic.detail import DetailView
@@ -96,13 +98,21 @@ def create_rating(request, pk):
     return HttpResponseRedirect(new_rating.create_rating().get_absolute_url())
 
 
+# get free rooms by dates page
 def get_free_rooms_for_hotels(request, slug, check_in, check_out):
     hotel = HotelModel().get_hotel_by_slug(slug)
-    print(type(hotel.city.name))
 
+    # get datetime object from string to get delta of days
+    check_in_obj = datetime.datetime.strptime(check_in, '%Y-%m-%d').date()
+    check_out_obj = datetime.datetime.strptime(check_out, '%Y-%m-%d').date()
+    delta_days = check_out_obj - check_in_obj
+
+    # getting valid string format for parser
     check_in = '.'.join(check_in.split('-')[::-1])
     check_out = '.'.join(check_out.split('-')[::-1])
-    print(check_in)
-    data = get_for_hotel_rooms(hotel.city.name, hotel.name, check_in, check_out)
-    print(data)
-    return render(request, 'hotels/free_rooms.html', {'hotel': hotel})
+
+    # get data from api
+    data = get_for_hotel_rooms(hotel.city.name, hotel.name, check_out, check_in)
+
+    context = {'hotel': hotel, 'data': data, 'delta_days': delta_days.days}
+    return render(request, 'hotels/free_rooms.html', context)
