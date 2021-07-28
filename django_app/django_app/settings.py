@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'user_auth',
     'hotels',
-    'weather'
+    'weather',
+    'user_profile'
 ]
 
 MIDDLEWARE = [

@@ -24,5 +24,6 @@ urlpatterns = [
     path('home/', views.home_page, name='home'),
     path('user_auth/', include('user_auth.urls')),
     path('hotels/', include('hotels.urls'), name='hotels'),
-    path('weather/', include('weather.urls'), name='weather')
+    path('weather/', include('weather.urls'), name='weather'),
+    path('user_profile/', include('user_profile.urls'), name='user_profile')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
