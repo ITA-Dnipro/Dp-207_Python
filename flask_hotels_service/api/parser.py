@@ -204,9 +204,9 @@ class ScrapperForHotel(ScraperForCityHotels):
         input_for_hotel = driver.find_element_by_xpath('//input[@id="search_field"]')
         input_for_hotel.clear()
         input_for_hotel.send_keys(self.hotel)
-        time.sleep(0.5)
+        time.sleep(1)
         input_for_hotel.send_keys(Keys.ENTER)
-        time.sleep(0.5)
+        time.sleep(1)
         url = driver.current_url
         driver.close()
         return url

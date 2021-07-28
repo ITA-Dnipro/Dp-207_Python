@@ -120,11 +120,14 @@ class Order(models.Model):
     """
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
     order_time = models.DateTimeField(default=timezone.now)
-    check_in = models.DateTimeField(default=timezone.now)
-    check_out = models.DateTimeField(default=timezone.now)
+    check_in = models.CharField(max_length=30)
+    check_out = models.CharField(max_length=30)
+    price = models.IntegerField()
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        dt = self.get_localtime(self.date_time).strftime('%d.%m.%Y %H:%M')
+        dt = self.get_localtime(self.order_time).strftime('%d.%m.%Y %H:%M')
         return f'"Order made at {dt}'
 
     # get local time

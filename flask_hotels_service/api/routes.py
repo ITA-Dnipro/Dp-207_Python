@@ -6,7 +6,7 @@ from .utils.api_jwt import check_token
 
 # create schema for hotel responce
 class HotelSchema(Schema):
-    hotel_name = fields.Str(required=True, validate=validate.Length(max=100))
+    hotel_name = fields.Str(required=True, validate=validate.Length(max=150))
     city = fields.Str(required=True, validate=validate.Length(max=100))
     adress = fields.Str(required=True)
     photo = fields.Str()
@@ -45,4 +45,4 @@ def get_hotel_rooms():
 
     data = Scraper(**request.get_json()).parse()
     result = hotel_schema.loads(data)
-    return result, 200
+    return jsonify(result), 200

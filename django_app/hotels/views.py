@@ -1,12 +1,11 @@
 import datetime
-
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.contrib import messages
 from django.views.generic.detail import DetailView
 from django.core.paginator import Paginator
-from .models import City, Hotel, HotelComment, Rating
+from .models import Hotel
 from .forms import CityModelForm, HotelCommentCreateForm, RatingCreateForm, OrderCreateForm
-from .utils.logic import CityAndHotelsHandler, CreateComment, CreateRating
+from .utils.logic import CityAndHotelsHandler, CreateComment, CreateRating, CreateOrder
 from .utils.models_handler import HotelModel
 from .utils.api_handler import get_for_hotel_rooms
 
@@ -111,8 +110,31 @@ def get_free_rooms_for_hotels(request, slug, check_in, check_out):
     check_in = '.'.join(check_in.split('-')[::-1])
     check_out = '.'.join(check_out.split('-')[::-1])
 
+    # errors catching
+    if 'error' in get_for_hotel_rooms(hotel.city.name, hotel.name, check_out, check_in).keys():
+        messages.warning(request, 'Сервис времено недоступен, попробуй позже')
+        HttpResponseRedirect(hotel.get_absolute_url())
+
     # get data from api
     data = get_for_hotel_rooms(hotel.city.name, hotel.name, check_out, check_in)
 
-    context = {'hotel': hotel, 'data': data, 'delta_days': delta_days.days}
+    context = {
+        'hotel': hotel,
+        'data': data,
+        'delta_days': delta_days.days,
+        'user': request.user,
+        'check_in': check_in,
+        'check_out': check_out
+    }
     return render(request, 'hotels/free_rooms.html', context)
+
+
+def order_room(request, slug, check_in, check_out, price, delta_days):
+    user = request.user
+    print(type(price))
+    if user.is_authenticated:
+        order = CreateOrder(request=request, slug=slug, check_in=check_in,
+                            check_out=check_out, user=user, price=str(price)).create_order()
+        return render(request, 'hotels/order_room.html', {'order': order, 'delta_days': delta_days})
+    else:
+        return redirect('user_auth:sign_in')
