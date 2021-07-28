@@ -44,9 +44,13 @@ def schedule_post_handler(request):
         form = RouteForm(request.POST)
         if form.is_valid():
             payload = {
-                "departure_name": form.cleaned_data['departure_name'],
+                "departure_name": (
+                    form.cleaned_data['departure_name'].lower().capitalize()
+                ),
                 "departure_date": form.cleaned_data['departure_date'],
-                "arrival_name": form.cleaned_data['arrival_name'],
+                "arrival_name": (
+                    form.cleaned_data['arrival_name'].lower().capitalize()
+                ),
                 "transport_types": form.cleaned_data['transport_types'],
             }
             payload['departure_date'] = datetime.strftime(
