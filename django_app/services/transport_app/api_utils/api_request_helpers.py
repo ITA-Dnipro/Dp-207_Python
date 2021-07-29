@@ -30,7 +30,18 @@ def create_api_call(payload, api_endpoint):
         )
         return api_response
     except ConnectionError as e:
-        return {'error': e.args[0].args[0]}
+        # a solution to return and object with .text property
+        error_response_content = {
+            'result': False,
+            'error': e.args[0].args[0]
+        }
+        #
+        error_response_content = json.dumps(error_response_content)
+
+        class ErrorResponse:
+            text = error_response_content
+
+        return ErrorResponse
 
 
 def get_trains_api_data(payload):
