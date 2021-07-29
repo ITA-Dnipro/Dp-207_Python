@@ -1,4 +1,4 @@
-from ..models import City, Hotel, HotelComment, Rating
+from ..models import City, Hotel, HotelComment, Rating, Order
 
 
 class CityModel:
@@ -47,10 +47,16 @@ class HotelModel:
             return False
         return hotel
 
+    def get_hotel_by_slug(self, slug):
+        hotel = Hotel.objects.get(slug=slug)
+        if not hotel:
+            return False
+        return hotel
+
     # getting all hotels by city
     def get_all_hotels_by_city(self, city):
         city = City.objects.filter(name=city).first()
-        return Hotel.objects.filter(city=city)
+        return Hotel.objects.filter(city=city).all()
 
     # getting all hotels from db
     def get_all_hotels(self):
@@ -79,3 +85,11 @@ class RatingModel:
     def create_rating(self, **kwargs):
         new_rate = Rating(**kwargs)
         new_rate.save()
+
+
+class OrderModel:
+
+    def create_order(self, **kwargs):
+        new_order = Order(**kwargs)
+        new_order.save()
+        return new_order

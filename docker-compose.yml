@@ -21,6 +21,15 @@ services:
             - .:/usr/src/app
         depends_on: 
             - postgres_server
+    transport_parser:
+        build: ./transport_parser
+        restart: always
+        env_file: ./transport_parser/.env
+        ports: 
+            - 4500:4500
+        depends_on:
+            - postgres_server
+            - django_server
     flask_hotels:
         build: ./flask_hotels_service
         restart: always

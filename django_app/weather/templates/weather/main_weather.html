@@ -1,13 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Weather App</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-</head>
+{% extends 'base.html' %}
+
+{% block content %}
+
 <body>
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-mb-4 white border-bottom shadow-sm">
-        <h5 class="my-0 mr-md-auto font-weight-normal">Mandruy</h5>
+
+    <div class="row">
+            {% for message in messages %}
+            <p class="text-danger">{{ message }}</p>
+            {% endfor %}
     </div>
     <div class="container">
         <div class="row">
@@ -23,6 +23,6 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+
+{% endblock %}
 
