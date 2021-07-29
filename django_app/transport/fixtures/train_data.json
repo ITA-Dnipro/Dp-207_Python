@@ -1,0 +1,67 @@
+[
+  {
+    "model": "transport.Route",
+    "pk": 3,
+    "fields": {
+      "departure_name": "Киев",
+      "arrival_name": "Рахов",
+      "departure_date": "2021-01-19 04:00:00.184106+01:00",
+      "parsed_time": "2021-01-17 04:30:00.184106+01:00",
+      "source_name": "poezd.ua",
+      "source_url": "https://poezd.ua/zd"
+    }
+  },
+
+  {
+    "model": "transport.Train",
+    "pk": 1,
+    "fields": {
+      "train_name": "ВЛАДИСЛАВ ЗУБЕНКО",
+      "train_number": "015О",
+      "train_uid": "015O_0_2",
+      "departure_name": "Киев",
+      "departure_code": "2200001",
+      "departure_date": "2021-01-19 04:00:00.184106+01:00",
+      "arrival_date": "2021-01-19 19:39:31.184106+01:00",
+      "arrival_code": "2218000",
+      "arrival_name": "Львов",
+      "in_route_time": "6 ч 55 мин",
+      "parsed_time": "2021-01-17 04:30:00.184106+01:00",
+      "source_name": "poezd.ua",
+      "source_url": "https://poezd.ua/zd"
+    }
+  },
+
+  {
+    "model": "transport.Route",
+    "pk": 4,
+    "fields": {
+      "departure_name": "Киев",
+      "arrival_name": "Львов",
+      "departure_date": "2021-01-19 22:37:00.184106+01:00",
+      "parsed_time": "2021-01-17 04:30:00.184106+01:00",
+      "source_name": "poezd.ua",
+      "source_url": "https://poezd.ua/zd"
+    }
+  },
+
+  {
+    "model": "transport.Train",
+    "pk": 2,
+    "fields": {
+      "train_name": "ЛЬВІВ",
+      "train_number": "091К",
+      "train_uid": "091K_0_2",
+      "departure_name": "Киев",
+      "departure_code": "2200001",
+      "departure_date": "2021-01-19 22:37:00.184106+01:00",
+      "arrival_name": "Львов",
+      "arrival_code": "2218000",
+      "arrival_date": "2021-01-20 06:26:00.184106+01:00",
+      "in_route_time": "6 ч 55 мин",
+      "parsed_time": "2021-01-17 04:30:00.184106+01:00",
+      "source_name": "poezd.ua",
+      "source_url": "https://poezd.ua/zd"
+    }
+  }
+]
