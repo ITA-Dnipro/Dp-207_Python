@@ -5,12 +5,17 @@ from services.transport_app.models_utils.route_helpers import (
 )
 from datetime import datetime  # , timedelta
 import pytz
+from services.transport_app.api_utils.api_response_helpers import (
+    train_api_response_time_converter
+)
 
 
 def save_api_response_in_route_and_train_models(api_response):
     '''
     Saving api_response dict in Route and Train models
     '''
+    api_response = train_api_response_time_converter(api_response)
+    #
     route = Route.objects.create(
         departure_name=api_response['departure_name'],
         departure_date=api_response['departure_date'],
