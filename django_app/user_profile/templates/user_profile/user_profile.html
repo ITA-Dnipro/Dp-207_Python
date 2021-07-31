@@ -16,6 +16,10 @@
         }
         .name-mail h3, p {
             margin-bottom: 0;
+
+        }
+        .container-fluid {
+            padding-top: 5%;
         }
     </style>
 </head>
@@ -33,20 +37,19 @@
                     <form method="POST">
                         {% csrf_token %}
                         <br>
-                        <button type="submit" class="btn btn-success">Change Email</button>
+                        <button type="submit" class="btn btn-success" name="Change Email">Change Email</button>
                         {{form.email}}
                     </form>
                     <form method="POST">
                         {% csrf_token %}
                         <br>
-                        <button type="submit" class="btn btn-success">Change Nickname</button>
+                        <button type="submit" class="btn btn-success" name="Change Nickname" >Change Nickname</button>
                         {{form.username}}
-                        
                     </form>
                     <form method="POST">
                         {% csrf_token %}
                         <br>
-                        <button type="submit" class="btn btn-success">Change Password</button>
+                        <button type="submit" class="btn btn-success" name="Change Password">Change Password</button>
                         {{form.password}}
                     </form>
                 </div>
