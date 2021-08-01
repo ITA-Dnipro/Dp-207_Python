@@ -1,0 +1,7 @@
+[run]
+source = 
+    ./transport
+    ./services/transport_app
+omit = 
+    */tests/*
+    */__init__.py
