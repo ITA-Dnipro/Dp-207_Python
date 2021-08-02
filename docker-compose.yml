@@ -4,6 +4,9 @@ services:
         build: ./postgres_server
         restart: always
         env_file: ./postgres_server/.env
+    redis_server:
+        image: redis:alpine
+        restart: always
     pgadmin:
         build: ./pgadmin4
         restart: always
@@ -21,6 +24,7 @@ services:
             - .:/usr/src/app
         depends_on: 
             - postgres_server
+            - redis_server
     transport_parser:
         build: ./transport_parser
         restart: always

@@ -20,5 +20,5 @@ urllib3==1.26.6
 Werkzeug==2.0.1
 pyjwt
 selenium
-chromedriver-binary
+chromedriver-binary==92.0.4515.107.0
 
