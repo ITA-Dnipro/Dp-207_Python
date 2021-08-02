@@ -8,6 +8,8 @@ from .forms import CityModelForm, HotelCommentCreateForm, RatingCreateForm, Orde
 from .utils.logic import CityAndHotelsHandler, CreateComment, CreateRating, CreateOrder
 from .utils.models_handler import HotelModel
 from .utils.api_handler import get_for_hotel_rooms
+from .tasks import send_order_email
+from .email.email import OrderEmail
 
 
 # create view for main page of hotels app
@@ -88,6 +90,7 @@ class HotelDetailView(DetailView):
 # create comments view
 def hotel_comment(request, pk):
     new_comment = CreateComment(pk=pk, request=request)
+    print(request.user.email)
     return HttpResponseRedirect(new_comment.create_comment().get_absolute_url())
 
 
@@ -131,10 +134,11 @@ def get_free_rooms_for_hotels(request, slug, check_in, check_out):
 
 def order_room(request, slug, check_in, check_out, price, delta_days):
     user = request.user
-    print(type(price))
     if user.is_authenticated:
         order = CreateOrder(request=request, slug=slug, check_in=check_in,
                             check_out=check_out, user=user, price=str(price)).create_order()
+        mail = OrderEmail(order=order)
+        send_order_email(mail)
         return render(request, 'hotels/order_room.html', {'order': order, 'delta_days': delta_days})
     else:
         return redirect('user_auth:sign_in')
