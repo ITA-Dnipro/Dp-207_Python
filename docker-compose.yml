@@ -46,3 +46,9 @@ services:
             - 5002:5002
         volumes:
             - .:/usr/src/app
+    statistics_rabbitmq_server:
+        build: ./statistics_rabbitmq_server
+        restart: always
+        ports:
+            - 5672:5672
+            - 15672:15672
