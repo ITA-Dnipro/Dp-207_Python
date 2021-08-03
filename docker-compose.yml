@@ -30,6 +30,8 @@ services:
         depends_on:
             - postgres_server
             - django_server
+        volumes: 
+            - ./transport_parser:/usr/src/app
     flask_hotels:
         build: ./flask_hotels_service
         restart: always
