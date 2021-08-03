@@ -9,7 +9,7 @@ class OrderEmail:
         self.sender = 'emandruy@gmail.com'
 
     def topic(self):
-        return f'e-mandruy заказ №{self.order.pk} получен'
+        return f'e-mandruy заказ №{self.order.id} получен'
 
     def body(self):
         context = {'order': self.order}
