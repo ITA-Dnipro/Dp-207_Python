@@ -60,9 +60,9 @@ class CreateComment:
     # create a comment to this object
     def create_comment(self):
         hotel = self.object.get_hotel_by_pk(self.pk)
+        author = User.objects.filter(pk=self.request.user.pk).first()
         try:
             text = self.request.POST.get('text')
-            author = self.request.POST.get('author')
             if text and author:
                 comment = HotelCommentModel()
                 comment.create_comment(hotel=hotel,
