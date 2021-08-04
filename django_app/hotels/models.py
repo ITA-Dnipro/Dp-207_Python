@@ -36,7 +36,7 @@ class Hotel(models.Model):
     url = models.URLField(max_length=200)
     contacts = models.CharField(max_length=150)
     slug = models.SlugField(unique=True, max_length=100)
-
+    href = models.CharField(max_length=100)
     # relation with city
     city = models.ForeignKey(City, on_delete=models.CASCADE)
 
@@ -86,7 +86,7 @@ class HotelComment(models.Model):
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE,
                               related_name='comments')
     text = models.TextField()
-    author = models.CharField(max_length=50)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     date_time = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

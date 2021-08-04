@@ -6,7 +6,6 @@ from django.utils import timezone
 from .models import City, Rating
 
 
-
 # city model form to get city from main page
 class CityModelForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -20,7 +19,6 @@ class CityModelForm(ModelForm):
 
 # Hotel comment create form for HotelDetails
 class HotelCommentCreateForm(Form):
-    author = CharField(label='author', max_length=50)
     text = CharField(label='comment', max_length=200, widget=Textarea)
 
 
