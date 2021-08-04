@@ -16,11 +16,9 @@ class CityAndHotelsHandler:
 
         city = self.city.get_city_by_name()
         if not city:
-            try:
-                data = get_data_for_hotels_by_city(self.city.city_name)
-                city = self.city.create_city()
-            except Exception:
-                return False
+
+            data = get_data_for_hotels_by_city(self.city.city_name)
+            city = self.city.create_city()
             for hotel_ in data:
                 self.hotel.create_hotel(hotel_name=hotel_['hotel_name'],
                                         adress=hotel_['adress'],
@@ -28,15 +26,13 @@ class CityAndHotelsHandler:
                                         detail=hotel_['detail'],
                                         photo=hotel_['photo'],
                                         contacts=hotel_['contacts'],
+                                        href=hotel_['href'],
                                         city=city)
         else:
             hotels_for_city = city.hotel_set.all()
             if not hotels_for_city:
-                try:
-                    data = get_data_for_hotels_by_city(self.city.city_name)
-                    city = self.city.create_city()
-                except Exception:
-                    return False
+                data = get_data_for_hotels_by_city(self.city.city_name)
+                city = self.city.create_city()
                 for hotel_ in data:
                     self.hotel.create_hotel(hotel_name=hotel_['hotel_name'],
                                             adress=hotel_['adress'],
@@ -44,6 +40,7 @@ class CityAndHotelsHandler:
                                             detail=hotel_['detail'],
                                             photo=hotel_['photo'],
                                             contacts=hotel_['contacts'],
+                                            href=hotel_['href'],
                                             city=city)
         return True
 
