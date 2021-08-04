@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'user_auth',
     'hotels',
     'weather',
+    'api',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

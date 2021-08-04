@@ -31,3 +31,4 @@ toml==0.10.2
 urllib3==1.26.6
 celery
 redis
+djangorestframework
