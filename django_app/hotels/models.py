@@ -36,7 +36,7 @@ class Hotel(models.Model):
     url = models.URLField(max_length=200)
     contacts = models.CharField(max_length=150)
     slug = models.SlugField(unique=True, max_length=100)
-
+    href = models.CharField(max_length=100)
     # relation with city
     city = models.ForeignKey(City, on_delete=models.CASCADE)
 
