@@ -86,7 +86,7 @@ class HotelComment(models.Model):
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE,
                               related_name='comments')
     text = models.TextField()
-    author = models.CharField(max_length=50)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     date_time = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
