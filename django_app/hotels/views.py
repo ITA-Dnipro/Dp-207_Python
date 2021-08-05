@@ -7,8 +7,8 @@ from .models import Hotel
 from .forms import CityModelForm, HotelCommentCreateForm, RatingCreateForm, OrderCreateForm
 from .utils.logic import CityAndHotelsHandler, CreateComment, CreateRating, CreateOrder
 from .utils.models_handler import HotelModel
-from .utils.api_handler import get_for_hotel_rooms
-from .tasks import send_order_email
+from .utils.api_handler import get_for_hotel_rooms, send_msg
+from .tasks import send_order_email, send_new_order_msg_to_tg
 
 
 
@@ -126,6 +126,7 @@ def order_room(request, slug, check_in, check_out, price, delta_days):
         order = CreateOrder(request=request, slug=slug, check_in=check_in,
                             check_out=check_out, user=user, price=str(price)).create_order()
         send_order_email.delay(order.pk)
+        send_new_order_msg_to_tg.delay(order.pk)
         return render(request, 'hotels/order_room.html', {'order': order, 'delta_days': delta_days})
     else:
         return redirect('user_auth:sign_in')

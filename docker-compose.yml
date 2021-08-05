@@ -73,5 +73,7 @@ services:
     tg_bot:
         build: ./tg_bot
         restart: always
+        ports:
+            - 5025:5025
         volumes:
             - ./tg_bot:/usr/src/app

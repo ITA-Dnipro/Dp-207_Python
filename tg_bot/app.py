@@ -25,17 +25,15 @@ async def send_welcome(message: types.message):
     await message.reply('Hello')
 
 
-@dp.message_handler(commands=['weather'])
-async def send_welcome(message: types.message):
-    res = await get_cities()
-    await message.reply(res)
-
-
 @dp.message_handler()
 async def post_city(message: types.message):
-    res = await get_cities(message.text)
-    data = {'temp': res['temperature']}
-    await message.reply(f'температура: {data["temp"]}')
+    commands = message.text.split()
+    if commands[-1] == 'погода':
+        res = await get_cities(commands[0])
+        data = {'temp': res['temperature']}
+        await message.reply(f'температура: {data["temp"]}')
+    else:
+        await message.reply(f'Неправильный формат', reply=False)
 
 
 if __name__ == '__main__':
