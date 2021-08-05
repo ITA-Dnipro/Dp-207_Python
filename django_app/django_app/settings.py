@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'user_auth',
     'hotels',
     'weather',
-    'api',
     'rest_framework',
 ]
 
@@ -153,6 +152,7 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 CELERY_BROKER_URL = 'redis://redis_server:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_BACKEND = 'redis://redis_server:6379/0'
 
 # CELERY_BEAT_SCHEDULE = {
 #     "sample_task": {

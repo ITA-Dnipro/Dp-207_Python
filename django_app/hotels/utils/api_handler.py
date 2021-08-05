@@ -49,3 +49,10 @@ def get_for_hotel_rooms(city, hotel_href, date_of_departure, date_of_arrival):
         return data
     elif res.status_code == 500 and res.json().get('msg'):
         raise SomeProblemWithParsing('Попробуйте еще раз!')
+
+
+def send_msg(text):
+    URL = os.environ.get('TELEGRAM_BOT_SEND_MSG')
+    chat_id = 894349543
+    answer = {'chat_id': chat_id, 'text': text}
+    requests.post(URL, json=answer)

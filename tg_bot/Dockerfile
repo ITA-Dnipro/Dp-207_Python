@@ -9,4 +9,4 @@ WORKDIR /usr/src/main/
 COPY . /usr/src/main/
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-CMD ["python3", "app.py"]
+CMD ["python3", "main.py"]
