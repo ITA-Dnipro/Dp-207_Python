@@ -52,7 +52,7 @@ def get_for_hotel_rooms(city, hotel_href, date_of_departure, date_of_arrival):
 
 
 def send_msg(text):
-    URL = 'https://api.telegram.org/bot1909958866:AAG6gRGaUD-zhowX8ZCwP9UwyLkiQGkuzTc/sendMessage'
+    URL = os.environ.get('TELEGRAM_BOT_SEND_MSG')
     chat_id = 894349543
     answer = {'chat_id': chat_id, 'text': text}
     requests.post(URL, json=answer)
