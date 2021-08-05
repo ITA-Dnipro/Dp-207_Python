@@ -9,6 +9,9 @@ from services.transport_app.api_utils.api_response_helpers import (
 from services.transport_app.models_utils.route_helpers import (
     model_query_time_converter
 )
+from services.statistics_app.celery_utils.celery_tasks.transport_app.transport_tasks_1 import (
+    save_cars_db_data_to_mongo_db
+)
 
 
 def is_car_exists(payload):
@@ -233,4 +236,5 @@ def get_cars_db_data(payload, source_name):
     ]
     db_response['trips'] = cars
     db_response['result'] = True
+    save_cars_db_data_to_mongo_db.delay(db_response)
     return db_response
