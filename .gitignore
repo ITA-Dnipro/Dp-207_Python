@@ -5,10 +5,10 @@
 **/venv
 **/__pycache__
 __pycache__
-__pycache__
 __pycache__/
 *.jpg
 *.log
 .pytest_cache
 .coverage
 htmlcov
+celerybeat-schedule
