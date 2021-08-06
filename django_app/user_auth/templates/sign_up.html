@@ -113,9 +113,11 @@
 				   		</div>
 					</form>
 				</div>
-				<div class="message-class">
-                	{% for message in messages %}
-                    	<p id='messages'>{{message}}</p>
+				<div class="message-class text-center">
+                	{% for field in form %}
+						{% if field.errors %}
+                    	<p id='messages'>{{field.errors.as_text}}</p>
+						{% endif %}
                 	{% endfor %}
 				</div>
 				<div class="mt-4">
