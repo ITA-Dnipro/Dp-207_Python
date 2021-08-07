@@ -1,14 +1,14 @@
 import datetime
 from django.shortcuts import render, redirect, HttpResponseRedirect
-from django.contrib import messages
+# from django.contrib import messages
 from django.views.generic.detail import DetailView
 from django.core.paginator import Paginator
 from .models import Hotel
 from .forms import CityModelForm, HotelCommentCreateForm, RatingCreateForm, OrderCreateForm
 from .utils.logic import CityAndHotelsHandler, CreateComment, CreateRating, CreateOrder
 from .utils.models_handler import HotelModel
-from .utils.api_handler import get_for_hotel_rooms
-from .tasks import send_order_email
+from .utils.api_handler import get_for_hotel_rooms, send_msg
+from .tasks import send_order_email, send_new_order_msg_to_tg
 
 
 
@@ -17,12 +17,10 @@ def main_page(request):
     # get sorted hotels by rating
     if request.method == 'POST':
         return redirect('hotels:hotels_list', request.POST.get('name').capitalize())
-
     # get sorted hotels by avg rating
     hotels = HotelModel().get_all_hotels()
     sorted_hotels = HotelModel().sort_hotels_by_avg_rating(reverse=True,
                                                            hotels=hotels)
-
     if sorted_hotels:
         return render(request, 'hotels/main_page.html',
                       {'form': CityModelForm(),
@@ -33,16 +31,11 @@ def main_page(request):
 # create view to get or create hotels by city search
 def hotels_by_city(request, city_name):
     objects = CityAndHotelsHandler(city_name)
-
-    if not objects.get_data_from_api_and_create_models():
-        messages.warning(request, 'ТАКОГО ГОРОДА НЕТ')
-        return redirect('hotels:main')
     objects.get_data_from_api_and_create_models()
 
     # get sorted hotels by avg rating
     hotels_in_city = HotelModel().get_all_hotels_by_city(city=city_name)
-    sorted_hotels = HotelModel().sort_hotels_by_avg_rating(reverse=True,
-                                                           hotels=hotels_in_city)
+    sorted_hotels = HotelModel().sort_hotels_by_avg_rating(reverse=True, hotels=hotels_in_city)
     p = Paginator(sorted_hotels, 5)
     page_num = request.GET.get('page', 1)
     page = p.page(page_num)
@@ -113,13 +106,8 @@ def get_free_rooms_for_hotels(request, slug, check_in, check_out):
     check_in = '.'.join(check_in.split('-')[::-1])
     check_out = '.'.join(check_out.split('-')[::-1])
 
-    # errors catching
-    if 'error' in get_for_hotel_rooms(hotel.city.name, hotel.name, check_out, check_in).keys():
-        messages.warning(request, 'Сервис времено недоступен, попробуй позже')
-        HttpResponseRedirect(hotel.get_absolute_url())
-
     # get data from api
-    data = get_for_hotel_rooms(hotel.city.name, hotel.name, check_out, check_in)
+    data = get_for_hotel_rooms(hotel.city.name, hotel.href, check_out, check_in)
 
     context = {
         'hotel': hotel,
@@ -138,6 +126,7 @@ def order_room(request, slug, check_in, check_out, price, delta_days):
         order = CreateOrder(request=request, slug=slug, check_in=check_in,
                             check_out=check_out, user=user, price=str(price)).create_order()
         send_order_email.delay(order.pk)
+        send_new_order_msg_to_tg.delay(order.pk)
         return render(request, 'hotels/order_room.html', {'order': order, 'delta_days': delta_days})
     else:
         return redirect('user_auth:sign_in')
