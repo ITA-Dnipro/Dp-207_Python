@@ -1,8 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from .forms import WeatherForm
-from datetime import datetime
-from .models import Weather
 from .utils.logic import WeatherHandler
 
 
@@ -21,23 +19,14 @@ def get_weather_in_city(request):
     Then, the main page with the form is shown instead of the result page
     """
 
-    current_date = datetime.now().date()
     if request.method == "POST":
-        city = request.POST.get("city")
+        city = request.POST.get("city").capitalize()
         weather_object = WeatherHandler(city)
         if not weather_object.create_weather_in_new_city():
             messages.warning(request, 'City does not exist!')
             return redirect('weather:main')
 
-        city_ = Weather.objects.filter(city=city).first()
-        if not city_:
-            weather_in_new_city = weather_object.create_weather_in_new_city()
-            return render(request, "weather/weather_results.html",
-                          {"weather_info": weather_in_new_city,
-                           "current_date": current_date, })
-        else:
-            weather_in_city = weather_object.get_weather_in_city_from_model()
-            form = WeatherForm()
-            return render(request, "weather/weather_results.html",
-                      {"weather_info": weather_in_city,
-                       "form": form, "current_date": current_date, })
+        weather_in_city = weather_object.get_weather_in_city_from_model()
+        form = WeatherForm()
+        return render(request, "weather/weather_results.html", {"weather_info": weather_in_city,
+                                                                "form": form, "city": city})

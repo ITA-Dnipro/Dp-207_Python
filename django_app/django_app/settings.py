@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from celery.schedules import crontab
+
 
 load_dotenv()
 
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     'user_auth',
     'hotels',
     'weather',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'middleware.error_handler.BaseExceptionHandler',
+    'middleware.error_handler.SpecialExceptionHandler'
 ]
 
 ROOT_URLCONF = 'django_app.urls'
@@ -149,6 +154,7 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 CELERY_BROKER_URL = 'redis://redis_server:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_BACKEND = 'redis://redis_server:6379/0'
 
 # CELERY_BEAT_SCHEDULE = {
 #     "sample_task": {
@@ -156,3 +162,10 @@ CELERY_TASK_SERIALIZER = 'json'
 #         "schedule": 15.0,
 #     },
 # }
+
+CELERY_BEAT_SCHEDULE = {
+    "delete_all_from_weather_model": {
+        "task": "weather.tasks.delete_all_from_weather_model",
+        "schedule": crontab(minute='*/59'),
+    },
+}
