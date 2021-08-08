@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render
 from services.transport_app.view_utils.view_helpers import get_route_data
 
 from .forms import RouteForm
-
+from django.views.decorators.csrf import csrf_exempt
 
 def route_view(request, route_name):
     payload = json.loads(request.session.get('payload'))
@@ -34,7 +34,7 @@ def main_view(request):
             context={'form': form},
         )
 
-
+@csrf_exempt
 def schedule_post_handler(request):
     if request.method == 'GET':
         return redirect(

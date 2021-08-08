@@ -33,7 +33,8 @@ def is_route_parsed_1_hour_ago(payload, source_name):
         source_name=source_name
     ).first()
     #
-    one_hour_delta = timedelta(hours=1)
+    # one_hour_delta = timedelta(hours=1)
+    one_hour_delta = timedelta(seconds=10)
     #
     now_time = datetime.utcnow().replace(tzinfo=pytz.utc)
     #
