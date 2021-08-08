@@ -3,10 +3,13 @@ from django.forms.models import model_to_dict
 from services.transport_app.models_utils.route_helpers import (
     model_query_time_converter
 )
-from datetime import datetime  # , timedelta
+from datetime import datetime
 import pytz
 from services.transport_app.api_utils.api_response_helpers import (
     train_api_response_time_converter
+)
+from services.statistics_app.celery_utils.celery_tasks.transport_app.transport_tasks_1 import (
+    save_trains_db_data_to_mongo_db
 )
 
 
@@ -47,6 +50,8 @@ def update_api_response_in_route_and_train_models(api_response, source_name):
     '''
     Update Route and Train models rows
     '''
+    #
+    api_response = train_api_response_time_converter(api_response)
     #
     Route.objects.filter(
         departure_name=api_response['departure_name'],
@@ -149,4 +154,7 @@ def get_trains_db_data(payload, source_name):
     ]
     db_response['trips'] = trains
     db_response['result'] = True
+    #
+    save_trains_db_data_to_mongo_db.delay(db_response=db_response)
+    #
     return db_response
