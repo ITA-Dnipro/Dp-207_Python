@@ -43,7 +43,15 @@
                 <a class="nav-link" href="{% url 'user_auth:sign_out' %}">Sign out</a>
             </li>
             {% endif %}
+            
           </ul>
+          {% if request.user.is_superuser %}
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'statistics_app:stats_home' %}">Statistics</a>
+            </li>
+          </ul>
+          {% endif %}
         </div>
     </nav>
     <div class="container-fluid">
