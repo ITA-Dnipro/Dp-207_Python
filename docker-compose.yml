@@ -4,6 +4,9 @@ services:
         build: ./postgres_server
         restart: always
         env_file: ./postgres_server/.env
+    redis_server:
+        image: redis:alpine
+        restart: always
     pgadmin:
         build: ./pgadmin4
         restart: always
@@ -12,7 +15,7 @@ services:
             - 7000:7000
         depends_on: 
             - postgres_server
-    django_server:
+    djangoserver:
         build: .
         restart: always
         ports: 
@@ -21,6 +24,7 @@ services:
             - .:/usr/src/app
         depends_on: 
             - postgres_server
+            - redis_server
     transport_parser:
         build: ./transport_parser
         restart: always
@@ -29,7 +33,9 @@ services:
             - 4500:4500
         depends_on:
             - postgres_server
-            - django_server
+            - djangoserver
+        volumes: 
+            - ./transport_parser:/usr/src/app
     flask_hotels:
         build: ./flask_hotels_service
         restart: always
@@ -44,3 +50,30 @@ services:
             - 5002:5002
         volumes:
             - .:/usr/src/app
+    statistics_rabbitmq_server:
+        build: ./statistics_rabbitmq_server
+        restart: always
+        ports:
+            - 5672:5672
+            - 15672:15672
+    statistics_mongo_db_server:
+        build: ./statistics_mongo_db_server
+        restart: always
+        env_file: ./statistics_mongo_db_server/.env
+        ports: 
+            - '27017-27019:27017-27019'
+    statistics_mongo_express:
+        build: ./statistics_mongo_express
+        restart: always
+        env_file: ./statistics_mongo_express/.env
+        ports: 
+            - 8081:8081
+        depends_on: 
+            - statistics_mongo_db_server
+    tg_bot:
+        build: ./tg_bot
+        restart: always
+        ports:
+            - 5025:5025
+        volumes:
+            - ./tg_bot:/usr/src/app
