@@ -6,6 +6,7 @@ import json
 
 
 MSG = 'Some problem with parser. Try later'
+MSG_FOR_NOT_EXIST_CITY = "Such city doesn't exist"
 
 
 class CustomException(Exception):
@@ -155,7 +156,7 @@ class ScraperForCityHotels():
                 if city == self.city:
                     return self.add_domen(hrefs[index])
             else:
-                raise CityNotExists("Such city doesn't exist")
+                raise CityNotExists(MSG_FOR_NOT_EXIST_CITY)
         else:
             raise SomeProblemWithParsing(MSG)
 
