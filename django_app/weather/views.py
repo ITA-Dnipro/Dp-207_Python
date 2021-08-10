@@ -2,6 +2,12 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from .forms import WeatherForm
 from .utils.logic import WeatherHandler
+from django.conf import settings
+from django.core.cache import cache
+
+
+CACHE_TTL = getattr(settings, 'CACHE_TTL', settings.SESSION_EXPIRATION)
+CACHE_KEY = 'weather'
 
 
 def main_weather(request):
@@ -26,7 +32,14 @@ def get_weather_in_city(request):
             messages.warning(request, 'City does not exist!')
             return redirect('weather:main')
 
-        weather_in_city = weather_object.get_weather_in_city_from_model()
-        form = WeatherForm()
-        return render(request, "weather/weather_results.html", {"weather_info": weather_in_city,
-                                                                "form": form, "city": city})
+        if CACHE_KEY in cache:
+            weather_in_city = cache.get(CACHE_KEY)
+            form = WeatherForm()
+            return render(request, "weather/weather_results.html", {"weather_info": weather_in_city,
+                                                                        "form": form, "city": city})
+        else:
+            weather_in_city = weather_object.get_weather_in_city_from_model()
+            cache.set(CACHE_KEY, weather_in_city, timeout=CACHE_TTL)
+            form = WeatherForm()
+            return render(request, "weather/weather_results.html", {"weather_info": weather_in_city,
+                                                                        "form": form, "city": city})

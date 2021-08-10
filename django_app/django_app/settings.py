@@ -169,3 +169,22 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": crontab(minute='*/59'),
     },
 }
+
+# cache settings
+
+CACHE_REDIS_HOST = os.environ['CACHE_REDIS_HOST']
+CACHE_REDIS_PORT = os.environ['CACHE_REDIS_PORT']
+CACHE_REDIS_DB = os.environ['CACHE_REDIS_DB']
+CACHE_REDIS_URL = os.environ['CACHE_REDIS_URL']
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        "LOCATION": os.getenv('CACHE_REDIS_URL', 'redis://127.0.0.1:6379'),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+}
+
+SESSION_EXPIRATION = 10 * 60     # x * 60 seconds
