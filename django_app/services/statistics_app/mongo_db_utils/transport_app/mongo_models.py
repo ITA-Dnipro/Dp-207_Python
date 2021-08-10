@@ -44,6 +44,7 @@ class Car(Document):
     price = StringField()
     car_model = StringField()
     blablacar_url = StringField()
+    parsed_time = StringField()
     source_name = StringField()
     source_url = StringField()
 

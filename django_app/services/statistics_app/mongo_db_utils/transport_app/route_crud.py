@@ -2,7 +2,9 @@ from services.statistics_app.mongo_db_utils.transport_app.route_helpers import (
     add_hash_to_db_response,
     is_route_exist_in_mongodb,
     save_route_car_in_collection,
-    save_route_train_in_collection
+    save_route_train_in_collection,
+    is_route_hash_differs,
+    update_route_car_in_collection,
 )
 
 
@@ -16,6 +18,13 @@ def store_route_cars_in_collection(db_response):
     if not route_exists:
         save_route_car_in_collection(db_response=db_response)
         return 'new route created'
+    else:
+        found_by_hash = is_route_hash_differs(db_response=db_response)
+        if found_by_hash:
+            return 'same route doing nothing'
+        else:
+            update_route_car_in_collection(db_response=db_response)
+            return 'route and car updated'
 
 
 def store_route_trains_in_collection(db_response):

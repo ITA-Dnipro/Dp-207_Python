@@ -1,6 +1,6 @@
 import hashlib
 import json
-from services.statistics_app.mongo_db_utils.mongo_db_client import client
+from services.statistics_app.mongo_db_utils.mongo_db_client import client # noqa
 from services.statistics_app.mongo_db_utils.transport_app.mongo_models import (
     Route, Car, Train
 )
@@ -73,14 +73,16 @@ def save_route_car_in_collection(db_response):
     ).save()
     for car in db_response.get('trips'):
         Car(
+            route=route,
             departure_name=car.get('departure_name'),
+            departure_date=car.get('departure_date'),
             arrival_name=car.get('arrival_name'),
             price=car.get('price'),
             car_model=car.get('car_model'),
             blablacar_url=car.get('blablacar_url'),
+            parsed_time=car.get('parsed_time'),
             source_name=car.get('source_name'),
             source_url=car.get('source_url'),
-            route=route,
         ).save()
 
 
@@ -118,3 +120,40 @@ def save_route_train_in_collection(db_response):
             source_name=train.get('source_name'),
             source_url=train.get('source_url'),
         ).save()
+
+
+def update_route_car_in_collection(db_response):
+    '''
+    Updating route and car data in mongodb collections
+    '''
+    Route.objects(
+        departure_name=db_response.get('departure_name'),
+        departure_date=db_response.get('departure_date'),
+        arrival_name=db_response.get('arrival_name'),
+        source_name=db_response.get('source_name'),
+    ).update(
+        departure_name=db_response.get('departure_name'),
+        arrival_name=db_response.get('arrival_name'),
+        departure_date=db_response.get('departure_date'),
+        parsed_time=db_response.get('parsed_time'),
+        source_name=db_response.get('source_name'),
+        source_url=db_response.get('source_url'),
+        route_hash=db_response.get('route_hash'),
+    )
+    for car in db_response.get('trips'):
+        Car.objects(
+            departure_name=car.get('departure_name'),
+            departure_date=car.get('departure_date'),
+            arrival_name=car.get('arrival_name'),
+        ).update(
+            departure_name=car.get('departure_name'),
+            departure_date=car.get('departure_date'),
+            arrival_name=car.get('arrival_name'),
+            price=car.get('price'),
+            car_model=car.get('car_model'),
+            blablacar_url=car.get('blablacar_url'),
+            parsed_time=car.get('parsed_time'),
+            source_name=car.get('source_name'),
+            source_url=car.get('source_url'),
+            upsert=True
+        )
