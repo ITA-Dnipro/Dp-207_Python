@@ -49,6 +49,20 @@ def is_route_hash_differs(db_response):
         return False
 
 
+def is_user_exists_in_mongodb(user_data):
+    '''
+    Return True if user exists in mongodb
+    '''
+    user = User.objects(
+        username=user_data.get('username'),
+        email=user_data.get('email'),
+    )
+    if user:
+        return True
+    else:
+        return False
+
+
 def add_hash_to_db_response(db_response):
     '''
     Add route_hash to db_response dict, and return db_response
@@ -63,15 +77,11 @@ def save_route_car_in_collection(route_data):
     Saving route and car in mongodb collections
     '''
     user_data = route_data.get('user_data')
-    user = User(
-        username=user_data.get('username'),
-        first_name=user_data.get('first_name'),
-        last_name=user_data.get('last_name'),
-        email=user_data.get('email'),
-        is_active=user_data.get('is_active'),
-        is_staff=user_data.get('is_staff'),
-        is_superuser=user_data.get('is_superuser'),
-    ).save()
+    user_exists = is_user_exists_in_mongodb(user_data=user_data)
+    if not user_exists:
+        user = save_user_in_collection(user_data=user_data)
+    else:
+        user = get_user_from_collection(user_data=user_data)
     #
     db_response = route_data.get('cars_data')
     route = Route(
@@ -99,11 +109,19 @@ def save_route_car_in_collection(route_data):
         ).save()
 
 
-def save_route_train_in_collection(db_response):
+def save_route_train_in_collection(route_data):
     '''
     Saving route and car in mongodb collections
     '''
+    user_data = route_data.get('user_data')
+    user_exists = is_user_exists_in_mongodb(user_data=user_data)
+    if not user_exists:
+        user = save_user_in_collection(user_data=user_data)
+    else:
+        user = get_user_from_collection(user_data=user_data)
+    db_response = route_data.get('trains_data')
     route = Route(
+        user=user,
         departure_name=db_response.get('departure_name'),
         arrival_name=db_response.get('arrival_name'),
         departure_date=db_response.get('departure_date'),
@@ -133,6 +151,35 @@ def save_route_train_in_collection(db_response):
             source_name=train.get('source_name'),
             source_url=train.get('source_url'),
         ).save()
+
+
+def save_user_in_collection(user_data):
+    '''
+    Saving user data in mongodb collection
+    '''
+    user = User(
+        username=user_data.get('username'),
+        first_name=user_data.get('first_name'),
+        last_name=user_data.get('last_name'),
+        email=user_data.get('email'),
+        is_active=user_data.get('is_active'),
+        is_staff=user_data.get('is_staff'),
+        is_superuser=user_data.get('is_superuser'),
+    ).save()
+    #
+    return user
+
+
+def get_user_from_collection(user_data):
+    '''
+    Return User object from mongodb
+    '''
+    user = User.objects(
+        username=user_data.get('username'),
+        email=user_data.get('email'),
+    ).get()
+    #
+    return user
 
 
 def update_route_car_in_collection(db_response):

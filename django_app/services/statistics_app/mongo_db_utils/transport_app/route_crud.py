@@ -29,16 +29,17 @@ def store_route_cars_in_collection(route_data):
             return 'route and car updated'
 
 
-def store_route_trains_in_collection(db_response):
+def store_route_trains_in_collection(route_data):
     '''
     Saving or updating db_response in mongo_db collection
     '''
+    db_response = route_data.get('trains_data')
     db_response = add_hash_to_db_response(db_response=db_response)
     #
     route_exists = is_route_exist_in_mongodb(db_response=db_response)
     #
     if not route_exists:
-        save_route_train_in_collection(db_response=db_response)
+        save_route_train_in_collection(route_data=route_data)
         return 'new route created'
     else:
         found_by_hash = is_route_hash_differs(db_response=db_response)
