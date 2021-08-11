@@ -1,10 +1,14 @@
 from services.statistics_app.mongo_db_utils.transport_app.route_helpers import (
     add_hash_to_db_response,
     is_route_exist_in_mongodb,
-    save_route_car_in_collection,
-    save_route_train_in_collection,
     is_route_hash_differs,
-    update_route_car_in_collection,
+)
+from services.statistics_app.mongo_db_utils.transport_app.car_helpers import (
+    save_route_car_in_collection,
+    update_route_car_in_collection
+)
+from services.statistics_app.mongo_db_utils.transport_app.train_helpers import (
+    save_route_train_in_collection,
     update_route_train_in_collection,
 )
 
