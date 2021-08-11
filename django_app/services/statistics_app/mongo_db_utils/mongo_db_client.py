@@ -11,7 +11,7 @@ MONGO_INITDB_ROOT_USERNAME = os.environ.get('MONGO_INITDB_ROOT_USERNAME')
 MONGO_INITDB_ROOT_PASSWORD = os.environ.get('MONGO_INITDB_ROOT_PASSWORD')
 
 
-client = connect(
+transport_client = connect(
     db='transport_app',
     username=MONGO_INITDB_ROOT_USERNAME,
     password=MONGO_INITDB_ROOT_PASSWORD,
@@ -20,4 +20,14 @@ client = connect(
     port=int(MONGO_DB_SERVICE_PORT),
     connect=False,
     alias='transport_app_alias'
+)
+user_client = connect(
+    db='django_users',
+    username=MONGO_INITDB_ROOT_USERNAME,
+    password=MONGO_INITDB_ROOT_PASSWORD,
+    authentication_source='admin',
+    host=MONGO_DB_SERVICE_NAME,
+    port=int(MONGO_DB_SERVICE_PORT),
+    connect=False,
+    alias='django_users_alias'
 )

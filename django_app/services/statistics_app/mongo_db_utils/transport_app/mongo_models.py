@@ -6,7 +6,6 @@ from mongoengine.fields import (
 
 class User(Document):
     username = StringField()
-    password = StringField()
     #
     first_name = StringField()
     last_name = StringField()
@@ -16,9 +15,13 @@ class User(Document):
     is_staff = BooleanField(default=False)
     is_superuser = BooleanField(default=False)
 
+    meta = {
+        'db_alias': 'django_users_alias',
+    }
+
 
 class Route(Document):
-    # user = ReferenceField(User)
+    user = ReferenceField(User)
     #
     departure_name = StringField()
     arrival_name = StringField()
@@ -29,7 +32,8 @@ class Route(Document):
     route_hash = StringField()
 
     meta = {
-        'db_alias': 'transport_app_alias'
+        'db_alias': 'transport_app_alias',
+        'allow_inheritance': True
     }
 
 

@@ -1,8 +1,8 @@
 import hashlib
 import json
-from services.statistics_app.mongo_db_utils.mongo_db_client import client # noqa
+from services.statistics_app.mongo_db_utils.mongo_db_client import transport_client, user_client # noqa
 from services.statistics_app.mongo_db_utils.transport_app.mongo_models import (
-    Route, Car, Train
+    Route, Car, Train, User
 )
 
 
@@ -58,11 +58,24 @@ def add_hash_to_db_response(db_response):
     return db_response
 
 
-def save_route_car_in_collection(db_response):
+def save_route_car_in_collection(route_data):
     '''
     Saving route and car in mongodb collections
     '''
+    user_data = route_data.get('user_data')
+    user = User(
+        username=user_data.get('username'),
+        first_name=user_data.get('first_name'),
+        last_name=user_data.get('last_name'),
+        email=user_data.get('email'),
+        is_active=user_data.get('is_active'),
+        is_staff=user_data.get('is_staff'),
+        is_superuser=user_data.get('is_superuser'),
+    ).save()
+    #
+    db_response = route_data.get('cars_data')
     route = Route(
+        user=user,
         departure_name=db_response.get('departure_name'),
         arrival_name=db_response.get('arrival_name'),
         departure_date=db_response.get('departure_date'),
