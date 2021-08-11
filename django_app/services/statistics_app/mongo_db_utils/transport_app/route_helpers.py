@@ -4,7 +4,8 @@ from services.statistics_app.mongo_db_utils.mongo_db_client import transport_cli
 from services.statistics_app.mongo_db_utils.transport_app.mongo_models import (
     Route, Car, Train, User
 )
-from mongoengine.errors import DoesNotExist
+from mongoengine.errors import DoesNotExist, ValidationError
+
 
 def dict_hash(dictionary):
     '''
@@ -184,31 +185,34 @@ def get_user_from_collection(user_data):
         return False
 
 
-def get_route_from_collection(route_data):
+def get_route_from_collection(route_data, route_type):
     '''
     Return Route object
     '''
-    db_response = route_data.get('cars_data')
+    db_response = route_data.get(route_type)
     user = get_user_from_collection(user_data=route_data.get('user_data'))
-    route = Route.objects(
-        user=user,
-        departure_name=db_response.get('departure_name'),
-        departure_date=db_response.get('departure_date'),
-        arrival_name=db_response.get('arrival_name'),
-        source_name=db_response.get('source_name'),
-    ).get()
-    #
-    return route
+    try:
+        route = Route.objects(
+            user=user,
+            departure_name=db_response.get('departure_name'),
+            departure_date=db_response.get('departure_date'),
+            arrival_name=db_response.get('arrival_name'),
+            source_name=db_response.get('source_name'),
+        ).get()
+        #
+        return route
+    except (DoesNotExist, ValidationError):
+        return False
 
 
-def is_users_car_route(route_data):
+def is_users_route(route_data, route_type):
     '''
     Return User object if Route.user == incoming user data
     '''
     user = get_user_from_collection(user_data=route_data.get('user_data'))
-    if not user:
+    route = get_route_from_collection(route_data=route_data, route_type=route_type)
+    if not user or not route:
         return False
-    route = get_route_from_collection(route_data=route_data)
     #
     route_user_id = route.user.id
     user_id = user.id
@@ -223,7 +227,7 @@ def update_route_car_in_collection(route_data):
     '''
     Updating route and car data in mongodb collections
     '''
-    user = is_users_car_route(route_data=route_data)
+    user = is_users_route(route_data=route_data, route_type='cars_data')
     if not user:
         return save_route_car_in_collection(route_data=route_data)
     #
@@ -244,7 +248,7 @@ def update_route_car_in_collection(route_data):
         source_url=db_response.get('source_url'),
         route_hash=db_response.get('route_hash'),
     )
-    route = get_route_from_collection(route_data=route_data)
+    route = get_route_from_collection(route_data=route_data, route_type='cars_data')
     for car in db_response.get('trips'):
         Car.objects(
             route=route,
@@ -266,16 +270,23 @@ def update_route_car_in_collection(route_data):
         )
 
 
-def update_route_train_in_collection(db_response):
+def update_route_train_in_collection(route_data):
     '''
     Updating route and train data in mongodb collections
     '''
+    user = is_users_route(route_data=route_data, route_type='trains_data')
+    if not user:
+        return save_route_train_in_collection(route_data=route_data)
+    #
+    db_response = route_data.get('trains_data')
     Route.objects(
+        user=user,
         departure_name=db_response.get('departure_name'),
         departure_date=db_response.get('departure_date'),
         arrival_name=db_response.get('arrival_name'),
         source_name=db_response.get('source_name'),
     ).update(
+        user=user,
         departure_name=db_response.get('departure_name'),
         arrival_name=db_response.get('arrival_name'),
         departure_date=db_response.get('departure_date'),
@@ -284,14 +295,17 @@ def update_route_train_in_collection(db_response):
         source_url=db_response.get('source_url'),
         route_hash=db_response.get('route_hash'),
     )
+    route = get_route_from_collection(route_data=route_data, route_type='trains_data')
     for train in db_response.get('trips'):
         Train.objects(
+            route=route,
             train_number=train.get('train_number'),
             departure_name=train.get('departure_name'),
             departure_date=train.get('departure_date'),
             arrival_name=train.get('arrival_name'),
             arrival_date=train.get('arrival_date'),
         ).update(
+            route=route,
             train_name=train.get('train_name'),
             train_number=train.get('train_number'),
             train_uid=train.get('train_uid'),
