@@ -25,7 +25,7 @@ def store_route_cars_in_collection(route_data):
         if found_by_hash:
             return 'same route doing nothing'
         else:
-            update_route_car_in_collection(db_response=db_response)
+            update_route_car_in_collection(route_data=route_data)
             return 'route and car updated'
 
 
