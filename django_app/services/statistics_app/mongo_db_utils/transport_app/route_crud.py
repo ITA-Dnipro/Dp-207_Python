@@ -1,15 +1,15 @@
-from services.statistics_app.mongo_db_utils.transport_app.route_helpers import (
-    add_hash_to_db_response,
-    is_route_exist_in_mongodb,
-    is_route_hash_differs,
-)
 from services.statistics_app.mongo_db_utils.transport_app.car_helpers import (
     save_route_car_in_collection,
+    is_users_route,
     update_route_car_in_collection
 )
 from services.statistics_app.mongo_db_utils.transport_app.train_helpers import (
     save_route_train_in_collection,
     update_route_train_in_collection,
+)
+from services.statistics_app.mongo_db_utils.transport_app.user_helpers import (
+    is_user_exists_in_mongodb,
+    save_user_in_collection
 )
 
 
@@ -17,17 +17,17 @@ def store_route_cars_in_collection(route_data):
     '''
     Saving or updating db_response in mongo_db collection
     '''
-    db_response = route_data.get('cars_data')
-    db_response = add_hash_to_db_response(db_response=db_response)
-    route_exists = is_route_exist_in_mongodb(db_response=db_response)
+    ROUTE_TYPE = 'cars_data'
     #
-    if not route_exists:
+    if not is_user_exists_in_mongodb(route_data.get('user_data')):
+        save_user_in_collection(user_data=route_data.get('user_data'))
+        #
         save_route_car_in_collection(route_data=route_data)
-        return 'new route created'
+        return 'new route cars created'
     else:
-        found_by_hash = is_route_hash_differs(db_response=db_response)
-        if found_by_hash:
-            return 'same route doing nothing'
+        if not is_users_route(route_data=route_data, route_type=ROUTE_TYPE):
+            save_route_car_in_collection(route_data=route_data)
+            return 'new route cars created'
         else:
             update_route_car_in_collection(route_data=route_data)
             return 'route and car updated'
@@ -37,18 +37,17 @@ def store_route_trains_in_collection(route_data):
     '''
     Saving or updating db_response in mongo_db collection
     '''
-    db_response = route_data.get('trains_data')
-    db_response = add_hash_to_db_response(db_response=db_response)
+    ROUTE_TYPE = 'trains_data'
     #
-    route_exists = is_route_exist_in_mongodb(db_response=db_response)
-    #
-    if not route_exists:
+    if not is_user_exists_in_mongodb(route_data.get('user_data')):
+        save_user_in_collection(user_data=route_data.get('user_data'))
+        #
         save_route_train_in_collection(route_data=route_data)
-        return 'new route created'
+        return 'new route trains created'
     else:
-        found_by_hash = is_route_hash_differs(db_response=db_response)
-        if found_by_hash:
-            return 'same route doing nothing'
+        if not is_users_route(route_data=route_data, route_type=ROUTE_TYPE):
+            save_route_train_in_collection(route_data=route_data)
+            return 'new route cars created'
         else:
             update_route_train_in_collection(route_data=route_data)
             return 'route and train updated'

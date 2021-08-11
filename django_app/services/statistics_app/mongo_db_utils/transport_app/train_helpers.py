@@ -1,8 +1,12 @@
 from services.statistics_app.mongo_db_utils.mongo_db_client import transport_client, user_client # noqa
-import services.statistics_app.mongo_db_utils.transport_app.user_helpers as user_helpers
-import services.statistics_app.mongo_db_utils.transport_app.route_helpers as route_helpers
 from services.statistics_app.mongo_db_utils.transport_app.mongo_models import (
     Route, Train
+)
+from services.statistics_app.mongo_db_utils.transport_app.user_helpers import (
+    get_user_from_collection
+)
+from services.statistics_app.mongo_db_utils.transport_app.route_helpers import (
+    get_route_from_collection
 )
 
 
@@ -11,11 +15,8 @@ def save_route_train_in_collection(route_data):
     Saving route and car in mongodb collections
     '''
     user_data = route_data.get('user_data')
-    user_exists = user_helpers.is_user_exists_in_mongodb(user_data=user_data)
-    if not user_exists:
-        user = user_helpers.save_user_in_collection(user_data=user_data)
-    else:
-        user = user_helpers.get_user_from_collection(user_data=user_data)
+    #
+    user = get_user_from_collection(user_data=user_data)
     db_response = route_data.get('trains_data')
     route = Route(
         user=user,
@@ -54,9 +55,8 @@ def update_route_train_in_collection(route_data):
     '''
     Updating route and train data in mongodb collections
     '''
-    user = user_helpers.is_users_route(route_data=route_data, route_type='trains_data')
-    if not user:
-        return save_route_train_in_collection(route_data=route_data)
+    user_data = route_data.get('user_data')
+    user = get_user_from_collection(user_data=user_data)
     #
     db_response = route_data.get('trains_data')
     Route.objects(
@@ -75,7 +75,7 @@ def update_route_train_in_collection(route_data):
         source_url=db_response.get('source_url'),
         route_hash=db_response.get('route_hash'),
     )
-    route = route_helpers.get_route_from_collection(route_data=route_data, route_type='trains_data')
+    route = get_route_from_collection(route_data=route_data, route_type='trains_data')
     for train in db_response.get('trips'):
         Train.objects(
             route=route,
