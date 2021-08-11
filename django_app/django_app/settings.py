@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'user_auth',
     'hotels',
     'weather',
-    'user_profile'
+    'user_profile',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -55,6 +56,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'middleware.error_handler.BaseExceptionHandler',
+    'middleware.error_handler.SpecialExceptionHandler'
 ]
 
 ROOT_URLCONF = 'django_app.urls'
@@ -138,3 +141,23 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST_USER = 'emandruy@gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+
+
+CELERY_BROKER_URL = 'redis://redis_server:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_BACKEND = 'redis://redis_server:6379/0'
+
+# CELERY_BEAT_SCHEDULE = {
+#     "sample_task": {
+#         "task": "hotels.tasks.time",
+#         "schedule": 15.0,
+#     },
+# }

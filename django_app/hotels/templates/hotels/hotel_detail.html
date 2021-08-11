@@ -50,7 +50,7 @@
         {{ rate }}
     <input type="submit" id="disabledInput" value="Rate"
            class="btn btn-primary">
-        <p class="text-danger">Dear, {{ user}}, you have rated this hotel already</p>
+        <p class="text-danger">Dear, {{ user }}, you have rated this hotel already</p>
         </fieldset>
         {% else %}
 
@@ -59,18 +59,16 @@
                class="btn btn-primary">
             {% endif %}
     {% else %}
-    <fieldset disabled>
-        {{ rate }}
-    <input type="submit" id="disabledInput" value="Rate"
-           class="btn btn-primary">
-        <p class="text-danger">You should be registered to make a Rate</p>
-        </fieldset>
+        <p class="text-danger">You should be registered to make a Rate and leave a comment.
+            <a href="{% url 'user_auth:sign_up' %}">Sign up</a>
+            <text class="">or</text>
+            <a href="{% url 'user_auth:sign_in' %}">Sign in</a>
+        </p>
     {% endif %}
 </form>
-<div class="container">
-<div class="row">
-    <div class="col-4">
 
+<div class="row">
+    <div class="col">
         {% if hotel.comments.all %}
         <h3 class="text-center">Comments:</h3>
         <ul class="list-group">
@@ -81,31 +79,30 @@
         {% else %}
         <h5>NO COMMENTS YET</h5>
         {% endif %}
-
+    </div>
     <hr>
+    {% if user.is_authenticated %}
+        <h3 class="text-center">Comment Form:</h3>
+        <div class="col-6">
+        <form action="{% url 'hotels:hotel_comment' hotel.pk %}" method="post">
+            {% csrf_token %}
+            {% for f in form %}
+            <div class="form-control row">
 
+                {{ f.label }}
+                {{ f }}
 
-    <h3 class="text-center">Comment Form:</h3>
-    <form action="{% url 'hotels:hotel_comment' hotel.pk %}" method="post">
-        {% csrf_token %}
-        {% for f in form %}
-        <div class="form-control row">
-
-            {{ f.label }}
-            {{ f }}
-
-        </div>
-        {% endfor %}
-        <button type="submit" value="Add Comment"
-                class="btn btn-outline-primary">Add Comment</button>
-
-    </form>
-        </div>
-        <div class="col">
-            <h3><span class="badge rounded-pill bg-info text-dark">tel. : {{ hotel.contacts }}</span></h3>
-            <p class="text-center fst-italic fs-5">{{ hotel.details }}</p>
-        </div>
-
+            </div>
+            {% endfor %}
+            <button type="submit" value="Add Comment"
+                    class="btn btn-outline-primary">Add Comment</button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+<div>
 </div>
 </div>
+
+
 {% endblock %}
