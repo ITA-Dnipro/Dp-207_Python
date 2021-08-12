@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Statistics home page</h1>
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title">Transport</h5>
+      <h6 class="card-subtitle mb-2 text-muted">Statistics for Transport</h6>
+      <p class="card-text">Statistics page for Transport section of the e-mandruy portal.</p>
+      <a href="{% url 'statistics_app:transport_home' %}" class="card-link">View page</a>
+    </div>
+  </div>
 {% endblock %}
