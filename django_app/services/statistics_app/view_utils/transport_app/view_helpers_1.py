@@ -4,6 +4,13 @@ from services.statistics_app.mongo_db_utils.transport_app.mongo_models import (
 )
 
 
+def get_users_count():
+    '''
+    Return count how many users in mongodb
+    '''
+    return User.objects.count()
+
+
 def get_last_20_users():
     '''
     Return last 20 users from mongodb

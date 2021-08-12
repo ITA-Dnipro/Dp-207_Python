@@ -1,8 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Statistics/Transport</h1>
 <div class="mb-4 mb-md-12 container-md text-center" id="users_section">
+    <br>
+    <h4>Welcome to Transport statistics</h4>
+    <br>
+    <form class="form-inline" action="{% url 'statistics_app:user_page_form_handler' %}" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        {{ form.username }}
+        <input type="submit" class="btn btn-primary btn-sm" value="Search">
+        {% if form.errors %}
+        <div id="form_errors">
+            <ul>
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                <li>
+                    {{ field }} - {{error}}
+                </li>
+                {% endfor %}
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </form>
+    <br>
+    <h5>Total users that searched transport: {{context_users_count}}</h5>
+    <br>
     <table class="table table-striped">
         <thead class="table-dark">
             <tr>
