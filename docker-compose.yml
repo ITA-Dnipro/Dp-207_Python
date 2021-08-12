@@ -43,6 +43,13 @@ services:
             - 5001:5001
         volumes:
             - .:/usr/src/app
+    flask_restaurants:
+        build: ./flask_restaurants_service
+        restart: always
+        ports:
+            - 4800:4800
+        volumes:
+            - .:/usr/src/app
     flask_weather:
         build: ./flask_weather_service
         restart: always
