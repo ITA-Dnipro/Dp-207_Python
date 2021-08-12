@@ -27,6 +27,8 @@ async def main_handler(message: types.Message):
         await enter_weather(message)
     elif message.text == 'transport':
         await enter_transport(message)
+    elif message.text == '/start':
+        await send_welcome(message)
     else:
         await message.answer('WRONG')
 
