@@ -23,7 +23,11 @@ def route_view(request, route_name):
     }
     #
     user_data = create_user_dict(user_data=request.user)
-    save_transport_data_to_mongo_db.delay(route_data=route_data, user_data=user_data)
+    #
+    save_transport_data_to_mongo_db.apply_async(
+        kwargs={'route_data': route_data, 'user_data': user_data},
+        serializers='pickle'
+    )
     #
     return render(
         request,

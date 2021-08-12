@@ -2,6 +2,7 @@ from services.statistics_app.mongo_db_utils.mongo_db_client import transport_cli
 from services.statistics_app.mongo_db_utils.transport_app.mongo_models import (
     User, Route, Car, Train
 )
+from mongoengine.errors import DoesNotExist
 
 
 def get_users_count():
@@ -17,3 +18,22 @@ def get_last_20_users():
     '''
     users = User.objects[:20]
     return users
+
+
+def get_user(username):
+    '''
+    Return User object from mongodb by username
+    '''
+    try:
+        user = User.objects(username=username).get()
+        return user
+    except DoesNotExist:
+        return None
+
+
+def get_route_data_from_mongodb(user):
+    '''
+    Return all Route objects for specific User
+    '''
+    routes = Route.objects(user=user)
+    return routes

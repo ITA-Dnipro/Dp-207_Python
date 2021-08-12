@@ -4,8 +4,11 @@ from django.contrib.admin.views.decorators import (
 )
 from services.statistics_app.view_utils.transport_app.view_helpers_1 import (
     get_last_20_users,
-    get_users_count
+    get_users_count,
+    get_user,
+    get_route_data_from_mongodb
 )
+from services.transport_app.view_utils.view_helpers import get_route_data
 from .forms import UserForm
 
 
@@ -43,7 +46,13 @@ def user_page(request, username):
     '''
     # payload = json.loads(request.session.get('payload'))
     context = {}
-    context['context_username'] = username
+    context['context_routes'] = None
+    mongo_user = get_user(username=username)
+    if mongo_user:
+        routes = get_route_data_from_mongodb(user=mongo_user)
+        context['context_routes'] = routes
+    #
+    context['context_user'] = mongo_user
     return render(request, 'statistics_app/user_page.html', context=context)
 
 
