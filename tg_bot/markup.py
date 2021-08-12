@@ -1,11 +1,10 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 
+btn_main = KeyboardButton('main')
+
+
 # main menu buttons
-btn_random = KeyboardButton('rnd number')
-btn_other = KeyboardButton('other')
-main_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(btn_random, btn_other)
-
-
-# weather menu
-btn_info = KeyboardButton('info')
+btn_transport = KeyboardButton('transport')
+btn_weather = KeyboardButton('weather')
+main_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(btn_transport, btn_weather)

@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .api_views import TransportApiView
 
 
 app_name = 'transport'
@@ -11,6 +12,9 @@ urlpatterns = [
         'schedule',
         views.schedule_post_handler,
         name='schedule_post_handler'
-    )
+    ),
+    path('api/v1/get_routes',
+         TransportApiView.as_view(),
+         name='routes_api')
 
 ]
