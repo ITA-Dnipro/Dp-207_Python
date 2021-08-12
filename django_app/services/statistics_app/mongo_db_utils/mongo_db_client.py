@@ -19,7 +19,8 @@ transport_client = connect(
     host=MONGO_DB_SERVICE_NAME,
     port=int(MONGO_DB_SERVICE_PORT),
     connect=False,
-    alias='transport_app_alias'
+    alias='transport_app_alias',
+    tz_aware=True,
 )
 user_client = connect(
     db='django_users',
@@ -29,5 +30,6 @@ user_client = connect(
     host=MONGO_DB_SERVICE_NAME,
     port=int(MONGO_DB_SERVICE_PORT),
     connect=False,
-    alias='django_users_alias'
+    alias='django_users_alias',
+    tz_aware=True,
 )

@@ -26,7 +26,6 @@ def save_route_train_in_collection(route_data):
         parsed_time=db_response.get('parsed_time'),
         source_name=db_response.get('source_name'),
         source_url=db_response.get('source_url'),
-        route_hash=db_response.get('route_hash'),
     ).save()
     for train in db_response.get('trips'):
         Train(
@@ -73,7 +72,6 @@ def update_route_train_in_collection(route_data):
         parsed_time=db_response.get('parsed_time'),
         source_name=db_response.get('source_name'),
         source_url=db_response.get('source_url'),
-        route_hash=db_response.get('route_hash'),
     )
     route = get_route_from_collection(route_data=route_data, route_type='trains_data')
     for train in db_response.get('trips'):

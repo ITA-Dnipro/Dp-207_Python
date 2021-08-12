@@ -1,6 +1,6 @@
 from mongoengine.document import Document
 from mongoengine.fields import (
-    BooleanField, EmailField, IntField, ReferenceField, StringField
+    BooleanField, DateTimeField, EmailField, IntField, ReferenceField, StringField
 )
 
 
@@ -25,11 +25,10 @@ class Route(Document):
     #
     departure_name = StringField()
     arrival_name = StringField()
-    departure_date = StringField()
-    parsed_time = StringField()
+    departure_date = DateTimeField()
+    parsed_time = DateTimeField()
     source_name = StringField()
     source_url = StringField()
-    route_hash = StringField()
 
     meta = {
         'db_alias': 'transport_app_alias',
@@ -41,14 +40,14 @@ class Car(Document):
     route = ReferenceField(Route)
     #
     departure_name = StringField()
-    departure_date = StringField()
+    departure_date = DateTimeField()
     #
     arrival_name = StringField()
     #
     price = StringField()
     car_model = StringField()
     blablacar_url = StringField()
-    parsed_time = StringField()
+    parsed_time = DateTimeField()
     source_name = StringField()
     source_url = StringField()
 
@@ -67,14 +66,14 @@ class Train(Document):
     #
     departure_name = StringField()
     departure_code = IntField()
-    departure_date = StringField()
+    departure_date = DateTimeField()
     #
     arrival_name = StringField()
     arrival_code = IntField()
-    arrival_date = StringField()
+    arrival_date = DateTimeField()
     #
     in_route_time = StringField()
-    parsed_time = StringField()
+    parsed_time = DateTimeField()
     source_name = StringField()
     source_url = StringField()
 

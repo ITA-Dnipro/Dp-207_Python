@@ -44,7 +44,6 @@ def save_route_car_in_collection(route_data):
         parsed_time=db_response.get('parsed_time'),
         source_name=db_response.get('source_name'),
         source_url=db_response.get('source_url'),
-        route_hash=db_response.get('route_hash'),
     ).save()
     for car in db_response.get('trips'):
         Car(
@@ -83,7 +82,6 @@ def update_route_car_in_collection(route_data):
         parsed_time=db_response.get('parsed_time'),
         source_name=db_response.get('source_name'),
         source_url=db_response.get('source_url'),
-        route_hash=db_response.get('route_hash'),
     )
     route = get_route_from_collection(route_data=route_data, route_type='cars_data')
     for car in db_response.get('trips'):

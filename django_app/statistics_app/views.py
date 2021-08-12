@@ -6,7 +6,8 @@ from services.statistics_app.view_utils.transport_app.view_helpers_1 import (
     get_last_20_users,
     get_users_count,
     get_user,
-    get_route_data_from_mongodb
+    get_route_data_from_mongodb,
+    get_routes_count,
 )
 from services.transport_app.view_utils.view_helpers import get_route_data
 from .forms import UserForm
@@ -53,6 +54,7 @@ def user_page(request, username):
         context['context_routes'] = routes
     #
     context['context_user'] = mongo_user
+    context['context_routes_count'] = get_routes_count(username=username)
     return render(request, 'statistics_app/user_page.html', context=context)
 
 

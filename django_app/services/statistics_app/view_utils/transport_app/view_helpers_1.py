@@ -12,6 +12,14 @@ def get_users_count():
     return User.objects.count()
 
 
+def get_routes_count(username):
+    '''
+    Return count how many routes in mongodb
+    '''
+    user = get_user(username=username)
+    return Route.objects(user=user).count()
+
+
 def get_last_20_users():
     '''
     Return last 20 users from mongodb
@@ -33,7 +41,7 @@ def get_user(username):
 
 def get_route_data_from_mongodb(user):
     '''
-    Return all Route objects for specific User
+    Return 20 Route objects for specific User
     '''
-    routes = Route.objects(user=user)
+    routes = Route.objects(user=user)[:20]
     return routes
