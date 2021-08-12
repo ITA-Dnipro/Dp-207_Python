@@ -39,7 +39,7 @@ class ScraperForCityHotels():
     Class for scrapping the site hotels24.ua
     """
 
-    URL = 'https://hotels24.ua'
+    URL = 'https://hotels24.ua/'
 
     desktop_agents = [
         'Mozilla/5.0 (Window s NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
@@ -216,4 +216,4 @@ if __name__ == '__main__':
          'date_of_departure': '30.08.2021',
          'date_of_arrival': '17.08.2021'}
     a = {'city': 'Киев'}
-    print(Scraper(**d).parse())
+    # print(Scraper(**a).parse())
