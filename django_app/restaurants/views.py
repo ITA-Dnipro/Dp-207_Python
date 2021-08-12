@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from .forms import RestaurantSearchForm
 
 def main_page(request):
-    return render(request, 'restaurants/main_page.html', {})
+    context={'form': RestaurantSearchForm}
+    return render(request, 'restaurants/main_page.html', context)
