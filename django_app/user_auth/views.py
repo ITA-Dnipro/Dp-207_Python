@@ -18,10 +18,8 @@ def sign_up(request):
             if form.is_valid():
                 form.save()
                 user = form.cleaned_data.get('username')
-                messages.success(request, f'Account was created for {user}')
-
+                messages.success(request, f'Account has created for {user}')
                 return redirect('user_auth:sign_in')
-
         context = {'form': form}
         return render(request, 'sign_up.html', context)
 
