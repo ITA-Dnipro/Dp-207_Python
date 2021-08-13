@@ -1,6 +1,5 @@
 from django.test import TestCase
 from hotels.utils.logic import CityAndHotelsHandler, CreateComment, CreateRating, CreateOrder
-from .test_api_handler import CITY_EXISTS
 from unittest import mock
 from .fixture import API_RESULT_FOR_HOTELS_IN_THE_CITY, CITY_EXISTS, CHECK_IN, CHECK_OUT, PRICE
 from hotels.models import City, Hotel, HotelComment, Rating
