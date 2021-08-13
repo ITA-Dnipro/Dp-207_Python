@@ -5,6 +5,7 @@ from .fixture import API_RESULT_FOR_HOTELS_IN_THE_CITY, CITY_EXISTS, CHECK_IN, C
 from hotels.models import City, Hotel, HotelComment, Rating
 from hotels.utils.models_handler import CityModel, HotelModel
 from django.contrib.auth.models import User
+import os
 
 
 class TestHotelModel(TestCase):
@@ -39,8 +40,10 @@ class TestHotelModel(TestCase):
         self.assertEqual(mock.call_count, 0)
 
     def tearDown(self):
+        hotel = Hotel.objects.all().first()
+        file = hotel.url.split('/')[-1]
+        os.remove(f"/usr/src/app/django_app/mediafiles/media/{file}")
         City.objects.all().delete()
-        Hotel.objects.all().delete()
 
 
 def mocked_request_for_creating_comment_and_rating():
@@ -74,11 +77,18 @@ class TestCreateComment(TestCase):
         data = API_RESULT_FOR_HOTELS_IN_THE_CITY[0][0]
         data['city'] = city
         HotelModel().create_hotel(**data)
+        cls.hotel = Hotel.objects.all().first()
         User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        file = cls.hotel.url.split('/')[-1]
+        os.remove(f"/usr/src/app/django_app/mediafiles/media/{file}")
 
     def test_create_comment(self):
         request = mocked_request_for_creating_comment_and_rating()
-        pk = Hotel.objects.all().first().pk
+        pk = self.hotel.pk
         instance = CreateComment(pk, request)
         instance.create_comment()
         self.assertEqual(HotelComment.objects.all().first().text, request.POST.get('text'))
@@ -95,11 +105,18 @@ class TestCreateRating(TestCase):
         data = API_RESULT_FOR_HOTELS_IN_THE_CITY[0][0]
         data['city'] = city
         HotelModel().create_hotel(**data)
+        cls.hotel = Hotel.objects.all().first()
         User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        file = cls.hotel.url.split('/')[-1]
+        os.remove(f"/usr/src/app/django_app/mediafiles/media/{file}")
 
     def test_create_rating(self):
         request = mocked_request_for_creating_comment_and_rating()
-        pk = Hotel.objects.all().first().pk
+        pk = self.hotel.pk
         instance = CreateRating(pk, request)
         instance.create_rating()
         self.assertEqual(Rating.objects.all().first().mark, request.POST.get('mark'))
@@ -108,14 +125,14 @@ class TestCreateRating(TestCase):
 
     def test_check_is_hotel_rated_by_user(self):
         request = mocked_request_for_creating_comment_and_rating()
-        pk = Hotel.objects.all().first().pk
+        pk = self.hotel.pk
         instance = CreateRating(pk, request)
         instance.create_rating()
         self.assertTrue(instance.check_is_hotel_rated_by_user())
 
     def test_check_is_not_hotel_rated_by_user(self):
         request = mocked_request_for_creating_comment_and_rating()
-        pk = Hotel.objects.all().first().pk
+        pk = self.hotel.pk
         instance = CreateRating(pk, request)
         self.assertFalse(instance.check_is_hotel_rated_by_user())
 
@@ -139,6 +156,12 @@ class TestCreateOrder(TestCase):
         cls.price = PRICE
         cls.instance = CreateOrder(request=cls.request, slug=cls.slug, check_in=cls.check_in,
                                    check_out=cls.check_out, user=cls.user, price=cls.price)
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        file = cls.hotel.url.split('/')[-1]
+        os.remove(f"/usr/src/app/django_app/mediafiles/media/{file}")
 
     def test_create_order(self):
         order = self.instance.create_order()

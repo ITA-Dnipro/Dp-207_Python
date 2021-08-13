@@ -1,4 +1,4 @@
-from hotels.models import Hotel, City, HotelComment, Order
+from hotels.models import Hotel, HotelComment, Order
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 import os
@@ -13,20 +13,17 @@ class TestHotelModel(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        city = City(1)
-        city.name = 'test_city'
-        city.save()
-        city = City.objects.get(name='test_city')
-        url = 'https://vgorode.ua/img/article/3361/80_main-v1566353737.jpg'
-        hotel = Hotel(name='test name',
-                      adress='test_adress',
-                      price='test_price',
-                      details='test_details',
-                      url=url,
-                      contacts='test_contacts',
-                      href='test_href',
-                      city=city)
-        hotel.save()
+        city = CityModel(city_name=CITY_EXISTS).create_city()
+        data = API_RESULT_FOR_HOTELS_IN_THE_CITY[0][0]
+        data['city'] = city
+        HotelModel().create_hotel(**data)
+        cls.hotel = Hotel.objects.all().first()
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        file = cls.hotel.url.split('/')[-1]
+        os.remove(f"/usr/src/app/django_app/mediafiles/media/{file}")
 
     def test_invalid_hotel_name(self):
         with self.assertRaises(ValidationError):
@@ -71,7 +68,7 @@ class TestHotelModel(TestCase):
         self.assertEqual(hotel.url, 'https://vgorode.ua/img/article/3361/80_main-v1566353737.jpg')
         self.assertEqual(hotel.contacts, 'test_contacts')
         self.assertEqual(hotel.href, 'test_href')
-        self.assertEqual(hotel.city.name, 'test_city')
+        self.assertEqual(hotel.city.name, 'Киев')
         self.assertEqual(hotel.slug, 'test-name')
         file = hotel.url.split('/')[-1]
         self.assertTrue(os.path.isfile(f"/usr/src/app/django_app/mediafiles/media/{file}"))
@@ -115,6 +112,12 @@ class TestHotelComment(TestCase):
         user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
         cls.user = user
 
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        file = cls.hotel.url.split('/')[-1]
+        os.remove(f"/usr/src/app/django_app/mediafiles/media/{file}")
+
     def test_method_str(self):
         comment = HotelComment(hotel=self.hotel, text='some text', author=self.user)
         comment.get_localtime = mock_time
@@ -133,6 +136,12 @@ class TestOrder(TestCase):
         cls.hotel = Hotel.objects.all().first()
         user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
         cls.user = user
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        file = cls.hotel.url.split('/')[-1]
+        os.remove(f"/usr/src/app/django_app/mediafiles/media/{file}")
 
     def test_method_str(self):
         order = Order(hotel=self.hotel, check_out=CHECK_OUT, check_in=CHECK_IN, user=self.user, price=PRICE[:-4])
