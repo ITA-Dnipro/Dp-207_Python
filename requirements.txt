@@ -33,3 +33,4 @@ loguru
 celery
 redis
 djangorestframework
+beautifulsoup4
