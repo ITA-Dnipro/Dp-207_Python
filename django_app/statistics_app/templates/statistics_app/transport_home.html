@@ -36,7 +36,7 @@
         <tbody>
         {% for context_user in context_users %}
         <tr class="">
-            <th><a href="{% url 'statistics_app:user_page' username=context_user.username %}" target="_blank">{{context_user.username}}</a></th>
+            <th><a href="{% url 'statistics_app:user_page' username=context_user.username %}">{{context_user.username}}</a></th>
             <th>{{context_user.email}}</th>
         </tr>
         {% endfor %}

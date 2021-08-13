@@ -1,3 +1,4 @@
+from os import name
 from django.urls import path
 from . import views
 
@@ -11,5 +12,15 @@ urlpatterns = [
         'user_page_form_handler',
         views.user_page_form_handler,
         name='user_page_form_handler'
+    ),
+    path(
+        'route_page_form_handler/<username>',
+        views.route_page_form_handler,
+        name='route_page_form_handler'
+    ),
+    path(
+        'transport/<username>/<route_name>',
+        views.route_page,
+        name='route_page'
     )
 ]
