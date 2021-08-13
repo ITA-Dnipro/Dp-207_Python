@@ -1,0 +1,17 @@
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Type</th>
+            <th>Route</th>
+            <th>Departure</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr class="">
+        <th><img src="https://poezdato.net/img/only_trains.png" alt="poezdato_train.jpg"></th>
+        <th>{{context_route.departure_name}} - {{ context_route.arrival_name }}</th>
+        <th>{{context_route.departure_date|date:"d-m-Y"}}</th>
+    </tr>
+    </tbody>
+</table>
+</div>
