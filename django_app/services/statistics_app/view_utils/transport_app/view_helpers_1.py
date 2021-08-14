@@ -70,17 +70,12 @@ def get_route_data(username, payload):
     '''
     Return Route statistics data
     '''
-    if len(payload.get('transport_types')) >= 2:
-        return None
-    #
     user = get_user(username=username)
-    for tr in payload.get('transport_types'):
-        if tr == 'car':
-            payload['source_name'] = 'poezdato/blablacar'
-        elif tr == 'train':
-            payload['source_name'] = 'poezd.ua'
-        else:
-            payload['source_name'] = None
+    if payload.get('transport_types') == 'car':
+        payload['source_name'] = 'poezdato/blablacar'
+    elif payload.get('transport_types') == 'train':
+        payload['source_name'] = 'poezd.ua'
+    #
     payload = payload_datetime_converter(payload=payload)
     try:
         route = Route.objects(
@@ -93,3 +88,33 @@ def get_route_data(username, payload):
         return route
     except DoesNotExist:
         return None
+
+
+def get_route_stats(route):
+    '''
+    Return dict with additional statistics of route
+    '''
+    if route.source_name == 'poezdato/blablacar':
+        return get_route_cars_stats(route=route)
+
+
+def get_route_cars_stats(route):
+    '''
+    Return result_dict with Route Cars statistics
+    '''
+    result_dict = {}
+    #
+    cars_count = Car.objects(route=route).count()
+    cars = Car.objects(route=route).all()
+    #
+    cars_prices = [float(car.price.split(' ')[0]) for car in cars]
+    cars_min_price = int(min(cars_prices))
+    cars_max_price = int(max(cars_prices))
+    cars_avg_price = sum(cars_prices) / len(cars_prices)
+    #
+    result_dict['cars_count'] = cars_count
+    result_dict['cars_min_price'] = cars_min_price
+    result_dict['cars_max_price'] = cars_max_price
+    result_dict['cars_avg_price'] = cars_avg_price
+    #
+    return result_dict

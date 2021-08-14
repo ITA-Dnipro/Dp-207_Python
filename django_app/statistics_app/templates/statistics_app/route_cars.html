@@ -4,6 +4,10 @@
             <th>Type</th>
             <th>Route</th>
             <th>Departure</th>
+            <th>Cars</th>
+            <th>Min_Price</th>
+            <th>Avg_Price</th>
+            <th>Max_Price</th>
         </tr>
     </thead>
     <tbody>
@@ -11,6 +15,10 @@
         <th><img src="https://poezdato.net/img/trip.png" alt="poezdato.jpg"></th>
         <th>{{context_route.departure_name}} - {{ context_route.arrival_name }}</th>
         <th>{{context_route.departure_date|date:"d-m-Y"}}</th>
+        <th>{{context_route_stats.cars_count}}</th>
+        <th>{{context_route_stats.cars_min_price}}</th>
+        <th>{{context_route_stats.cars_avg_price}}</th>
+        <th>{{context_route_stats.cars_max_price}}</th>
     </tr>
     </tbody>
 </table>

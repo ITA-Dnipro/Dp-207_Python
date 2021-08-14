@@ -9,12 +9,11 @@ from services.statistics_app.view_utils.transport_app.view_helpers_1 import (
     get_20_routes_from_mongodb,
     get_routes_count,
     get_route_data,
+    get_route_stats,
 )
-from .forms import UserForm
-from transport.forms import RouteForm
+from .forms import UserForm, RouteForm
 import json
 from datetime import datetime
-# import pytz
 
 
 @staff_member_required
@@ -77,6 +76,9 @@ def route_page(request, username, route_name):
     mongo_user = get_user(username=username)
     context['context_route'] = context_route
     context['context_user'] = mongo_user
+    context['context_route_stats'] = get_route_stats(
+        route=context_route
+    )
     return render(request, 'statistics_app/route_page.html', context=context)
 
 
