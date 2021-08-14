@@ -115,9 +115,9 @@ def get_route_cars_stats(route):
     cars_avg_price = sum(cars_prices) / len(cars_prices)
     #
     result_dict['cars_count'] = cars_count
-    result_dict['cars_min_price'] = cars_min_price
-    result_dict['cars_max_price'] = cars_max_price
-    result_dict['cars_avg_price'] = cars_avg_price
+    result_dict['cars_min_price'] = f'{cars_min_price} UAH'
+    result_dict['cars_max_price'] = f'{cars_max_price} UAH'
+    result_dict['cars_avg_price'] = f'{cars_avg_price} UAH'
     #
     return result_dict
 
