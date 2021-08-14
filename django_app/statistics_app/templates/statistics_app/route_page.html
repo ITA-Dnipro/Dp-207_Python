@@ -10,7 +10,7 @@
 {% if not context_route %}
 <div class="mb-4 mb-md-12 container-md text-center" id="user_not_found">
     <h3>Route does not exists.</h3>
-    <a href="{% url 'statistics_app:transport_home' %}"><input type="button" class="btn btn-primary btn-sm" value="Try Again"></a>
+    <a href="{% url 'statistics_app:user_page' username=context_user.username %}"><input type="button" class="btn btn-primary btn-sm" value="Try Again"></a>
 </div>
 {% else %}
 <div class="mb-4 mb-md-12 container-md text-center" id="users_section">

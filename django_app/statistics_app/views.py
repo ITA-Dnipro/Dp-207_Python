@@ -69,16 +69,21 @@ def route_page(request, username, route_name):
     '''
     payload = json.loads(request.session.get('payload'))
     context = {}
+    context['context_route_stats'] = None
+    #
     context_route = get_route_data(
         username=username,
         payload=payload
     )
+    if context_route:
+        context_route_stats = get_route_stats(
+            route=context_route
+        )
+        context['context_route_stats'] = context_route_stats
     mongo_user = get_user(username=username)
+    #
     context['context_route'] = context_route
     context['context_user'] = mongo_user
-    context['context_route_stats'] = get_route_stats(
-        route=context_route
-    )
     return render(request, 'statistics_app/route_page.html', context=context)
 
 
