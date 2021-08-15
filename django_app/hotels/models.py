@@ -128,7 +128,7 @@ class Order(models.Model):
 
     def __str__(self):
         dt = self.get_localtime(self.order_time).strftime('%d.%m.%Y %H:%M')
-        return f'"Order made at {dt}'
+        return f'Order made at {dt}'
 
     # get local time
     @staticmethod
