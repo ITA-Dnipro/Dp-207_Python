@@ -19,7 +19,7 @@ unittest_hotels:
 	docker exec -it dp-207_python_djangoserver_1 python ./django_app/manage.py test hotels.tests
 
 postgres:
-	docker exec -it dp-207_python_postgres_server_1 sh && psql -U admin_pg postgres
+	docker exec -it dp-207_python_postgres_server_1 sh
 
 start:
 	cp ./django_app/.env.example ./django_app/.env && docker-compose up --build
