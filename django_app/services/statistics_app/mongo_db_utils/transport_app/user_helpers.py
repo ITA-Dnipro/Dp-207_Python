@@ -48,3 +48,17 @@ def get_user_from_collection(user_data):
         return user
     except DoesNotExist:
         return False
+
+
+def delete_user_from_collection(user_data):
+    '''
+    Delete user from mongodb collection
+    '''
+    try:
+        User.objects(
+            username=user_data.get('username'),
+            email=user_data.get('email'),
+        ).delete()
+        return True
+    except DoesNotExist:
+        return False
