@@ -56,6 +56,7 @@ def schedule_post_handler(request):
             payload['departure_date'] = datetime.strftime(
                 payload['departure_date'], '%d.%m.%Y'
             )
+
             request.session['payload'] = json.dumps(payload)
             return redirect(
                 'transport:route_view',

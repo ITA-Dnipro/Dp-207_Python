@@ -2,3 +2,4 @@ aiogram
 python-dotenv==0.18.0
 aiohttp
 requests
+emoji

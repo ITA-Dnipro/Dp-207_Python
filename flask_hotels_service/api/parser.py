@@ -6,6 +6,7 @@ import json
 
 
 MSG = 'Some problem with parser. Try later'
+MSG_FOR_NOT_EXIST_CITY = "Such city doesn't exist"
 
 
 class CustomException(Exception):
@@ -38,7 +39,7 @@ class ScraperForCityHotels():
     Class for scrapping the site hotels24.ua
     """
 
-    URL = 'https://hotels24.ua'
+    URL = 'https://hotels24.ua/'
 
     desktop_agents = [
         'Mozilla/5.0 (Window s NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
@@ -155,7 +156,7 @@ class ScraperForCityHotels():
                 if city == self.city:
                     return self.add_domen(hrefs[index])
             else:
-                raise CityNotExists("Such city doesn't exist")
+                raise CityNotExists(MSG_FOR_NOT_EXIST_CITY)
         else:
             raise SomeProblemWithParsing(MSG)
 
@@ -215,4 +216,4 @@ if __name__ == '__main__':
          'date_of_departure': '30.08.2021',
          'date_of_arrival': '17.08.2021'}
     a = {'city': 'Киев'}
-    print(Scraper(**d).parse())
+    # print(Scraper(**a).parse())
