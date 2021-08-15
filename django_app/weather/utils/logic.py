@@ -18,7 +18,6 @@ class WeatherHandler:
         """
         c = self.get_city_from_city_model()
         city = Weather.objects.filter(city=c).exists()
-
         if not city:
             try:
                 weather_in_city = get_weather_from_api(self.city)
@@ -43,7 +42,8 @@ class WeatherHandler:
             weather_in_city = Weather.objects.filter(city=c).values()
         else:
             # self.delete_weather_in_city()
-            weather_in_city = self.create_weather_in_city(get_weather_from_api(self.city))
+            data = get_weather_from_api(self.city)
+            weather_in_city = self.create_weather_in_city(data)
         return weather_in_city
 
     def create_weather_in_city(self, data):
@@ -68,13 +68,13 @@ class WeatherHandler:
             weather_in_new_city.save()
         return forecast
 
-    # def delete_weather_in_city(self):
-    #     """
-    #     Delete weather data from Weather model
-    #     """
-    #     c = self.get_city_from_city_model()
-    #     Weather.objects.filter(city=c).delete()
-    #     return True
+    def delete_weather_in_city(self):
+        """
+        Delete weather data from Weather model
+        """
+        c = self.get_city_from_city_model()
+        Weather.objects.filter(city=c).delete()
+        return True
 
     def get_city_from_city_model(self):
         return City.objects.get_or_create(name=self.city)[0]
