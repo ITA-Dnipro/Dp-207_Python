@@ -9,6 +9,7 @@ from services.statistics_app.mongo_db_utils.transport_app.route_helpers import (
     get_route_from_collection,
 )
 from services.statistics_app.mongo_db_utils.transport_app.train_helpers import (
+    delete_trains_from_collection,
     save_route_train_in_collection,
     update_route_train_in_collection,
 )
@@ -60,9 +61,9 @@ def store_route_trains_in_collection(route_data):
             return 'route and train updated'
 
 
-def delete_delete_user_route_cars_data(route_data, user_data):
+def delete_user_route_cars_data(route_data, user_data):
     '''
-    Delete user, route and transport data
+    Delete user, route and cars data
     '''
     ROUTE_TYPE = 'cars_data'
     user = get_user_from_collection(user_data=user_data)
@@ -72,7 +73,26 @@ def delete_delete_user_route_cars_data(route_data, user_data):
     route_data['user_data'] = user_data
     route = get_route_from_collection(route_data=route_data, route_type=ROUTE_TYPE)
     #
-    delete_cars_from_collection(route)
+    delete_cars_from_collection(route=route)
+    #
+    delete_route_from_collection(user=user)
+    #
+    delete_user_from_collection(user_data=user_data)
+
+
+def delete_user_route_trains_data(route_data, user_data):
+    '''
+    Delete user, route and trains data
+    '''
+    ROUTE_TYPE = 'trains_data'
+    user = get_user_from_collection(user_data=user_data)
+    if not user:
+        return
+    #
+    route_data['user_data'] = user_data
+    route = get_route_from_collection(route_data=route_data, route_type=ROUTE_TYPE)
+    #
+    delete_trains_from_collection(route=route)
     #
     delete_route_from_collection(user=user)
     #

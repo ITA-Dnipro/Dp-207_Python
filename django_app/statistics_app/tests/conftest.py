@@ -9,8 +9,10 @@ from services.statistics_app.celery_utils.celery_tasks.transport_app.transport_t
     save_transport_data_to_mongo_db
 )
 from services.statistics_app.mongo_db_utils.transport_app.route_crud import (
-    delete_delete_user_route_cars_data
+    delete_user_route_cars_data,
+    delete_user_route_trains_data,
 )
+from statistics_app.tests_data.route_train_data import route_trains_data
 
 
 @pytest.fixture(scope='function')
@@ -30,7 +32,7 @@ def add_user_route_car_in_mongodb():
     '''
     Add user, route, car data to mongodb
     '''
-    delete_delete_user_route_cars_data(
+    delete_user_route_cars_data(
         route_data=route_cars_data,
         user_data=test_user_data
     )
@@ -38,7 +40,26 @@ def add_user_route_car_in_mongodb():
         route_data=route_cars_data,
         user_data=test_user_data,
     )
-    delete_delete_user_route_cars_data(
+    delete_user_route_cars_data(
         route_data=route_cars_data,
+        user_data=test_user_data
+    )
+
+
+@pytest.fixture(scope='function')
+def add_user_route_train_in_mongodb():
+    '''
+    Add user, route, train data to mongodb
+    '''
+    delete_user_route_trains_data(
+        route_data=route_trains_data,
+        user_data=test_user_data
+    )
+    yield save_transport_data_to_mongo_db(
+        route_data=route_trains_data,
+        user_data=test_user_data,
+    )
+    delete_user_route_trains_data(
+        route_data=route_trains_data,
         user_data=test_user_data
     )

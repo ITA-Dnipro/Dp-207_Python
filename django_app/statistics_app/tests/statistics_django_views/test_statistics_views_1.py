@@ -3,6 +3,9 @@ from statistics_app.tests_data.user_data import test_user_data
 from statistics_app.tests_data.route_car_data import (
     search_route_car_data
 )
+from statistics_app.tests_data.route_train_data import (
+    search_route_train_data
+)
 
 
 def test_get_statistics_home_page(admin_client):
@@ -76,12 +79,12 @@ def test_post_statistics_user_page_with_user_added(admin_client, add_user_in_mon
     assert f'Search {test_user_data.get("username")} routes' == user_not_found_msg[0]
 
 
-def test_post_statistics_user_page_with_route_data_added(
+def test_post_statistics_user_page_with_route_car_data_added(
         admin_client, add_user_route_car_in_mongodb
         ):
     '''
-    Test admin user GET '/statistics/transport/' page
-    with test user added to mongodb
+    Test admin user GET '/statistics/transport/<username>/<route_name>' page
+    with test user, route, car data added to mongodb
     '''
     form_data = {
         'departure_name': search_route_car_data.get('departure_name'),
@@ -107,3 +110,36 @@ def test_post_statistics_user_page_with_route_data_added(
     #
     assert f'{test_user_data.get("username")} route statistics' == user_routes_msg[0]
     assert 'Днепр - Запорожье' == route_from_to[0]
+
+
+def test_post_statistics_user_page_with_route_train_data_added(
+        admin_client, add_user_route_train_in_mongodb
+        ):
+    '''
+    Test admin user GET '/statistics/transport/<username>/<route_name>' page
+    with test user, route, train data added to mongodb
+    '''
+    form_data = {
+        'departure_name': search_route_train_data.get('departure_name'),
+        'departure_date': search_route_train_data.get('departure_date'),
+        'arrival_name': search_route_train_data.get('arrival_name'),
+        'transport_types': search_route_train_data.get('transport_types'),
+    }
+    username = test_user_data.get('username')
+    #
+    response = admin_client.post(
+        f'/statistics/route_page_form_handler/{username}',
+        data=form_data,
+        follow=True,
+    )
+    #
+    tree = html.fromstring(response.content)
+    user_routes_msg = tree.xpath(
+        '//*/div[@id="users_section"]/h4/text()'
+    )
+    route_from_to = tree.xpath(
+        '//*/div[@id="users_section"]/table/tbody/tr/th[2]/text()'
+    )
+    #
+    assert f'{test_user_data.get("username")} route statistics' == user_routes_msg[0]
+    assert 'Киев - Львов' == route_from_to[0]
