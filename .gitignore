@@ -8,6 +8,8 @@ __pycache__
 __pycache__/
 *.jpg
 *.log
+*.zip
+exception.json
 .pytest_cache
 .coverage
 htmlcov

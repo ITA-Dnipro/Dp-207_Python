@@ -8,7 +8,6 @@ class CityModel:
 
     def create_city(self):
         city = City.objects.filter(name=self.city_name).first()
-
         if not city:
             city = City(name=self.city_name)
             city.save()
@@ -26,7 +25,7 @@ class HotelModel:
 
     # create hotel method
     def create_hotel(self, hotel_name, adress, prices,
-                     detail, photo, contacts, city):
+                     detail, photo, contacts, city, href):
         hotel = Hotel.objects.filter(name=hotel_name).first()
 
         if not hotel:
@@ -36,6 +35,7 @@ class HotelModel:
                               details=detail,
                               url=photo,
                               contacts=contacts,
+                              href=href,
                               city=city)
             new_hotel.save()
         return True

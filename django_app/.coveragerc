@@ -1,5 +1,6 @@
 [run]
-source = 
+source =
+    ./hotels
     ./transport
     ./services/transport_app
     ./statistics_app

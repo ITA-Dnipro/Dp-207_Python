@@ -1,16 +1,13 @@
 import requests
 from lxml import html
 from random import choice
-import time
 import concurrent.futures
 import json
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-# from selenium.webdriver.firefox.options import Options
-# from webdriver_manager.firefox import GeckoDriverManager
-import chromedriver_binary
+
 
 MSG = 'Some problem with parser. Try later'
+MSG_FOR_NOT_EXIST_CITY = "Such city doesn't exist"
+
 
 class CustomException(Exception):
     def __init__(self, msg):
@@ -20,27 +17,30 @@ class CustomException(Exception):
 class CityNotExists(CustomException):
     pass
 
+
 class SomeProblemWithParsing(CustomException):
     pass
 
+
 class Scraper():
-    
+
     def __init__(self, **kwarg):
         if len(kwarg) == 1:
             self.parser = ScraperForCityHotels(**kwarg)
         else:
             self.parser = ScrapperForHotel(**kwarg)
-    
+
     def parse(self):
         return self.parser.parse()
+
 
 class ScraperForCityHotels():
     """
     Class for scrapping the site hotels24.ua
     """
-    
-    URL = 'https://hotels24.ua'
-    
+
+    URL = 'https://hotels24.ua/'
+
     desktop_agents = [
         'Mozilla/5.0 (Window s NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
         'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 '
@@ -59,7 +59,6 @@ class ScraperForCityHotels():
         'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 '
         'Safari/537.36',
         'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0']
-
 
     def __init__(self, city):
         self.city = city
@@ -92,7 +91,7 @@ class ScraperForCityHotels():
                 return tree
             else:
                 raise SomeProblemWithParsing(MSG)
-        except requests.exceptions.RequestException as e:
+        except requests.exceptions.RequestException:
             raise SomeProblemWithParsing(MSG)
 
     def find_url_for_cities(self, url):
@@ -106,7 +105,7 @@ class ScraperForCityHotels():
             return url
         else:
             raise SomeProblemWithParsing(MSG)
-    
+
     @staticmethod
     def check_data(data):
         """
@@ -118,11 +117,11 @@ class ScraperForCityHotels():
         except IndexError:
             return ''
 
-    def find_detail(self, url):
+    def find_detail(self, href):
         """
         Find necessary informatiom about hotel and pack it into dict
         """
-        url = self.add_domen(url)
+        url = self.add_domen(href)
         tree = self.request(url)
         detail = tree.xpath('//*[@id="hotel-description-panel-content"]/text()')
         contacts = tree.xpath('//span[@class="phone-img"]/text()')
@@ -141,6 +140,7 @@ class ScraperForCityHotels():
         data['hotel_name'] = self.__class__.check_data(name)
         data['city'] = self.__class__.check_data(city)
         data['adress'] = self.__class__.retrive_adress(adress)
+        data['href'] = href
         return data
 
     def find_city_url(self, url):
@@ -156,7 +156,7 @@ class ScraperForCityHotels():
                 if city == self.city:
                     return self.add_domen(hrefs[index])
             else:
-                raise CityNotExists("Such city doesn't exist")
+                raise CityNotExists(MSG_FOR_NOT_EXIST_CITY)
         else:
             raise SomeProblemWithParsing(MSG)
 
@@ -175,87 +175,45 @@ class ScraperForCityHotels():
         Go around urls for hotels and return json with detail info for hotels
         """
         urls = self.find_urls_for_hotels_in_city(self.find_city_url(ScraperForCityHotels.URL))
-        with concurrent.futures.ThreadPoolExecutor(max_workers=40) as p:
-
+        with concurrent.futures.ThreadPoolExecutor(max_workers=20) as p:
             data = list(p.map(self.find_detail, urls))
         return json.dumps(data, ensure_ascii=False)
 
 
 class ScrapperForHotel(ScraperForCityHotels):
 
-    #EX_PATH = r'C:\Users\Anton\Desktop\Python\Project\geckodriver.exe'
-
-    def __init__(self, hotel, date_of_arrival, date_of_departure):
-        self.hotel = hotel
-        self.date_of_arrival =date_of_arrival
+    def __init__(self, hotel_href, date_of_arrival, date_of_departure):
+        self.hotel_href = hotel_href
+        self.date_of_arrival = date_of_arrival
         self.date_of_departure = date_of_departure
-    
-    def find_url_for_hotel(self):
-        """
-        Find appropriate url for the given hotel
-        """
-        options = webdriver.ChromeOptions()
-        options.headless = True
-        options.add_argument('--disable-blink-features=AutomationControlled')
-        options.add_argument('--disable-gpu')
-        options.add_argument("--no-sandbox")
-        driver = webdriver.Chrome(options=options)
-        driver.get(self.__class__.URL)
-        input_for_hotel = driver.find_element_by_xpath('//input[@id="search_field"]')
-        input_for_hotel.clear()
-        input_for_hotel.send_keys(self.hotel)
-        time.sleep(1)
-        input_for_hotel.send_keys(Keys.ENTER)
-        time.sleep(1)
-        url = driver.current_url
-        driver.close()
-        return url
-    
-    def prepare_url(self, url):
+
+    def prepare_url(self):
         """
         Insert into url appropriate date of arrival and departure
         """
-        try:
-            elements = url.split('&')
-            elements[6] = f'dateArrival={self.date_of_arrival}'
-            elements[7] = f'dateDeparture={self.date_of_departure}'
-            elements = elements[1:-2]
-            url = '?target=view&' + '&'.join(elements)
-            return url
-        except IndexError:
-            raise SomeProblemWithParsing(MSG)
-            
+        url = self.add_domen(self.hotel_href) + f'?dateArrival={self.date_of_arrival}&dateDeparture={self.date_of_departure}'
+        return url
+
     def find_detail(self, url):
         """
         Find necessary informatiom about hotel and pack it into dict
         """
-        url = self.add_domen(url)
         tree = self.request(url)
-        detail = tree.xpath('//*[@id="hotel-description-panel-content"]/text()')
-        contacts = tree.xpath('//span[@class="phone-img"]/text()')
         prices = tree.xpath('//table[@class="room-table"]//tr/td[2]/table//tr/td[2]/table//tr/td/div/span[@class="price"]/text()')
         rooms = map(str.strip, tree.xpath('//table[@class="room-table"]//tr/td[2]/table/caption/text()'))
-        prices_for_rooms = dict(zip(rooms, prices))
-        photo = tree.xpath('//div[@id="image_container"]/img/@src')
-        name = tree.xpath('//span[@class="fn"]/text()')
-        city = tree.xpath('//div[@class="hotel-line"]/a/span/strong/text()')
-        adress = tree.xpath('//div[@class="hotel-line"]/a/span/text()')
         data = {}
-        data['detail'] = self.__class__.check_data(detail).strip().replace('\n', '').replace('  ', '')
-        data['contacts'] = self.__class__.check_data(contacts)
-        data['prices'] = prices_for_rooms
-        data['photo'] = 'https:' + self.__class__.check_data(photo)
-        data['hotel_name'] = self.__class__.check_data(name)
-        data['city'] = self.__class__.check_data(city)
-        data['adress'] = self.__class__.retrive_adress(adress)
+        data['prices'] = dict(zip(rooms, prices))
         return data
-       
+
     def parse(self):
-        url = self.prepare_url(self.find_url_for_hotel())
+        url = self.prepare_url()
         data = self.find_detail(url)
         return json.dumps(data, ensure_ascii=False)
 
+
 if __name__ == '__main__':
-    d= {'hotel': "Отель \"Favor Sport Hotel\"", 'date_of_departure': '3.08.2021', 'date_of_arrival': '27.07.2021'}
+    d = {'hotel_href': "Гостиницы-Киева/Отель-Предслава-4942.html",
+         'date_of_departure': '30.08.2021',
+         'date_of_arrival': '17.08.2021'}
     a = {'city': 'Киев'}
-    print(Scraper(**d).parse())
+    # print(Scraper(**a).parse())

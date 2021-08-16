@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'user_auth',
     'hotels',
     'weather',
-    'statistics_app'
+    'statistics_app',
+    'user_profile',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'middleware.error_handler.BaseExceptionHandler',
+    'middleware.error_handler.SpecialExceptionHandler'
 ]
 
 ROOT_URLCONF = 'django_app.urls'
@@ -150,6 +154,7 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 CELERY_BROKER_URL = 'redis://redis_server:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_BACKEND = 'redis://redis_server:6379/0'
 
 # CELERY_BEAT_SCHEDULE = {
 #     "sample_task": {

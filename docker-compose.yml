@@ -15,7 +15,7 @@ services:
             - 7000:7000
         depends_on: 
             - postgres_server
-    django_server:
+    djangoserver:
         build: .
         restart: always
         ports: 
@@ -33,7 +33,7 @@ services:
             - 4500:4500
         depends_on:
             - postgres_server
-            - django_server
+            - djangoserver
         volumes: 
             - ./transport_parser:/usr/src/app
     flask_hotels:
@@ -70,3 +70,10 @@ services:
             - 8081:8081
         depends_on: 
             - statistics_mongo_db_server
+    tg_bot:
+        build: ./tg_bot
+        restart: always
+        ports:
+            - 5025:5025
+        volumes:
+            - ./tg_bot:/usr/src/app

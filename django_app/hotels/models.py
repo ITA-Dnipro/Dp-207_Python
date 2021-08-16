@@ -36,7 +36,7 @@ class Hotel(models.Model):
     url = models.URLField(max_length=200)
     contacts = models.CharField(max_length=150)
     slug = models.SlugField(unique=True, max_length=100)
-
+    href = models.CharField(max_length=100)
     # relation with city
     city = models.ForeignKey(City, on_delete=models.CASCADE)
 
@@ -128,7 +128,7 @@ class Order(models.Model):
 
     def __str__(self):
         dt = self.get_localtime(self.order_time).strftime('%d.%m.%Y %H:%M')
-        return f'"Order made at {dt}'
+        return f'Order made at {dt}'
 
     # get local time
     @staticmethod
