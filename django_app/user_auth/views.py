@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import CreateUserForm
-from django.views.decorators.csrf import csrf_exempt
+
 
 def home_page(request):
     return render(request, 'base.html')
@@ -23,7 +23,7 @@ def sign_up(request):
         context = {'form': form}
         return render(request, 'sign_up.html', context)
 
-@csrf_exempt
+
 def sign_in(request):
     if request.user.is_authenticated:
         return redirect('home')

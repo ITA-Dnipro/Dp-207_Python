@@ -5,7 +5,6 @@ from django.shortcuts import redirect, render
 from services.transport_app.view_utils.view_helpers import get_route_data, create_user_dict
 
 from .forms import RouteForm
-from django.views.decorators.csrf import csrf_exempt
 from services.statistics_app.celery_utils.celery_tasks.transport_app.transport_tasks_1 import (
     save_transport_data_to_mongo_db
 )
@@ -45,7 +44,7 @@ def main_view(request):
             context={'form': form},
         )
 
-@csrf_exempt
+
 def schedule_post_handler(request):
     if request.method == 'GET':
         return redirect(
