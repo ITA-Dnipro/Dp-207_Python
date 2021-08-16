@@ -8,6 +8,7 @@ from services.statistics_app.mongo_db_utils.transport_app.user_helpers import (
 from services.statistics_app.mongo_db_utils.transport_app.route_helpers import (
     get_route_from_collection
 )
+from mongoengine.errors import DoesNotExist
 
 
 def save_route_train_in_collection(route_data):
@@ -102,3 +103,16 @@ def update_route_train_in_collection(route_data):
             source_url=train.get('source_url'),
             upsert=True,
         )
+
+
+def delete_trains_from_collection(route):
+    '''
+    Delete trains data from collection
+    '''
+    try:
+        Train.objects(
+            route=route
+        ).delete()
+        return True
+    except DoesNotExist:
+        return False

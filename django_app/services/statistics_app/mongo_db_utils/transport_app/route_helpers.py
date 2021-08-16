@@ -26,3 +26,16 @@ def get_route_from_collection(route_data, route_type):
         return route
     except DoesNotExist:
         return False
+
+
+def delete_route_from_collection(user):
+    '''
+    Delete route from collection
+    '''
+    try:
+        Route.objects(
+            user=user
+        ).delete()
+        return True
+    except DoesNotExist:
+        return False

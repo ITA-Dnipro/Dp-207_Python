@@ -8,6 +8,7 @@ from services.statistics_app.mongo_db_utils.transport_app.user_helpers import (
 from services.statistics_app.mongo_db_utils.transport_app.mongo_models import (
     Route, Car
 )
+from mongoengine.errors import DoesNotExist
 
 
 def is_users_route(route_data, route_type):
@@ -103,3 +104,16 @@ def update_route_car_in_collection(route_data):
             source_url=car.get('source_url'),
             upsert=True
         )
+
+
+def delete_cars_from_collection(route):
+    '''
+    Delete car from collection
+    '''
+    try:
+        Car.objects(
+            route=route
+        ).delete()
+        return True
+    except DoesNotExist:
+        return False
