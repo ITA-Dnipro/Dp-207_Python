@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if not context_user %}
+<div class="mb-4 mb-md-12 container-md text-center" id="user_not_found">
+    <h3>User does not exists.</h3>
+    <a href="{% url 'statistics_app:transport_home' %}"><input type="button" class="btn btn-primary btn-sm" value="Try Again"></a>
+</div>
+{% else %}
+{% if not context_route %}
+<div class="mb-4 mb-md-12 container-md text-center" id="user_not_found">
+    <h3>Route does not exists.</h3>
+    <a href="{% url 'statistics_app:user_page' username=context_user.username %}"><input type="button" class="btn btn-primary btn-sm" value="Try Again"></a>
+</div>
+{% else %}
+<div class="mb-4 mb-md-12 container-md text-center" id="users_section">
+    <br>
+    <h4>{{context_user.username}} route statistics</h4>
+    <a href="{% url 'statistics_app:user_page' username=context_user.username %}"><input type="button" class="btn btn-primary btn-sm" value="Search Again"></a>
+    <br>
+    <br>
+{% if context_route.source_name == "poezd.ua" %}
+    {% include 'statistics_app/route_trains.html' %}
+{% elif context_route.source_name == "poezdato/blablacar" %}
+    {% include 'statistics_app/route_cars.html' %}
+{% endif %}
+
+{% endif %}
+{% endif %}
+{% endblock %}
