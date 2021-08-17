@@ -174,3 +174,24 @@ def get_trains_data(payload):
         }
         #
         return result
+
+
+def create_user_dict(user_data):
+    '''
+    Return dict with django user data
+    '''
+    result_dict = {}
+    if user_data.is_anonymous is True:
+        result_dict['username'] = None
+    else:
+        result_dict['username'] = user_data.username
+        result_dict['email'] = user_data.email
+        #
+        result_dict['first_name'] = user_data.first_name
+        result_dict['last_name'] = user_data.last_name
+        #
+        result_dict['is_active'] = user_data.is_active
+        result_dict['is_staff'] = user_data.is_staff
+        result_dict['is_superuser'] = user_data.is_superuser
+    #
+    return result_dict
