@@ -33,7 +33,6 @@ api_blu = Blueprint('api', __name__, url_prefix='/api')
 def get_all_hotels():
     if not request.get_json():
         return jsonify({'msg': 'wrong request'}), 403
-
     try:
         data = Scraper(**request.get_json()).parse()
         result = hotels_schema.loads(data)
