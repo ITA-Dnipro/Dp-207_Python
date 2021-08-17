@@ -27,6 +27,6 @@ urlpatterns = [
     path('hotels/', include('hotels.urls'), name='hotels'),
     path('weather/', include('weather.urls'), name='weather'),
     path('user_profile/', include('user_profile.urls'), name='user_profile'),
-    path('restaurants/', include('restaurants.urls'), name='restaurants')
+    path('restaurants/', include('restaurants.urls'), name='restaurants'),
     path('statistics/', include('statistics_app.urls'), name='statistics_app')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

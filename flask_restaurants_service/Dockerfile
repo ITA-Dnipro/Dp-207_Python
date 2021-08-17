@@ -10,5 +10,4 @@ COPY . /usr/src/main/
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["sh", "entrypoint.sh"]
-# CMD ["python3", "app.py"]
+CMD ["python3", "app.py"]

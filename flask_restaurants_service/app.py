@@ -1,23 +1,18 @@
-from flask import Flask
-from . import parser
+from flask import Flask, jsonify, request
+from api import parser
 
 app = Flask(__name__)
+app.config['JSON_AS_ASCII'] = False
 
-@app.route("/", methods=["POST"])
+@app.route("/get_restaurants_by_city/", methods=["POST"])
 def get_restaurants_by_city():
-    data = ScraperForRestaurants()
-    result = data.get_content("dnepr")
-    #temperature = "{0:.2f}".format(data["main"]["temp"])
-    #feels_like = "{0:.2f}".format(data["main"]["feels_like"])
-    #description = data["weather"][0]["description"]
-    #humidity = "{0:.2f}".format(data["main"]["humidity"])
-    #wind = "{0:.2f}".format(data["wind"]["speed"])
-    #clouds = "{0:.2f}".format(data["clouds"]["all"])
-    #location = data["name"]
+    city_name = request.get_json()["city_name"]
+    data = parser.ScraperForRestaurants(city_name)
+    parsing_result = data.get_content()
 
-    return "hello"
+    return jsonify(parsing_result)
 
 
 
 if __name__ == '__main__':
-    app.run(Debug=True, port='4800', host='0.0.0.0')
+    app.run(port='4800', host='0.0.0.0')
