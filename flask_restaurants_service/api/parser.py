@@ -16,13 +16,9 @@ class ScraperForRestaurants:
             'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.3'
         }
 
-    def get_html(self, params=''):
+    def get_content(self, params=''):
         response = requests.get(self.URL, headers=self.HEADERS, params=params)
-        r = response.text
-        return r
-
-    def get_content(self, html):
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = BeautifulSoup(response.text, 'html.parser')
         items = soup.find_all('div', class_='search-item__box')
         content = []
 
@@ -35,7 +31,7 @@ class ScraperForRestaurants:
                     'address':item.find('div', class_='search-item__center-item-loc d-d-f').find('span').get_text().strip().replace('\n', '').replace('  ', ''),
                     'price_lvl':item.find('span', class_='average_bill').attrs['data-val'].strip().replace('\n', '').replace('  ', ''),
                     'rating':item.find('div', class_='rest_block_raiting').get_text().strip().replace('\n', '').replace('  ', ''),
-                    'photo':item.find('a', class_='search-item__left-search_item_img').attrs['style'].replace("background-image: url('", '').replace("')", '')
+                    'photo':item.find('a', class_='search-item__left-search_item_img').attrs['style'].replace("background-image: url('", '').replace("')", '') 
                 }
             )
         return content
@@ -43,5 +39,5 @@ class ScraperForRestaurants:
 
 if __name__ == "__main__":
     parser = ScraperForRestaurants("dnepr")
-    result = parser.get_content(parser.get_html())
+    result = parser.get_content()
     print(result)

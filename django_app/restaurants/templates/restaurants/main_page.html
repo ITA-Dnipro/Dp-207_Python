@@ -14,7 +14,7 @@
         <div class="text-center"><h3>Search for Restaurants and Recreational Zones</h3></div>
         
         <div class="col-md-12 d-flex justify-content-center">
-            <form class="form-inline" action="{% url 'home' %}" method="POST">
+            <form class="form-inline" action="{% url 'restaurants:result' %}" method="POST">
                 {% csrf_token %}
                 {{form.city}}
                 {{form.restaurant_name}}

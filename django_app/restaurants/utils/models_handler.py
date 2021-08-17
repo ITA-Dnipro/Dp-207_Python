@@ -1,0 +1,2 @@
+class RestaurantModel():
+    pass

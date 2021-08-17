@@ -49,7 +49,7 @@ services:
         ports:
             - 4800:4800
         volumes:
-            - .:/usr/src/app
+            - ./flask_restaurants_service:/usr/src/app
     flask_weather:
         build: ./flask_weather_service
         restart: always
