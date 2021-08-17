@@ -14,6 +14,3 @@ class ApiHandlerTest(TestCase):
         response = get_weather_from_api(city=CITY['city_name'])
         agent_data = response["result"][0]['forecast'][0]
         self.assertEqual(agent_data["current_date"], "2021-08-12")
-
-
-

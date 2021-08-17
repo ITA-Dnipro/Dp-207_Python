@@ -27,24 +27,21 @@ def get_weather_in_city(request):
     if request.method == "POST":
         city = request.POST.get("city").capitalize()
         weather_object = WeatherHandler(city)
-        if not weather_object.create_weather_in_new_city():
+
+        if not weather_object.get_weather_from_api_and_create_model():
             messages.warning(request, 'City does not exist!')
             return redirect('weather:main')
-            #return render(request, 'weather/main_weather.html', {})
 
-        # weather_in_city = weather_object.get_weather_in_city_from_model()
-        # form = WeatherForm()
-        # return render(request, "weather/weather_results.html", {"weather_info": weather_in_city,
-        #                                                                 "form": form, "city": city})
-
-        if CACHE_KEY in cache:
+        elif CACHE_KEY in cache:
             weather_in_city = cache.get(CACHE_KEY)
             form = WeatherForm()
-            return render(request, "weather/weather_results.html", {"weather_info": weather_in_city,
-                                                                    "form": form, "city": city})
+            return render(request, "weather/weather_results.html",
+                          {"weather_info": weather_in_city,
+                           "form": form, "city": city})
         else:
-            weather_in_city = weather_object.get_weather_in_city_from_model()
+            weather_in_city = weather_object.get_weather_from_model()
             cache.set(CACHE_KEY, weather_in_city, timeout=CACHE_TTL)
             form = WeatherForm()
-            return render(request, "weather/weather_results.html", {"weather_info": weather_in_city,
-                                                                    "form": form, "city": city})
+            return render(request, "weather/weather_results.html",
+                          {"weather_info": weather_in_city,
+                           "form": form, "city": city})

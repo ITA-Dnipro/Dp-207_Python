@@ -9,41 +9,26 @@ from weather.utils.api_handler import get_weather_from_api
 
 class TestWeatherModel(TestCase):
 
-    @mock.patch('weather.utils.logic.get_weather_from_api', side_effect=WEATHER_DATA)
-    def test_create_weather_in_city(self, mock, city=CITY['city_name']):
+    @mock.patch('weather.utils.logic.WeatherHandler.get_weather_from_api_and_create_model', side_effect=WEATHER_DATA)
+    def test_get_weather_from_api_and_create_model(self, mock, city=CITY['city_name']):
         instance = WeatherHandler(city)
-        instance.create_weather_in_city(WEATHER_DATA)
-        self.assertTrue(City.objects.get(name=city))
-        self.assertEqual(len(Weather.objects.all()), 4)
 
-    # @mock.patch('weather.utils.logic.get_weather_from_api', side_effect=WEATHER_DATA)
-    # def test_get_weather_in_city_from_model(self, mock, city=CITY['city_name']):
-    #     instance = WeatherHandler(city)
-    #     c = instance.get_city_from_city_model()
-    #     result = Weather.objects.filter(city=c)
-    #     # weather_in_city = instance.get_weather_in_city_from_model()
-    #     self.assertEqual(c, city)
-    #     # self.assertEqual(weather_in_city[0]['current_date'], '2021-08-12')
+        self.assertTrue(instance.get_weather_from_api_and_create_model())
 
-    # @mock.patch('weather.utils.logic.get_weather_from_api', side_effect=WEATHER_DATA)
-    # def test_create_weather_city_not_in_model(self, mock, city=CITY['city_name']):
-    #     instance = WeatherHandler(city)
-    #     city = False
-    #     instance.create_weather_in_new_city() # doesn't work :(
-    #     self.assertTrue(City.objects.get(name=city))
-    #     self.assertEqual(len(Weather.objects.all()), 4)
-
-    @mock.patch('weather.utils.logic.get_weather_from_api', side_effect=WEATHER_DATA)
-    def test_delete_weather_in_city(self, mock, city=CITY['city_name']):
-        instance = WeatherHandler(city)
-        instance.delete_weather_in_city()
-        self.assertEqual(len(Weather.objects.all()), 0)
-
-    @mock.patch('weather.utils.logic.get_weather_from_api', side_effect=WEATHER_DATA)
+    @mock.patch('weather.utils.logic.WeatherHandler.get_weather_from_api_and_create_model', side_effect=WEATHER_DATA)
     def test_get_city_from_city_model(self, mock, city=CITY['city_name']):
         instance = WeatherHandler(city)
-        c = instance.get_city_from_city_model()
-        self.assertTrue(City.objects.get(name=c))
+        city_name = instance.get_city_from_city_model()
+
+        self.assertTrue(City.objects.get(name=city_name))
+
+
+    @mock.patch('weather.utils.logic.get_weather_from_api', side_effect=WEATHER_DATA)
+    def test_get_weather_from_api_and_create_model1(self, mock, city_name=CITY['city_name']):
+        instance = WeatherHandler(city_name)
+        instance.get_weather_from_api_and_create_model()
+        self.assertTrue(City.objects.get(name=city_name))
+
 
     def tearDown(self):
         City.objects.all().delete()

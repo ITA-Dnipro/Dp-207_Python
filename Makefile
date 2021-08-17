@@ -22,6 +22,6 @@ postgres:
 	docker exec -it dp-207_python_postgres_server_1 sh
 
 start:
-	cp ./django_app/.env.example ./django_app/.env && docker-compose up --build
+	docker-compose up --build
 
 build: start migrate
