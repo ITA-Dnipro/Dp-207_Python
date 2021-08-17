@@ -2,9 +2,12 @@ import json
 from datetime import datetime
 
 from django.shortcuts import redirect, render
-from services.transport_app.view_utils.view_helpers import get_route_data
+from services.transport_app.view_utils.view_helpers import get_route_data, create_user_dict
 
 from .forms import RouteForm
+from services.statistics_app.celery_utils.celery_tasks.transport_app.transport_tasks_1 import (
+    save_transport_data_to_mongo_db
+)
 
 
 def route_view(request, route_name):
@@ -17,6 +20,13 @@ def route_view(request, route_name):
         'cars_data': route_data.get('cars_data'),
         'trains_data': route_data.get('trains_data'),
     }
+    #
+    user_data = create_user_dict(user_data=request.user)
+    #
+    save_transport_data_to_mongo_db.apply_async(
+        kwargs={'route_data': route_data, 'user_data': user_data},
+        serializers='pickle'
+    )
     #
     return render(
         request,
