@@ -13,7 +13,7 @@ from transport.tests_data.train_data import route_train
 @pytest.fixture(scope='function')
 def add_car_data_to_db(django_db_blocker):
     '''
-    Fixture that populates test database's route and car tables
+    Fixture that populates tests database's route and car tables
     with route and car data
     '''
     with django_db_blocker.unblock():
@@ -24,7 +24,7 @@ def add_car_data_to_db(django_db_blocker):
 @pytest.fixture(scope='function')
 def add_train_data_to_db(django_db_blocker):
     '''
-    Fixture that populates test database's route and train tables
+    Fixture that populates tests database's route and train tables
     with route and train data
     '''
     with django_db_blocker.unblock():
