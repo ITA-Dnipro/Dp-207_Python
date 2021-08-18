@@ -3,7 +3,7 @@ import requests
 GET_WEATHER_API_URL = "http://flask_weather:5002/appi/get_weather_by_city"
 
 
-def get_weather_from_api(city):
+def get_weather_from_api(city: object) -> object:
     """
     Get data from API from Flask
     """
