@@ -78,12 +78,9 @@ class PoezdUaSpider(scrapy.Spider):
                         #
                         result_train_dict['train_name'] = train.get('name')
                         result_train_dict['train_number'] = train.get('number')
-                        result_train_dict['train_uid'] = (
-                            station_type.get(
-                                'trains_uids'
-                            ).get(
-                                train.get('number')
-                            )
+                        result_train_dict['train_uid'] = get_train_uid(
+                            station_type=station_type,
+                            train=train
                         )
                         result_train_dict['departure_name'] = (
                             train.get('station_from', {}).get('name')
@@ -113,3 +110,17 @@ class PoezdUaSpider(scrapy.Spider):
                         result_dict['trips'].append(result_train_dict)
         #
         yield result_dict
+
+
+def get_train_uid(station_type, train):
+    '''
+    Return train uid from station_type dict
+    '''
+    train_uuids = station_type.get('trains_uids')
+    if isinstance(train_uuids, dict):
+        train_number = train.get('number')
+        train_uid = train_uuids.get(train_number)
+        return train_uid
+    else:
+        train_uid = None
+        return train_uid

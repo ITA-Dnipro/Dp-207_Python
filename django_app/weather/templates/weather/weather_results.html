@@ -11,11 +11,12 @@
                 <div class="current">
                     <div class="info">
                         <div>&nbsp;</div>
-                        <div class="city"><small><small>CITY:</small></small> {{ weather_info.city }}</div>
-                        <div class="temp">{{ weather_info.temperature }}&deg; <small>C</small></div>
-                        <div class="wind"><small><small>FEELS LIKE:</small></small> {{ weather_info.feels_like }}</div>
-                        <div class="wind"><small><small>WIND:</small></small> {{ weather_info.wind }}</div>
-                        <div class="wind"><small><small>CLOUDS:</small></small> {{ weather_info.clouds }}</div>
+                        <div class="city">{{ city }}</div>
+                        <p>{{ weather_info.0.current_date|date:"d-m-Y" }}</p>
+                        <div class="temp">{{ weather_info.0.current_temp }}&deg; <small>C</small></div>
+                        <div class="wind"><small><small>FEELS LIKE:</small></small> {{ weather_info.0.feels_like }}</div>
+                        <div class="wind"><small><small>WIND:</small></small> {{ weather_info.0.wind }}</div>
+                        <div class="wind"><small><small>CLOUDS:</small></small> {{ weather_info.0.clouds }}</div>
 
                         <div>&nbsp;</div>
                     </div>
@@ -25,16 +26,16 @@
                 </div>
                 <div class="future">
                     <div class="day">
-                        <h5>Description</h5>
-                        <p>{{ weather_info.description }}</p>
+                        <h5>{{weather_info.1.current_date|date:"d-m-Y"}}</h5>
+                        <p>{{weather_info.1.description}}</p>
                     </div>
                     <div class="day">
-                        <h5>Humidity</h5>
-                        <p>{{ weather_info.humidity }}</p>
+                        <h5>{{weather_info.2.current_date|date:"d-m-Y"}}</h5>
+                        <p>{{weather_info.2.description}}</p>
                     </div>
                     <div class="day">
-                        <h5>Clouds</h5>
-                        <p>{{ weather_info.clouds }}</p>
+                        <h5>{{weather_info.3.current_date|date:"d-m-Y"}}</h5>
+                        <p>{{weather_info.3.description}}</p>
                     </div>
                 </div>
             </div>
@@ -43,4 +44,5 @@
 </div>
 
 {% endblock %}
+
 
