@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from celery.schedules import crontab
+
 
 load_dotenv()
 
@@ -163,3 +165,29 @@ CELERY_RESULT_BACKEND = 'redis://redis_server:6379/0'
 #         "schedule": 15.0,
 #     },
 # }
+
+CELERY_BEAT_SCHEDULE = {
+    "delete_all_from_weather_model": {
+        "task": "weather.tasks.delete_all_from_weather_model",
+        "schedule": crontab(minute='*/59'),
+    },
+}
+
+# cache settings
+
+CACHE_REDIS_HOST = os.environ['CACHE_REDIS_HOST']
+CACHE_REDIS_PORT = os.environ['CACHE_REDIS_PORT']
+CACHE_REDIS_DB = os.environ['CACHE_REDIS_DB']
+CACHE_REDIS_URL = os.environ['CACHE_REDIS_URL']
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        "LOCATION": os.getenv('CACHE_REDIS_URL', 'redis://127.0.0.1:6379'),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+}
+
+SESSION_EXPIRATION = 10 * 60     # x * 60 seconds
