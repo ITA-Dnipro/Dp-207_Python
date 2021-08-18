@@ -45,4 +45,5 @@ vine==5.0.0
 wcwidth==0.2.5
 loguru
 djangorestframework
+beautifulsoup4
 django-redis==5.0.0
