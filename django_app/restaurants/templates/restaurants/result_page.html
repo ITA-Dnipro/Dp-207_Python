@@ -5,10 +5,12 @@
     <style>
         .content-box{
             height: 150px;
-            border-top: 1px solid rgba(153, 153, 153, 0.933)
+            border-top: 1px solid rgba(153, 153, 153, 0.933);
+            margin-top: 2rem;
         }
         .content-box h5{
             margin: 1rem 0 0 0;
+
         }
         .photo-box{
             max-height: 106px;
@@ -31,11 +33,28 @@
         .pagination-box li a{
             border: 1px solid rgba(153, 153, 153, 0.933);
         }
+        .row{
+            margin-top: 1rem;
+        }
+        .search-box{
+            padding-top: 0.3rem;
+        }
     </style>
 </head>
 <div class="container">
     <div class="row">
-        <h3 class="text-center">Restaurants and Recreational Zones in {{ form.city.value|title }}:</h3>
+        <div class="col-md-4 search-box">
+            <div class="col-md-12 d-flex justify-content-center">
+                <form class="form-inline" action="{% url 'restaurants:result' %}" method="POST">
+                    {% csrf_token %}
+                    {{form.city}}
+                    <input type="submit" class="btn btn-primary btn-sm" value="Search">
+                </form>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h3 class="text-left">Restaurants and Recreational Zones in {{ form.city.value|title }}:</h3>
+        </div>
         
         {% for restaurant in restaurants %}
         <div class="row content-box">
