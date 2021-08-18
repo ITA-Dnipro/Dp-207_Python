@@ -61,7 +61,7 @@ class TestHotelModel(TestCase):
             hotel.full_clean()
 
     def test_valid_hotel(self):
-        hotel = Hotel.objects.get(name='test name')
+        hotel = Hotel.objects.get(name='tests name')
         self.assertEqual(hotel.adress, 'test_adress')
         self.assertEqual(hotel.price, 'test_price')
         self.assertEqual(hotel.details, 'test_details')
@@ -69,18 +69,18 @@ class TestHotelModel(TestCase):
         self.assertEqual(hotel.contacts, 'test_contacts')
         self.assertEqual(hotel.href, 'test_href')
         self.assertEqual(hotel.city.name, 'Киев')
-        self.assertEqual(hotel.slug, 'test-name')
+        self.assertEqual(hotel.slug, 'tests-name')
         file = hotel.url.split('/')[-1]
         self.assertTrue(os.path.isfile(f"/usr/src/app/django_app/mediafiles/media/{file}"))
 
     def test_method_str(self):
-        hotel = Hotel.objects.get(name='test name')
-        self.assertEqual(str(hotel), 'test name')
+        hotel = Hotel.objects.get(name='tests name')
+        self.assertEqual(str(hotel), 'tests name')
 
     def test_get_absolute_url(self):
-        hotel = Hotel.objects.get(name='test name')
+        hotel = Hotel.objects.get(name='tests name')
         url = hotel.get_absolute_url()
-        self.assertEqual(url, f'/hotels/hotel/%3Fhotel_id={hotel.pk}/test-name')
+        self.assertEqual(url, f'/hotels/hotel/%3Fhotel_id={hotel.pk}/tests-name')
 
     def test_get_rooms(self):
         hotel = Hotel(price=f'{{"price":"{PRICE}"}}')

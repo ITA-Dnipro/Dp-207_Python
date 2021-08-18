@@ -59,7 +59,7 @@ def mocked_request_for_creating_comment_and_rating():
 
                 def get(self, text):
                     if text == 'text':
-                        return 'test text'
+                        return 'tests text'
                     elif text == 'mark':
                         return 5
             self.user = MockUser(1)

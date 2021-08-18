@@ -1,4 +1,5 @@
 import os
+import sys
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher import FSMContext
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -50,6 +51,9 @@ async def enter_weather(message: types.Message):
 @dp.message_handler(state=Weather.get_city)
 async def answer_get_city(message: types.Message, state: FSMContext):
     data = await get_cities(message.text)
+    if 'msg' in data:
+        await message.answer(data['msg'])
+        await state.finish()
     await message.answer(f'Температура: {data["temperature"]}')
     await state.finish()
 
@@ -105,4 +109,6 @@ async def answer_date(message: types.Message, state: FSMContext):
 
 
 if __name__ == '__main__':
+    if API_TOKEN == 'NOT_A_TOKEN':
+        sys.exit()
     executor.start_polling(dp, skip_updates=True)
