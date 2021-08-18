@@ -22,6 +22,15 @@
         .info-box p{
             margin-bottom: 0.2rem;
         }
+        .pagination-box{
+            padding: 0;
+        }
+        .pagination-box li{
+            list-style-type: None;
+        }
+        .pagination-box li a{
+            border: 1px solid rgba(153, 153, 153, 0.933);
+        }
     </style>
 </head>
 <div class="container">
@@ -38,13 +47,18 @@
             </div>
             <div class="col-md-3 info-box">
                 <p>{{ restaurant.timetable }}</p>
-                <p>price level: {{ restaurant.price_lvl }}$</p>
+                <p>{{ restaurant.price_lvl }}</p>
                 <p>rating: {{ restaurant.rating }}</p>
-                
-                
             </div>
         </div>
         {% endfor %}
+        <nav>
+            <ul class="pagination-box">
+                <li>
+                    <a href="{% url 'home' %}" class="btn btn-white">Next page</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>
 

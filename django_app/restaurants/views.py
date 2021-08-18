@@ -11,6 +11,6 @@ def result_page(request):
         form = RestaurantSearchForm(request.POST)
         if form.is_valid():
             city = form.cleaned_data['city']
-            restaurants = api_handler.get_restaurants_from_api(city)
+            restaurants = api_handler.get_restaurants_from_api(city=city)
     context = {'form': form, 'restaurants': restaurants}
     return render(request, 'restaurants/result_page.html', context)
