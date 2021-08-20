@@ -5,6 +5,7 @@ from weather.test_data.weather_data import CITY, WEATHER_DATA
 from hotels.models import City
 from weather.models import Weather
 from weather.utils.api_handler import get_weather_from_api
+from unittest.mock import Mock
 
 
 class TestWeatherModel(TestCase):
@@ -21,14 +22,6 @@ class TestWeatherModel(TestCase):
         city_name = instance.get_city_from_city_model()
 
         self.assertTrue(City.objects.get(name=city_name))
-
-
-    @mock.patch('weather.utils.logic.get_weather_from_api', side_effect=WEATHER_DATA)
-    def test_get_weather_from_api_and_create_model1(self, mock, city_name=CITY['city_name']):
-        instance = WeatherHandler(city_name)
-        instance.get_weather_from_api_and_create_model()
-        self.assertTrue(City.objects.get(name=city_name))
-
 
     def tearDown(self):
         City.objects.all().delete()

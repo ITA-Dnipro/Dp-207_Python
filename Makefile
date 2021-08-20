@@ -21,6 +21,9 @@ unittest_hotels:
 postgres:
 	docker exec -it dp-207_python_postgres_server_1 sh
 
+sh:
+	docker exec -it dp-207_python_djangoserver_1 sh
+
 start:
 	docker-compose up --build
 
