@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'statistics_app',
     'user_profile',
     'rest_framework',
+    'restaurants',
 ]
 
 MIDDLEWARE = [
