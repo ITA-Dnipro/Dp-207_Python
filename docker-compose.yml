@@ -27,17 +27,6 @@ services:
         depends_on: 
             - postgres_server
             - redis_server
-    transport_parser:
-        build: ./transport_parser
-        restart: always
-        env_file: ./transport_parser/.env
-        ports: 
-            - 4500:4500
-        depends_on:
-            - postgres_server
-            - djangoserver
-        volumes: 
-            - ./transport_parser:/usr/src/app
     flask_hotels:
         build: ./flask_hotels_service
         restart: always
