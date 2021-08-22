@@ -116,6 +116,10 @@
 					</form>
 				</div>
 				<div class="message-class text-center">
+					{% for message in messages %}
+						<br>
+						<p id="messages">{{message}}</p>
+					{% endfor %}		
                 	{% for field in form %}
 						{% if field.errors %}						
                     	<p id='messages'>{{ field.errors.as_text|slice:"2:" }}</p>

@@ -1,9 +1,13 @@
+from django.contrib.auth.forms import UsernameField
 from django.shortcuts import render, redirect
 from .forms import UpdateNicknameForm, UpdateEmailForm, UpdatePasswordForm, UpdateForm
 from django.contrib import messages
 
 
 def change_data(request):
+    if not request.user.is_authenticated:
+        messages.error(request, f"You need to be authenticated to do this action.")
+        return redirect('user_auth:sign_up')
     form = UpdateForm()
     if request.method == 'POST':
         if 'Change Nickname' in request.POST:
@@ -45,5 +49,13 @@ def change_data(request):
     return render(request, 'user_profile/user_profile.html', context)
 
 def del_page(request):
+    if request.method == 'POST' and "Delete" in request.POST:   
+        username = request.user
+        request.user.delete()
+        messages.success(request, f"The user {username} has deleted.")
+        return redirect('user_auth:sign_up')
+    elif not request.user.is_authenticated:
+        messages.error(request, f"You need to be authenticated to do this action.")
+        return redirect('user_auth:sign_up')
     context = {}
     return render(request, 'user_profile/del_page.html', context)

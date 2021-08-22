@@ -11,7 +11,10 @@
             <h1>Are you sure to delete your profile, {{ request.user }}?</h1>
             <h5>This action cannot be canceled, your profile would be deleted forever</h5>
             <div class="d-flex justify-content-center answer-buttons">
-                <a class="btn btn-danger pass-btn col-md-6" style="margin-right:1rem;">Yes</a>
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger pass-btn col-md-6" style="margin-right:1rem;" name="Delete">Yes</button>
+                </form>
                 <a class="btn btn-success pass-btn col-md-6" href="{% url 'user_profile:user_profile' %}">No</a>
             </div>
         </div>
