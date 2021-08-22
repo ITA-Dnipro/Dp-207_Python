@@ -74,8 +74,6 @@ def get_geo_location(city):
     address = city
     geolocator = Nominatim(user_agent="e_mandruy")
     location = geolocator.geocode(address)
-    print(location)
-    print(location.latitude, location.longitude)
     return location.latitude, location.longitude
 
 
