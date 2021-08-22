@@ -6,12 +6,15 @@
         .icon-img {
             background-color: rgb(29, 29, 29);
             color: white;
-            font-size: 15rem;
-        }
-        .icon-img::after {
-            content: "";
-            padding-top: 100%;
-            display: block;
+            aspect-ratio: 1 / 1;
+            position: relative;
+        }   
+        .icon-img__letter {
+            position: absolute;
+            top: 50%;
+            left:50%;
+            transform: translate(-50%, -50%);
+            font-size: clamp(14px, 25vw, 100px);
         }
         .name-mail h3, p {
             margin-bottom: 0;
@@ -32,14 +35,19 @@
             font-weight: 600;
         }
         .form-group form input {
-            width: 230px;
+            width: 100%;
             border: 1px solid #cccccc;
             border-radius: 3px;
             -webkit-border-radius: 3px;
             -moz-border-radius: 3px;
             -khtml-border-radius: 3px;
             background: #ffffff !important;
-            height: 35px;
+            padding: 5px 10px;
+            margin: 10px 0;
+        }
+        #id_username, #id_email {
+            display: block;
+            width: 50%
         }
         .pass-btn{
             margin-top:1rem;
@@ -50,7 +58,9 @@
     {% csrf_token %}
     <div class="container">
         <div class="row">
-            <div class="col-md-4 icon-img d-flex justify-content-center"> {{request.user.username|first|capfirst}} </div>
+            <div class="col-md-4">
+                <div class="icon-img"><span class="icon-img__letter">{{request.user.username|first|capfirst}}</span></div>        
+                </div>
             <div class="col-md-8 name-mail">
                 <div class="elements">
                     <h3> {{request.user.username}}</h3>
@@ -71,23 +81,21 @@
                     </form>
                     <form method="POST">
                         <hr>
-                        <div class="container" style="padding:0%">
                             <div class="row">
                                 {% csrf_token %}
-                                <div class="col-md-4">
+                                <div class="col-md-4 d-flex flex-column justify-content-between">
                                     <span>Old password:</span>
                                     {{form.old_password}}
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4 d-flex flex-column justify-content-between">
                                     <span>New password:</span>
                                     {{form.new_password1}}
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4 d-flex flex-column justify-content-between">
                                     <span>New password-confirmation:</span>
                                     {{form.new_password2}}
                                 </div>
                             </div>
-                        </div>
                         <button type="submit" class="btn btn-success pass-btn">Change Password</button>
                     </form>
                     <hr>
