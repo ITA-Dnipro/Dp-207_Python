@@ -6,8 +6,7 @@
         .icon-img {
             background-color: rgb(29, 29, 29);
             color: white;
-            font-size: 13rem;
-
+            font-size: 15rem;
         }
         .icon-img::after {
             content: "";
@@ -16,7 +15,6 @@
         }
         .name-mail h3, p {
             margin-bottom: 0;
-
         }
         .container-fluid {
             padding-top: 5%;
@@ -92,6 +90,10 @@
                         </div>
                         <button type="submit" class="btn btn-success pass-btn" name="Change Password">Change Password</button>
                     </form>
+                    <hr>
+                    <div >
+                        <a class="btn btn-danger pass-btn" name="Delete Profile" style="margin-top:0;" href="{% url 'user_profile:del_page' %}">Delete Profile</a>
+                    </div>
                 </div>
             </div>
             {% for message in messages %}
@@ -102,7 +104,8 @@
                 {% endif %}
                 {% if message.tags == "error" %}
             <div class="col-md-12 msg-class-error text-center">
-                <p class="msg-text">{{message}}</p>
+                <p class="msg-text">{{message}}</p>				
+                <p>{{ form.email.error }}</p>
             </div>
                 {% endif %}
             {% endfor %}
