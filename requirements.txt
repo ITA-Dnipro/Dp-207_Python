@@ -1,6 +1,7 @@
 amqp==5.0.6
 asgiref==3.4.1
 attrs==21.2.0
+beautifulsoup4==4.9.3
 billiard==3.6.4.0
 celery==5.1.2
 certifi==2021.5.30
@@ -12,10 +13,14 @@ click-repl==0.2.0
 coverage==5.5
 Django==3.2.5
 django-dotenv==1.4.2
+django-redis==5.0.0
+djangorestframework==3.12.4
+dnspython==1.16.0
 flake8==3.9.2
 idna==3.2
 iniconfig==1.1.1
 kombu==5.1.0
+loguru==0.5.3
 lxml==4.6.3
 mccabe==0.6.1
 mongoengine==0.23.1
@@ -38,12 +43,9 @@ redis==3.5.3
 requests==2.26.0
 responses==0.13.3
 six==1.16.0
+soupsieve==2.2.1
 sqlparse==0.4.1
 toml==0.10.2
 urllib3==1.26.6
 vine==5.0.0
 wcwidth==0.2.5
-loguru
-djangorestframework
-beautifulsoup4
-django-redis==5.0.0

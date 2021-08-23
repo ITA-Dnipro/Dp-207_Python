@@ -54,20 +54,6 @@ services:
         ports:
             - 5672:5672
             - 15672:15672
-    statistics_mongo_db_server:
-        build: ./statistics_mongo_db_server
-        restart: always
-        env_file: ./statistics_mongo_db_server/.env
-        ports: 
-            - '27017-27019:27017-27019'
-    statistics_mongo_express:
-        build: ./statistics_mongo_express
-        restart: always
-        env_file: ./statistics_mongo_express/.env
-        ports: 
-            - 8081:8081
-        depends_on: 
-            - statistics_mongo_db_server
     tg_bot:
         build: ./tg_bot
         restart: always
