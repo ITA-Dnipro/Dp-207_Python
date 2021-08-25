@@ -59,3 +59,18 @@ def get_hotel_rooms():
         return jsonify(result), 200
     except SomeProblemWithParsing as e:
         return jsonify({'msg': e.msg}), 500
+
+
+# create endpoint to get city
+@api_blu.route('/get_city', methods=['POST'])
+@check_token
+def get_city():
+    if not request.get_json():
+        return jsonify({'msg': 'wrong request'}), 403
+    try:
+        if Scraper(**request.get_json()).parser.find_city_url():
+            return jsonify({'answer': 'Exist'}), 200
+    except SomeProblemWithParsing as e:
+        return jsonify({'msg': e.msg}), 500
+    except CityNotExists as e:
+        return jsonify({'msg': e.msg}), 404

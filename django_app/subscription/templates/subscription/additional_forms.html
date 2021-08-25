@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content%}
+    <div>Hello</div>
+    <form action="{% url 'subscription:additional_form' period=period services=services %} " method="post">
+        {% csrf_token %}
+        <div class="col-6 col-md-4">
+            {% for field in form %}
+                <div class="form-group row">{{ field.label_tag }} {{ field }}</div>
+                {% if field.errors %}
+                    <div class="alert alert-danger">
+                        {{ field.label_tag }}{{ field.errors }}
+                    </div>
+                {% endif %}
+                {% if field.help_text %}
+                    <p class="help">{{ field.help_text|safe }}</p>
+                {% endif %}
+            {% endfor %}
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            {{ form.non_field_errors}}
+        </div>
+        {% endif %}
+        </div>
+        <div class="row">
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <br>
+        <input type="submit" class="form-control btn btn-primary">
+    </form>
+{% endblock %}

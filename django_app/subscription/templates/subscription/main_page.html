@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content%}
+    <form action = "{% url 'subscription:main' %}" method="post">
+        {% csrf_token %}
+        <fieldset id="services">
+            <div>
+                <div>
+                    <label for="services">Services: </label>
+                </div>
+                <div>
+                    <input type="checkbox" id="weather_id" name="weather" onclick="change(this)">
+                    <label for="weather">Weather</label>
+                    <fieldset id="info_for_weather" hidden disabled>
+                        <label for="city_for_weather_id">City: </label>
+                        <input type="text" id="city_for_weather_id" name='city_for_weather' required=true>
+                        <label for="date_of_expire_for_weather_id">Date of expire: </label>
+                        <input type="date" id="date_of_expire_for_weather_id" name='date_of_expire_for_weather' required=true onchange="checkdate(this)">
+                    </fieldset>
+                </div>
+                <div>
+                    <input type="checkbox" id="hotels_id" name="hotels" onclick="change(this)">
+                    <label for="hotels">Hotels</label>
+                    <fieldset id="info_for_hotels" hidden disabled>
+                        <label for="city_for_hotels_id">City: </label>
+                        <input type="text" id="city_for_hotels_id" name='city_for_hotels' required=true>
+                        <label for="date_of_expire_for_hotels_id">Date of expire: </label>
+                        <input type="date" id="date_of_expire_for_hotels_id" name='date_of_expire_for_hotels' required=true onchange="checkdate(this)">
+                    </fieldset>
+                </div>
+                <div>
+                    <input type="checkbox" id="transport_id" name="transport" onclick="change(this)">
+                    <label for="transport">Transport</label>
+                    <fieldset id="info_for_transport" hidden disabled>
+                        <label for="city_of_arrival_for_hotels_id">City of arrival: </label>
+                        <input type="text" id="city_of_arrival_for_transport_id" name='city_of_arrival_for_hotels' required=true>
+                        <label for="city_of_departure_for_hotels_id">City of departure: </label>
+                        <input type="text" id="city_of_departure_for_transport_id" name='city_of_departure_for_hotels' required=true>
+                        <label for="date_of_expire_for_hotels_id">Date of expire: </label>
+                        <input type="date" id="date_of_expire_for_hotels_id" name='date_of_expire_for_hotels' required=true onchange="checkdate(this)">
+                    </fieldset>
+                </div>
+            </div>  
+        <br>
+        <input type="submit" id="111"></input>
+    </form>
+    <div class="row">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <script>
+        function change(el){
+            let fieldset = this.document.getElementById('info_for_' + el.name)
+            if (fieldset.hidden==true){
+                fieldset.hidden=false
+                fieldset.disabled=false
+            } else {
+                fieldset.hidden=true
+                fieldset.disabled=true
+            }
+        }
+        function checkdate(el){
+            let today = new Date()
+            if (Date.parse(el.value) <= Date.parse(today)){
+                alert ( "You can't submit in the past. Please change the date" );
+                valid = false;
+                el.value = NaN
+            }
+            return valid;
+        }
+    </script>
+
+    {% endblock %}

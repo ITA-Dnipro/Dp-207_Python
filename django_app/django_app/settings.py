@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'hotels',
     'weather',
     'user_profile',
-    'rest_framework'
+    'rest_framework',
+    'subscription'
 ]
 
 MIDDLEWARE = [

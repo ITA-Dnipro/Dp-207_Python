@@ -11,7 +11,6 @@ from .utils.api_handler import get_for_hotel_rooms, send_msg
 from .tasks import send_order_email, send_new_order_msg_to_tg
 
 
-
 # create view for main page of hotels app
 def main_page(request):
     # get sorted hotels by rating

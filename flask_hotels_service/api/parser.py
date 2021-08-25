@@ -143,11 +143,11 @@ class ScraperForCityHotels():
         data['href'] = href
         return data
 
-    def find_city_url(self, url):
+    def find_city_url(self):
         """
         Find the appropriate url for the searched city
         """
-        url_for_all_cities = self.find_url_for_cities(url)
+        url_for_all_cities = self.find_url_for_cities(self.URL)
         tree = self.request(url_for_all_cities)
         cities = tree.xpath('//div[@class="catalog-name-region"]/following-sibling::ul/li/a[@class="regionSmallReg"]/text()')
         hrefs = tree.xpath('//div[@class="catalog-name-region"]/following-sibling::ul/li/a[@class="regionSmallReg"]/@href')
@@ -174,7 +174,7 @@ class ScraperForCityHotels():
         """
         Go around urls for hotels and return json with detail info for hotels
         """
-        urls = self.find_urls_for_hotels_in_city(self.find_city_url(ScraperForCityHotels.URL))
+        urls = self.find_urls_for_hotels_in_city(self.find_city_url())
         with concurrent.futures.ThreadPoolExecutor(max_workers=20) as p:
             data = list(p.map(self.find_detail, urls))
         return json.dumps(data, ensure_ascii=False)
@@ -216,4 +216,4 @@ if __name__ == '__main__':
          'date_of_departure': '30.08.2021',
          'date_of_arrival': '17.08.2021'}
     a = {'city': 'Киев'}
-    # print(Scraper(**a).parse())
+    print(Scraper(**a).parse())
