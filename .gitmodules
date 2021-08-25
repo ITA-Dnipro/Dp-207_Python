@@ -1,0 +1,4 @@
+[submodule "transport_parser"]
+	path = transport_parser
+	url = https://github.com/ITA-Dnipro/Dp-207_Python_e-mandruy_transports_api.git
+	branch = master
