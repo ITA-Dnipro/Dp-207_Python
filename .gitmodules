@@ -2,3 +2,6 @@
 	path = transport_parser
 	url = https://github.com/ITA-Dnipro/Dp-207_Python_e-mandruy_transports_api.git
 	branch = master
+[submodule "flask_hotels_service"]
+	path = flask_hotels_service
+	url = https://github.com/ITA-Dnipro/Dp-207_Python_e-mandruy_hotels_api.git
