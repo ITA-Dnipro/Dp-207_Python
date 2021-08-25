@@ -2,12 +2,9 @@ from django.test import TestCase
 from django.urls import reverse
 from unittest import mock
 from django.http import HttpRequest
-from django.test import Client
 
 from weather.utils.logic import WeatherHandler
 from weather.test_data.weather_data import CITY, WEATHER_DATA
-from weather.models import Weather
-from hotels.models import City
 from weather.views import main_weather, get_weather_in_city
 
 
@@ -32,18 +29,19 @@ class MainWeatherViewTest(TestCase):
 
 class GetWeatherInCityViewTest(TestCase):
 
-    def setUp(self):
-        c = Client()
-
-    @mock.patch('weather.views.get_weather_in_city', side_effect=WEATHER_DATA)
-    def test_get_weather_in_city_view(self, mock, city=CITY['city_name']):
-        instance = WeatherHandler(city)
+    @mock.patch('weather.utils.logic.get_weather_from_api', return_value=WEATHER_DATA)
+    def test_get_weather_in_city(self, mock):
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST['city'] = CITY['city_name']
+        instance = WeatherHandler(request.POST['city'])
         instance.get_weather_from_api_and_create_model()
+        weather_in_city = instance.get_weather_from_model()
 
-        self.assertTrue(City.objects.get(name=city))
-        self.assertEqual(len(Weather.objects.all()), 4)
+        self.assertEqual(weather_in_city[0].current_temp, 20.66)
+        self.assertEqual(weather_in_city[0].description, 'clear sky')
 
-    def test_get_weather_in_city_view_can_save_a_POST_request(self):
+    def test_get_weather_in_city_view_can_save_a_post_request(self):
         request = HttpRequest()
         request.method = 'POST'
         request.POST['city'] = 'Kyiv'

@@ -16,6 +16,4 @@ WEATHER_DATA = {'forecast':
                         'feels_like': '28.56', 'humidity': '31.00', 'icon': '01d',
                         'max_temp': '30.94', 'min_temp': '18.48', 'wind': '3.42'}]}
 
-
-URL = 'http://flask_weather:5002/appi/get_weather_by_city'
 CITY = {'city_name': 'Kyiv'}
