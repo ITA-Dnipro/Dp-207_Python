@@ -27,13 +27,6 @@ services:
         depends_on: 
             - postgres_server
             - redis_server
-    flask_hotels:
-        build: ./flask_hotels_service
-        restart: always
-        ports:
-            - 5001:5001
-        volumes:
-            - .:/usr/src/app
     flask_restaurants:
         build: ./flask_restaurants_service
         restart: always
