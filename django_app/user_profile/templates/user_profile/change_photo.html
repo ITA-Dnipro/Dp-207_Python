@@ -1,20 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
+    <br>
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
-                <form method="POST" enctype="multipart/form-data">
+            <div class="col-md-12 d-flex justify-content-center" style="margin-bottom:1rem;">
+                <form method="POST" class="form-control-file col-md-12 text-center" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit">Upload photo</button>
+                <button type="submit" class="btn btn-primary">Upload photo</button>
                 </form>
             </div>
             <div class="col-md-12">
+                <form method="POST" class="text-center">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger pass-btn"name="Delete Photo">Delete Active Photo</button>
+                </form>
+            </div>
+            
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
                 {% if img_obj %}
-                <h3>Sucesfully uploaded photo</h3>
-                <img src="{{ img_obj.url }}" alt="connect">
+                <div class="col-md-12 text-center"><h3>Your uploaded photo: </h3></div>
+                <div class="col-md-12 d-flex justify-content-center"><img src="{{ img_obj.url }}" alt="connect"></div>
                 {% endif %}
             </div>
+            <div class="col-md-4"></div>
         </div>
     </div>
 {% endblock %}

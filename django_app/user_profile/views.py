@@ -75,16 +75,36 @@ def change_photo(request):
     if not request.user.is_authenticated:
         messages.error(request, f"You need to be authenticated to do this action.")
         return redirect('user_auth:sign_up')
+
     form = ImageForm()
     img_obj = []
-    if request.method == 'POST':
+
+    if request.method == "POST" and "Delete Photo" in request.POST:
+        PhotoForUser.objects.filter(user_id=request.user).delete()    
         form = ImageForm(request.POST, request.FILES)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.user = request.user
-            obj.save()
-            
-        img_obj = form.instance
+        return redirect('user_profile:user_profile')
+
+    elif request.method == 'POST':
+        try:
+            photos = PhotoForUser.objects.get(user_id=request.user)
+            img_obj = photos.photo
+        except PhotoForUser.DoesNotExist:
+            form = ImageForm(request.POST, request.FILES)
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.user = request.user
+                obj.save()
+                return redirect('user_profile:user_profile')
+        else:
+            PhotoForUser.objects.filter(user_id=request.user).delete()    
+            form = ImageForm(request.POST, request.FILES)
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.user = request.user
+                obj.save()
+                img_obj = form.instance
+                return redirect('user_profile:user_profile')
+
     elif request.method == 'GET':
         try:
             photos = PhotoForUser.objects.get(user_id=request.user)
