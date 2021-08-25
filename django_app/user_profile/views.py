@@ -1,14 +1,16 @@
 from django.contrib.auth.forms import UsernameField
 from django.shortcuts import render, redirect
-from .forms import UpdateNicknameForm, UpdateEmailForm, UpdatePasswordForm, UpdateForm
+from .forms import UpdateNicknameForm, UpdateEmailForm, UpdatePasswordForm, UpdateForm, ImageForm
 from django.contrib import messages
-
+from .models import PhotoForUser
 
 def change_data(request):
     if not request.user.is_authenticated:
         messages.error(request, f"You need to be authenticated to do this action.")
         return redirect('user_auth:sign_up')
+
     form = UpdateForm()
+    
     if request.method == 'POST':
         if 'Change Nickname' in request.POST:
             form = UpdateNicknameForm(request.POST, instance=request.user)
@@ -45,7 +47,15 @@ def change_data(request):
                     return redirect('user_auth:sign_in')
             else:
                 messages.error(request, f"Your password is incorrect or new password can't be entirely numeric, can't be too similar to your personal information and must contain at least 8 characters.")
-    context = {'form': form}
+    elif request.method == "GET":
+        try:
+            photos = PhotoForUser.objects.get(user_id=request.user)
+            img_obj = photos.photo
+            print(photos.photo)
+        except PhotoForUser.DoesNotExist:
+            img_obj = []  
+    
+    context = {'form': form, 'img_obj': img_obj}
     return render(request, 'user_profile/user_profile.html', context)
 
 def del_page(request):
@@ -57,5 +67,31 @@ def del_page(request):
     elif not request.user.is_authenticated:
         messages.error(request, f"You need to be authenticated to do this action.")
         return redirect('user_auth:sign_up')
+        
     context = {}
     return render(request, 'user_profile/del_page.html', context)
+
+def change_photo(request):
+    if not request.user.is_authenticated:
+        messages.error(request, f"You need to be authenticated to do this action.")
+        return redirect('user_auth:sign_up')
+    form = ImageForm()
+    img_obj = []
+    if request.method == 'POST':
+        form = ImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.save()
+            
+        img_obj = form.instance
+    elif request.method == 'GET':
+        try:
+            photos = PhotoForUser.objects.get(user_id=request.user)
+            img_obj = photos.photo
+            print(photos.photo)
+        except PhotoForUser.DoesNotExist:
+            img_obj = []
+
+    context = {'form': form, 'img_obj': img_obj}
+    return render(request, 'user_profile/change_photo.html', context)
