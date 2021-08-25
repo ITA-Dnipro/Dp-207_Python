@@ -5,6 +5,7 @@ WORKDIR /usr/src/app/
 #
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONPATH "${PYTHONPATH}:/usr/src/app/django_app/"
 #
 RUN apk update
 RUN apk add --no-cache \

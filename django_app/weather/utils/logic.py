@@ -2,65 +2,69 @@ from ..models import Weather
 from .api_handler import get_weather_from_api
 from datetime import timedelta
 from django.utils import timezone
+from hotels.models import City
 
 
 class WeatherHandler:
     """
-    Class to control the way the weather data is provided
+     Class to control the way the weather data is provided
     """
     def __init__(self, city):
         self.city = city
 
-    def create_weather_in_new_city(self):
+    def get_weather_from_api_and_create_model(self):
         """
         If the city is not in Weather model, get data by API and add it in the model.
         """
-
-        city = Weather.objects.filter(city=self.city).exists()
+        city_name = self.get_city_from_city_model()
+        city = Weather.objects.filter(city=city_name).exists()
         if not city:
             try:
                 weather_in_city = get_weather_from_api(self.city)
-
+                #print(weather_in_city)
+                forecast = weather_in_city['forecast']
             except Exception:
                 return False
-
-            self.create_weather_in_city(weather_in_city)
+            for i in range(len(forecast)):
+                self.create_weather_in_city(
+                    current_temp=forecast[i]['current_temp'],
+                    feels_like=forecast[i]['feels_like'],
+                    description=forecast[i]['description'],
+                    humidity=forecast[i]['humidity'],
+                    wind=forecast[i]['wind'],
+                    clouds=forecast[i]['clouds'],
+                    max_temp=forecast[i]['max_temp'],
+                    min_temp=forecast[i]['min_temp'],
+                    current_date=forecast[i]['current_date'],
+                    icon=forecast[i]['icon'])
         return True
 
-    def get_weather_in_city_from_model(self):
-
-        """
-        If the data was created no longer than 1 hour from now, it is retrieved from Weather
-        model. Otherwise, the 'old' data is deleted and 'new' one is added into the model.
-        """
-
-        time_limit = timezone.now() - timedelta(hours=1)
-        result = Weather.objects.filter(city=self.city).filter(created__gt=time_limit)
-        if result:
-            weather_in_city = Weather.objects.filter(city=self.city).values()[0]
-        else:
-            self.delete_weather_in_city()
-            weather_in_city = self.create_weather_in_city(get_weather_from_api(self.city))
-        return weather_in_city
-
-    def create_weather_in_city(self, data):
+    def create_weather_in_city(self, current_temp, feels_like, description,
+                               humidity, wind, clouds, max_temp, min_temp,
+                               current_date, icon):
         """
         Add weather data into Weather model
         """
-
-        weather_in_new_city = Weather.objects.create(
-            temperature=data['temperature'],
-            feels_like=data['feels_like'],
-            description=data['description'],
-            humidity=data['humidity'],
-            wind=data['wind'],
-            clouds=data['clouds'], city=self.city)
+        c = self.get_city_from_city_model()
+        weather_in_new_city = Weather(
+            current_temp=current_temp,
+            feels_like=feels_like,
+            description=description,
+            humidity=humidity,
+            wind=wind,
+            clouds=clouds,
+            max_temp=max_temp,
+            min_temp=min_temp,
+            current_date=current_date,
+            icon=icon,
+            city=c)
         weather_in_new_city.save()
-        return weather_in_new_city
-
-    def delete_weather_in_city(self):
-        """
-        Delete weather data from Weather model
-        """
-        Weather.objects.filter(city=self.city).delete()
         return True
+
+    def get_weather_from_model(self):
+        city = self.get_city_from_city_model()
+
+        return Weather.objects.filter(city=city).all()
+
+    def get_city_from_city_model(self):
+        return City.objects.get_or_create(name=self.city)[0]

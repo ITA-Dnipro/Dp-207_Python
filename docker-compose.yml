@@ -5,8 +5,10 @@ services:
         restart: always
         env_file: ./postgres_server/.env
     redis_server:
+        container_name: redis
         image: redis:alpine
         restart: always
+        env_file: django_app/.env
     pgadmin:
         build: ./pgadmin4
         restart: always
@@ -41,6 +43,13 @@ services:
         restart: always
         ports:
             - 5001:5001
+        volumes:
+            - .:/usr/src/app
+    flask_restaurants:
+        build: ./flask_restaurants_service
+        restart: always
+        ports:
+            - 4800:4800
         volumes:
             - .:/usr/src/app
     flask_weather:

@@ -3,6 +3,8 @@ source =
     ./hotels
     ./transport
     ./services/transport_app
+    ./statistics_app
+    ./services/statistics_app
 omit = 
     */tests/*
     */__init__.py
