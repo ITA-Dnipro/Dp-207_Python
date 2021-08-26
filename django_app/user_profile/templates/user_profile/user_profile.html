@@ -74,6 +74,9 @@
             height:100%;
             object-fit: cover;
         }
+        .hotels-block {
+            margin-top:1rem;
+        }
     </style>
 </head>
 
@@ -137,6 +140,7 @@
                     </div>
                 </div>
             </div>
+            
             {% for message in messages %}
                 {% if message.tags == "success" %}
             <div class="col-md-12 msg-class-success text-center">
@@ -150,6 +154,21 @@
             </div>
                 {% endif %}
             {% endfor %}
+
+            <div class="col-md-12 hotels-block">
+                {% if hotels %}
+                <h3>Your ordered hotels: </h3>
+                <hr>
+                {% for ordered_hotel in hotels %}
+                    <h5>{{ ordered_hotel.hotel }}</h5>
+                    <p>Booking date: {{ ordered_hotel.order_time }}</p>
+                    <p>Check-in date: {{ ordered_hotel.check_in }}</p>
+                    <p>Check-out date: {{ ordered_hotel.check_out }}</p>
+                    <p>Amount to pay: {{ ordered_hotel.price }}</p>
+                <hr>
+                {% endfor %}
+                {% endif %}
+            </div>
         </div> 
     </div>
     

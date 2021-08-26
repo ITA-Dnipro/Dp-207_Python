@@ -1,16 +1,30 @@
-from django.contrib.auth.forms import UsernameField
 from django.shortcuts import render, redirect
+from hotels.models import Order
 from .forms import UpdateNicknameForm, UpdateEmailForm, UpdatePasswordForm, UpdateForm, ImageForm
 from django.contrib import messages
 from .models import PhotoForUser
+import os
 
-def change_data(request):
+def user_profile(request):
     if not request.user.is_authenticated:
         messages.error(request, f"You need to be authenticated to do this action.")
         return redirect('user_auth:sign_up')
 
     form = UpdateForm()
-    
+    img_obj = []
+    hotels = []
+
+    try:
+        photos = PhotoForUser.objects.get(user_id=request.user)
+        img_obj = photos.photo
+    except PhotoForUser.DoesNotExist:
+        img_obj = []  
+
+    try:
+        hotels = Order.objects.filter(user_id=request.user)
+    except Order.DoesNotExist:
+        hotels = []
+
     if request.method == 'POST':
         if 'Change Nickname' in request.POST:
             form = UpdateNicknameForm(request.POST, instance=request.user)
@@ -47,15 +61,8 @@ def change_data(request):
                     return redirect('user_auth:sign_in')
             else:
                 messages.error(request, f"Your password is incorrect or new password can't be entirely numeric, can't be too similar to your personal information and must contain at least 8 characters.")
-    elif request.method == "GET":
-        try:
-            photos = PhotoForUser.objects.get(user_id=request.user)
-            img_obj = photos.photo
-            print(photos.photo)
-        except PhotoForUser.DoesNotExist:
-            img_obj = []  
     
-    context = {'form': form, 'img_obj': img_obj}
+    context = {'form': form, 'img_obj': img_obj, 'hotels': hotels}
     return render(request, 'user_profile/user_profile.html', context)
 
 def del_page(request):
@@ -80,7 +87,9 @@ def change_photo(request):
     img_obj = []
 
     if request.method == "POST" and "Delete Photo" in request.POST:
-        PhotoForUser.objects.filter(user_id=request.user).delete()    
+        photos = PhotoForUser.objects.get(user_id=request.user)
+        os.remove(f"mediafiles/{photos.photo}")
+        PhotoForUser.objects.filter(user_id=request.user).delete() 
         form = ImageForm(request.POST, request.FILES)
         return redirect('user_profile:user_profile')
 
@@ -96,6 +105,8 @@ def change_photo(request):
                 obj.save()
                 return redirect('user_profile:user_profile')
         else:
+            photos = PhotoForUser.objects.get(user_id=request.user)
+            os.remove(f"mediafiles/{photos.photo}")
             PhotoForUser.objects.filter(user_id=request.user).delete()    
             form = ImageForm(request.POST, request.FILES)
             if form.is_valid():
@@ -109,7 +120,6 @@ def change_photo(request):
         try:
             photos = PhotoForUser.objects.get(user_id=request.user)
             img_obj = photos.photo
-            print(photos.photo)
         except PhotoForUser.DoesNotExist:
             img_obj = []
 
