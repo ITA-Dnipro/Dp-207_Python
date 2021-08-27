@@ -34,13 +34,6 @@ services:
             - 4800:4800
         volumes:
             - .:/usr/src/app
-    flask_weather:
-        build: ./flask_weather_service
-        restart: always
-        ports:
-            - 5002:5002
-        volumes:
-            - .:/usr/src/app
     statistics_rabbitmq_server:
         build: ./statistics_rabbitmq_server
         restart: always
