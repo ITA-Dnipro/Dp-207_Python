@@ -37,7 +37,7 @@ The application would be useful for travellers and travel agencies as well.
 
 ###  Entity–relationship model 
 The major features of database system is shown in below entity–relationship model (ER model)
-![](/home/lbdl/Desktop/django/Dp-207_Python/django_app/static/images/model.jpeg)
+![static/images](/home/lbdl/Desktop/django/Dp-207_Python/django_app/static/images/model.jpeg)
 
 1. Users
    <br>
