@@ -6,6 +6,13 @@ users with functionality of searching and viewing hotels, transport, restaurants
 information. As a user you can sign up, sign in and see a profile page, where you can edit
 your personal information.
 
+### Intended Audience
+This project is a web application which provides users with detailed information that could be used while
+planning journeys and trips. Users can easily find the information about hotels, restaurants, transport 
+and weather forecast in a chosen city. The application offers online hotels reservation and bookings for cars.
+The E-mandruy application also offers a subscription to the services to provide users daily with available information.
+The application would be useful for travellers and travel agencies as well.
+
 ### The project should provide:
 - Store the account information of all the users in a database;
 - Get the information about hotels through parsing and storing it in the database;
@@ -26,7 +33,11 @@ your personal information.
 - Search and display statistics data for routes and means of transport;
 - Get the user's subscription to chosen services;
 - Send daily emails, according  to the user's subscription, with the information 
-  from hotel, restaurant, transport and weather applications during the period of subscription;
+  from hotel, restaurant, transport and weather applications during the period of subscription.
+
+###  Entity–relationship model 
+The major features of database system is shown in below entity–relationship model (ER model)
+![](/home/lbdl/Desktop/django/Dp-207_Python/django_app/static/images/model.jpeg)
 
 1. Users
    <br>
@@ -93,7 +104,7 @@ your personal information.
 - If available variants for the chosen dates exist, the sort description and prices for each option are shown;
 - If users want to book a room, the "забронировать" button must be pressed then the detailed booking
   information and a message "Ваша бронь успешно добавлена" are shown;
-- An email with booking information is sent to the user email and to the telegram bot, as well;
+- An email with booking information is sent to the user email.
   <br>
   <br>
     2.3 Leave a comment and rate a hotel
@@ -107,7 +118,7 @@ your personal information.
 - A message with the chosen rate is shown;
 - If a user has already rated the hotel, they cannot rate it again;
 - To leave a comment, users fill the text input field and press the "Add Comment" button;
-- When "Rate" or/and "Add Comment" button is pressed the input data is saved in the database;
+- When "Rate" or/and "Add Comment" button is pressed the input data is saved in the database.
 
 3. Restaurants application
    <br>
@@ -123,7 +134,7 @@ your personal information.
 - If the city exists, the list of 20 restaurants with detailed information is shown;
 - If there are more than 20 restaurants are parsed, users can press the "Next Page" button 
   to see the next 20 restaurants;
-- If users want to go back to the previous page, "Previous Page" button must be pressed;
+- If users want to go back to the previous page, "Previous Page" button must be pressed.
 
 4. Restaurants application
    <br>
@@ -145,6 +156,49 @@ your personal information.
 - When the "Reserve" button is pressed, users are redirected to "Bla-bla_car" site to reserve a seat.
   <br>
   <br>
+5. Weather application
+   <br>
+   <br>
+      5.1 Weather control  
+  <br>
+      The application allows users to search and view a detailed weather forecast for a current day and 
+      a short weather description for the next three days in a chosen city all round the world.
+  <br>
 
+- When a user presses the "Weather" button on the navbar, the input field is shown;
+- When a city name is entered, users press the "Submit" button;
+- If the city exists, the table with detailed weather information for the chosen city is shown;
+- The table is also displays a short weather description for the next three days in the chosen city; 
+- If the entered city does not exist, a message 'City does not exist!' is shown.
+  <br>
+  <br>
+6. Telegram bot
+   <br>
+   <br>
+      6.1 Telegram bot control  
+  <br>
+      Telegram bot works with hotels, transport and weather services.
+  <br>
+
+- Users choose a certain service to get available information from an application;
+- When the data is received from the chosen service, users are sent a message with the data on telegram;
+- When users book a room in a hotel, the telegram bot sends an email with booking information to the users' emails.
+  <br>
+  <br>
+7. Django subscription application
+   <br>
+   <br>
+      7.1 Subscription control  
+  <br>
+      Django subscription application allows customers to choose services to get daily emails
+      with information from hotels, transport, restaurants and weather applications during the 
+      period of subscription.
+  <br>
+
+- Users subscribe to a certain service to get available information from a chosen application;
+- Data is received from the chosen service and users are daily sent an email with the data;
+- If users do not want to receive emails anymore, they can unsubscribe from the service.
+  <br>
+  <br>
 
 
