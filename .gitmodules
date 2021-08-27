@@ -11,3 +11,6 @@
 [submodule "flask_restaurants_service"]
 	path = flask_restaurants_service
 	url = https://github.com/ITA-Dnipro/Dp-207_Python_e-mandruy_restaurants_api.git
+[submodule "tg_bot"]
+	path = tg_bot
+	url = https://github.com/ITA-Dnipro/Dp-207_Python_e-mandruy_tg_bot.git
