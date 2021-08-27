@@ -8,3 +8,6 @@
 [submodule "flask_weather_service"]
 	path = flask_weather_service
 	url = https://github.com/ITA-Dnipro/Dp-207_Python_e-mandruy_weather_api.git
+[submodule "flask_restaurants_service"]
+	path = flask_restaurants_service
+	url = https://github.com/ITA-Dnipro/Dp-207_Python_e-mandruy_restaurants_api.git
