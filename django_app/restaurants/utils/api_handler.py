@@ -1,6 +1,7 @@
 import requests
+import os
 
-GET_RESTAURANTS_API_URL = "http://flask_restaurants:4800/get_restaurants_by_city/"
+GET_RESTAURANTS_API_URL = os.environ.get('GET_RESTAURANTS_API_URL')
 
 
 def get_restaurants_from_api(city):
