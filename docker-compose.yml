@@ -4,11 +4,6 @@ services:
         build: ./postgres_server
         restart: always
         env_file: ./postgres_server/.env
-    redis_server:
-        container_name: redis
-        image: redis:alpine
-        restart: always
-        env_file: django_app/.env
     pgadmin:
         build: ./pgadmin4
         restart: always
@@ -26,4 +21,3 @@ services:
             - .:/usr/src/app
         depends_on: 
             - postgres_server
-            - redis_server
