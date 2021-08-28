@@ -27,9 +27,3 @@ services:
         depends_on: 
             - postgres_server
             - redis_server
-    statistics_rabbitmq_server:
-        build: ./statistics_rabbitmq_server
-        restart: always
-        ports:
-            - 5672:5672
-            - 15672:15672
