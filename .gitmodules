@@ -14,3 +14,6 @@
 [submodule "tg_bot"]
 	path = tg_bot
 	url = https://github.com/ITA-Dnipro/Dp-207_Python_e-mandruy_tg_bot.git
+[submodule "django_app"]
+	path = django_app
+	url = https://github.com/ITA-Dnipro/Dp-207_Python_e-mandruy_django_app.git

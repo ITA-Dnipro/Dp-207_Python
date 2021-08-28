@@ -1,8 +1,0 @@
-[flake8]
-max-line-length = 120
-exclude =
-    .git,
-    __pycache__,
-    ./transport_parser/transport_scraper/transport_scraper/settings.py
-    ./transport_parser/transport_scraper/transport_scraper/middlewares.py
-    ./transport_parser/transport_scraper/transport_scraper/pipelines.py

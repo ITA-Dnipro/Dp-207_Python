@@ -7,9 +7,9 @@ services:
         ports: 
             - 7000:7000
     djangoserver:
-        build: .
+        build: ./django_app
         restart: always
         ports: 
             - 5000:5000
         volumes: 
-            - .:/usr/src/app
+            - ./django_app:/usr/src/app
