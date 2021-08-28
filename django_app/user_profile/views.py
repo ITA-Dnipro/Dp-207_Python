@@ -4,6 +4,8 @@ from .forms import UpdateNicknameForm, UpdateEmailForm, UpdatePasswordForm, Upda
 from django.contrib import messages
 from .models import PhotoForUser
 import os
+from datetime import datetime
+
 
 def user_profile(request):
     if not request.user.is_authenticated:
@@ -12,18 +14,26 @@ def user_profile(request):
 
     form = UpdateForm()
     img_obj = []
-    hotels = []
+    hotels_actual = []
+    hotels_history = []
 
     try:
         photos = PhotoForUser.objects.get(user_id=request.user)
         img_obj = photos.photo
     except PhotoForUser.DoesNotExist:
         img_obj = []  
-
     try:
         hotels = Order.objects.filter(user_id=request.user)
+        for hotel in hotels:
+            date = datetime.strptime(hotel.check_out, "%d.%m.%Y")
+            if date < datetime.today():
+                hotels_history.append(hotel)
+            else:
+                hotels_actual.append(hotel)
     except Order.DoesNotExist:
-        hotels = []
+        hotels_actual = []
+        hotels_history = []
+    
 
     if request.method == 'POST':
         if 'Change Nickname' in request.POST:
@@ -44,7 +54,6 @@ def user_profile(request):
             else:
                 form = UpdateForm()
                 messages.error(request, f'This email is used by another user.')
-            
         elif 'Change Password' in request.POST:
             form = UpdatePasswordForm(request.user, request.POST)
             if form.is_valid():
@@ -61,20 +70,18 @@ def user_profile(request):
                     return redirect('user_auth:sign_in')
             else:
                 messages.error(request, f"Your password is incorrect or new password can't be entirely numeric, can't be too similar to your personal information and must contain at least 8 characters.")
-    
-    context = {'form': form, 'img_obj': img_obj, 'hotels': hotels}
+    context = {'form': form, 'img_obj': img_obj, 'hotels_actual': hotels_actual, 'hotels_history': hotels_history,}
     return render(request, 'user_profile/user_profile.html', context)
 
 def del_page(request):
-    if request.method == 'POST' and "Delete" in request.POST:   
+    if not request.user.is_authenticated:
+        messages.error(request, f"You need to be authenticated to do this action.")
+        return redirect('user_auth:sign_up')
+    elif request.method == 'POST' and "Delete" in request.POST:   
         username = request.user
         request.user.delete()
         messages.success(request, f"The user {username} has deleted.")
         return redirect('user_auth:sign_up')
-    elif not request.user.is_authenticated:
-        messages.error(request, f"You need to be authenticated to do this action.")
-        return redirect('user_auth:sign_up')
-        
     context = {}
     return render(request, 'user_profile/del_page.html', context)
 
@@ -92,7 +99,6 @@ def change_photo(request):
         PhotoForUser.objects.filter(user_id=request.user).delete() 
         form = ImageForm(request.POST, request.FILES)
         return redirect('user_profile:user_profile')
-
     elif request.method == 'POST':
         try:
             photos = PhotoForUser.objects.get(user_id=request.user)
@@ -115,13 +121,11 @@ def change_photo(request):
                 obj.save()
                 img_obj = form.instance
                 return redirect('user_profile:user_profile')
-
     elif request.method == 'GET':
         try:
             photos = PhotoForUser.objects.get(user_id=request.user)
             img_obj = photos.photo
         except PhotoForUser.DoesNotExist:
             img_obj = []
-
     context = {'form': form, 'img_obj': img_obj}
     return render(request, 'user_profile/change_photo.html', context)
