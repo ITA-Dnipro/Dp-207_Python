@@ -1,17 +1,11 @@
 version: "3"
-services: 
-    postgres_server:
-        build: ./postgres_server
-        restart: always
-        env_file: ./postgres_server/.env
+services:
     pgadmin:
         build: ./pgadmin4
         restart: always
         env_file: ./pgadmin4/.env
         ports: 
             - 7000:7000
-        depends_on: 
-            - postgres_server
     djangoserver:
         build: .
         restart: always
@@ -19,5 +13,3 @@ services:
             - 5000:5000
         volumes: 
             - .:/usr/src/app
-        depends_on: 
-            - postgres_server
