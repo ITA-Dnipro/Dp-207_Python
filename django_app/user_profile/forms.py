@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
+from .models import PhotoForUser
 
 class UpdateForm(forms.ModelForm):
     old_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password'}))
@@ -28,3 +29,8 @@ class UpdatePasswordForm(PasswordChangeForm):
     class Meta:
         model = User
         fields = ['old_password', 'new_password1', 'new_password2']
+
+class ImageForm(forms.ModelForm):
+    class Meta:
+        model = PhotoForUser
+        fields = ['photo']

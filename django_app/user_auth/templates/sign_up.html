@@ -67,7 +67,9 @@
         .d-flex {
             color: white !important;
         }
-
+		.message-class{
+			margin-top:1rem;
+		}
 	</style>
 
 </head>
@@ -114,9 +116,13 @@
 					</form>
 				</div>
 				<div class="message-class text-center">
+					{% for message in messages %}
+						<br>
+						<p id="messages">{{message}}</p>
+					{% endfor %}		
                 	{% for field in form %}
-						{% if field.errors %}
-                    	<p id='messages'>{{field.errors.as_text}}</p>
+						{% if field.errors %}						
+                    	<p id='messages'>{{ field.errors.as_text|slice:"2:" }}</p>
 						{% endif %}
                 	{% endfor %}
 				</div>

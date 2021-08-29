@@ -5,18 +5,34 @@
 	<style>
         .icon-img {
             background-color: rgb(29, 29, 29);
-            color: white;
-            font-size: 13rem;
-
+            aspect-ratio: 1 / 1;
+            position: relative;
+            color:white;
+        }   
+        .icon-img:hover .user_photo{
+            opacity: 0.8;
         }
-        .icon-img::after {
-            content: "";
-            padding-top: 100%;
+        .icon-img:hover {
+            background-color: #ccccccad;
+        }
+        .add-photo {
+            display:none;
+        }
+        .icon-img:hover .add-photo {
             display: block;
+            position: absolute;
+            top: 25%;
+            text-align: center;
+        }
+        .icon-img__letter {
+            position: absolute;
+            top: 50%;
+            left:50%;
+            transform: translate(-50%, -50%);
+            font-size: clamp(14px, 25vw, 100px);
         }
         .name-mail h3, p {
             margin-bottom: 0;
-
         }
         .container-fluid {
             padding-top: 5%;
@@ -34,79 +50,139 @@
             font-weight: 600;
         }
         .form-group form input {
-            width: 230px;
+            width: 100%;
             border: 1px solid #cccccc;
             border-radius: 3px;
             -webkit-border-radius: 3px;
             -moz-border-radius: 3px;
             -khtml-border-radius: 3px;
             background: #ffffff !important;
-            height: 35px;
+            padding: 5px 10px;
+            margin: 10px 0;
+        }
+        hr {
+            margin: 0.5rem 0;
+        }
+        #id_username, #id_email {
+            width: 30%
         }
         .pass-btn{
+            margin-top:1rem;
+        }
+        .user_photo{
+            width:100%;
+            height:100%;
+            object-fit: cover;
+        }
+        .hotels-block {
             margin-top:1rem;
         }
     </style>
 </head>
 
-    {% csrf_token %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 icon-img d-flex justify-content-center"> {{request.user.username|first|capfirst}} </div>
-            <div class="col-md-8 name-mail">
-                <div class="elements">
-                    <h3> {{request.user.username}}</h3>
-                    <p> {{ request.user.email}} </p>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="icon-img">
+                {% if img_obj %}
+                <img src="{{ img_obj.url }}" class="user_photo" alt="connect">
+                {% else %}
+                <span class="icon-img__letter">{{request.user.username|first|capfirst}}</span>
+                {% endif %}
+                <div class="add-photo">
+                    <a href="{%url 'user_profile:change_photo'%}" style="text-decoration: none;">
+                    <img src="../../../static/images/icon.png" alt="" class="w-50">
+                    <p class="text-dark">Change Photo</p>
+                    </a>
                 </div>
-                <div class="form-group">
-                    <form method="POST">
-                        {% csrf_token %}
-                        <br>
-                        <button type="submit" class="btn btn-success" name="Change Email">Change Email</button>
-                        {{form.email}}
-                    </form>
-                    <form method="POST">
-                        {% csrf_token %}
-                        <hr>
-                        <button type="submit" class="btn btn-success" name="Change Nickname" >Change Nickname</button>
-                        {{form.username}}
-                    </form>
-                    <form method="POST">
-                        <hr>
-                        <div class="container" style="padding:0%">
-                            <div class="row">
-                                {% csrf_token %}
-                                <div class="col-md-4">
-                                    <span>Old password:</span>
-                                    {{form.old_password}}
-                                </div>
-                                <div class="col-md-4">
-                                    <span>New password:</span>
-                                    {{form.new_password1}}
-                                </div>
-                                <div class="col-md-4">
-                                    <span>New password-confirmation:</span>
-                                    {{form.new_password2}}
-                                </div>
+            </div>        
+        </div>
+        <div class="col-md-8 name-mail">
+            <div class="elements">
+                <h3> {{request.user.username}}</h3>
+                <p> {{ request.user.email}} </p>
+            </div>
+            <div class="form-group">
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success" name="Change Email">Change Email</button>
+                    {{form.email}}
+                </form>
+                <form method="POST">
+                    {% csrf_token %}
+                    <hr>
+                    <button type="submit" class="btn btn-success" name="Change Nickname" >Change Nickname</button>
+                    {{form.username}}
+                </form>
+                <form method="POST">
+                    <hr>
+                        <div class="row">
+                            {% csrf_token %}
+                            <div class="col-md-4 d-flex flex-column justify-content-between">
+                                <span>Old password:</span>
+                                {{form.old_password}}
+                            </div>
+                            <div class="col-md-4 d-flex flex-column justify-content-between">
+                                <span>New password:</span>
+                                {{form.new_password1}}
+                            </div>
+                            <div class="col-md-4 d-flex flex-column justify-content-between">
+                                <span>New password-confirmation:</span>
+                                {{form.new_password2}}
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-success pass-btn" name="Change Password">Change Password</button>
-                    </form>
+                    <button type="submit" class="btn btn-success pass-btn">Change Password</button>
+                </form>
+                <hr>
+                <div>
+                    <a class="btn btn-danger pass-btn" style="margin-top:0;" href="{% url 'user_profile:del_page' %}">Delete Profile</a>
                 </div>
             </div>
-            {% for message in messages %}
-                {% if message.tags == "success" %}
-            <div class="col-md-12 msg-class-success text-center">
-                <p class="msg-text">{{message}}</p>
+        </div>
+        {% for message in messages %}
+            {% if message.tags == "success" %}
+        <div class="col-md-12 msg-class-success text-center">
+            <p class="msg-text">{{message}}</p>
+        </div>
+            {% endif %}
+            {% if message.tags == "error" %}
+        <div class="col-md-12 msg-class-error text-center">
+            <p class="msg-text">{{message}}</p>				
+            <p>{{ form.email.error }}</p>
+        </div>
+            {% endif %}
+        {% endfor %}
+
+        <div class="col-md-6 hotels-block">
+            {% if hotels_actual or hotels_history %}
+            <h3>Your actual reservations: </h3>
+            <hr>
+            {% for ordered_hotel in hotels_actual %}
+            <div class="col-md-12">
+                <h5>{{ ordered_hotel.hotel }} in {{ ordered_hotel.hotel.city }}</h5>
+                <p>Contact phone: {{ ordered_hotel.hotel.contacts }}</p>
+                <p>Booking date: {{ ordered_hotel.order_time }}</p>
+                <p>Check-in date: {{ ordered_hotel.check_in }}</p>
+                <p>Check-out date: {{ ordered_hotel.check_out }}</p>
+                <p>Amount to pay: {{ ordered_hotel.price }} UAH</p>
+                <hr>
             </div>
-                {% endif %}
-                {% if message.tags == "error" %}
-            <div class="col-md-12 msg-class-error text-center">
-                <p class="msg-text">{{message}}</p>
-            </div>
-                {% endif %}
             {% endfor %}
-        </div> 
-    </div>
-    
+        </div>
+        <div class="col-md-6 hotels-block">
+            <h3>Your booking history: </h3>
+            <hr>
+            {% for ordered_hotel in hotels_history %}
+                <h5>{{ ordered_hotel.hotel }} in {{ ordered_hotel.hotel.city }}</h5>
+                <p>Contact phone: {{ ordered_hotel.hotel.contacts }}</p>
+                <p>Booking date: {{ ordered_hotel.order_time }}</p>
+                <p>Check-in date: {{ ordered_hotel.check_in }}</p>
+                <p>Check-out date: {{ ordered_hotel.check_out }}</p>
+                <p>Amount to pay: {{ ordered_hotel.price }} UAH</p>
+                <hr>
+            {% endfor %}
+        </div>
+            {% endif %}
+    </div> 
+</div>
 {% endblock %}
