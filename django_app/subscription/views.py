@@ -1,40 +1,37 @@
-from django.shortcuts import render
-from .forms import SubscriptionForm #, SubscriptionHotelForm, SubscriptionWeatherForm, SubscriptionTransportForm
-from subscription.utils.utils_for_views import find_period, create_subsciptions
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-from subscription.utils.api_handler import CityNotExists
+from django.shortcuts import render, HttpResponseRedirect, redirect
+from subscription.utils.utils_for_subscription import create_subsciptions, ServiceHandler
 from django.contrib import messages
+from subscription.models import NotUniqueSubscription
+from subscription.utils.utils_for_forms import ControllerForm
 
 
-def main(request):
-    form = SubscriptionForm()
-    # form_hotel = SubscriptionHotelForm()
-    # form_weather = SubscriptionWeatherForm()
-    # form_transport = SubscriptionTransportForm()
-    # forms = {'hotel': form_hotel, 'weather': form_weather, 'transport': form_transport}
+def add(request):
+    subscriptions = ServiceHandler().get_all_user_subscriptions(request.user.pk)
     if request.method == 'POST':
-        print(request.user)
-        print(create_subsciptions(post_dict=request.POST, user=request.user))
-        # form = SubscriptionForm(request.POST)
-        # if form.is_valid():
-        #     period = find_period(request.POST.get('date_of_expire'))
-        #     services = '?'.join(form.cleaned_data.get('services'))
-        #     return HttpResponseRedirect(reverse('subscription:additional_form', args=(period, services)))
-        return render(request, 'subscription/main_page.html', context={'form': form})
-    return render(request, 'subscription/main_page.html', context={'form': form})
+        subsciptions = create_subsciptions(post_dict=request.POST, user=request.user)
+        for subsciption in subsciptions:
+            if isinstance(subsciption, NotUniqueSubscription):
+                messages.warning(request, subsciption)
+            else:
+                messages.success(request, f"{subsciption} was created")
+        return HttpResponseRedirect('add')
+    return render(request, 'subscription/add_subscription.html', {"subscriptions": subscriptions})
 
 
-def choose_cities(request, period, services):
-    class_form = AdditionalFormSetCreator(services.split('?')).create_form()
-    form = class_form()
+def delete(request, pk):
+    ServiceHandler().delete_subscription_by_id(pk)
+    return redirect('subscription:add_subscription')
+
+
+def update(request, pk):
+    subscription = ServiceHandler().get_by_id(pk)
+    form = ControllerForm(subscription).get_proper_form()(instance=subscription)
     if request.method == 'POST':
-        form = class_form(request.POST)
-        try:
-            if form.is_valid():
-                print(period)
-                return render(request, 'subscription/additional_forms.html', context={'form': form, 'period': period, 'services': services})
-        except CityNotExists as e:
-            messages.warning(request, e.msg)
-
-    return render(request, 'subscription/additional_forms.html', context={'form': form, 'period': period, 'services': services})
+        bound_form = ControllerForm(subscription).get_proper_form()(request.POST, instance=subscription)
+        if bound_form.is_valid():
+            update_subscription = bound_form.save(commit=False)
+            print(update_subscription)
+            update_subscription.update()
+            return redirect('subscription:add_subscription')
+        return render(request, 'subscription/update_subscription.html', {"form": bound_form, "subscription": subscription})
+    return render(request, 'subscription/update_subscription.html', {"form": form, "subscription": subscription})

@@ -172,6 +172,10 @@ CELERY_BEAT_SCHEDULE = {
         "task": "weather.tasks.delete_all_from_weather_model",
         "schedule": crontab(minute='*/59'),
     },
+    "sending_emails": {
+        "task": "subscription.tasks.sending_emails",
+        "schedule": crontab(minute=0, hour=9)
+    },
 }
 
 # cache settings

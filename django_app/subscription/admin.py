@@ -1,4 +1,5 @@
 from django.contrib import admin
-from .models import WeatherService, HotelService
+from .models import Subscription
 
-admin.site.register([WeatherService, HotelService])
+
+admin.site.register(Subscription)

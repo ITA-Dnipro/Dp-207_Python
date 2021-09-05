@@ -1,0 +1,30 @@
+Спасибо за Вашу подписку, уважаемый {{name}}
+{% if weather %}
+    {% for sub in weather%}
+        Сегодня температура в городе {{sub.target_city}} {{sub.data.forecast.0.current_temp}}°С, влажность {{sub.data.forecast.0.humidity}}%
+    {% endfor %}
+{% endif %}
+{% if hotels %}
+    {% for sub in hotels %}
+        Отели в городе {{sub.target_city}}:
+        {% for hotel in sub.data%}
+            {{hotel.hotel_name}}
+            {{hotel.adress}}    
+            {{hotel.contacts}}
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+{% if transport %}
+    {% for sub in transport %}
+        Доступные автомобили на маршруте {{sub.city_of_departure}} -> {{sub.target_city}}:
+        {% for car in sub.data.cars_data.trips%}
+            {{car.blablacar_url|safe}}
+            {{car.price}}  
+        {% endfor %}  
+    {% endfor %}
+{% endif %}
+
+
+По любым вопросом Вы можете обращаться на почту: emandruy@.gmail.com
+
+C Уважением команда портала для путешественников E-mandruy !

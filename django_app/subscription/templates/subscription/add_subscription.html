@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content%}
-    <form action = "{% url 'subscription:main' %}" method="post">
+    <form action = "{% url 'subscription:add_subscription' %}" method="post">
         {% csrf_token %}
         <fieldset id="services">
             <div>
@@ -32,17 +32,17 @@
                     <input type="checkbox" id="transport_id" name="transport" onclick="change(this)">
                     <label for="transport">Transport</label>
                     <fieldset id="info_for_transport" hidden disabled>
-                        <label for="city_of_arrival_for_hotels_id">City of arrival: </label>
-                        <input type="text" id="city_of_arrival_for_transport_id" name='city_of_arrival_for_hotels' required=true>
-                        <label for="city_of_departure_for_hotels_id">City of departure: </label>
-                        <input type="text" id="city_of_departure_for_transport_id" name='city_of_departure_for_hotels' required=true>
-                        <label for="date_of_expire_for_hotels_id">Date of expire: </label>
-                        <input type="date" id="date_of_expire_for_hotels_id" name='date_of_expire_for_hotels' required=true onchange="checkdate(this)">
+                        <label for="city_of_arrival_for_transport_id">City of arrival: </label>
+                        <input type="text" id="city_of_arrival_for_transport_id" name='city_of_arrival_for_transport' required=true>
+                        <label for="city_of_departure_for_transport_id">City of departure: </label>
+                        <input type="text" id="city_of_departure_for_transport_id" name='city_of_departure_for_transport' required=true>
+                        <label for="date_of_expire_for_transport_id">Date of expire: </label>
+                        <input type="date" id="date_of_expire_for_transport_id" name='date_of_expire_for_transport' required=true onchange="checkdate(this)">
                     </fieldset>
                 </div>
             </div>  
         <br>
-        <input type="submit" id="111"></input>
+        <input type="submit" ></input>
     </form>
     <div class="row">
         {% if messages %}
@@ -53,27 +53,19 @@
             </ul>
         {% endif %}
     </div>
-    
-    <script>
-        function change(el){
-            let fieldset = this.document.getElementById('info_for_' + el.name)
-            if (fieldset.hidden==true){
-                fieldset.hidden=false
-                fieldset.disabled=false
-            } else {
-                fieldset.hidden=true
-                fieldset.disabled=true
-            }
-        }
-        function checkdate(el){
-            let today = new Date()
-            if (Date.parse(el.value) <= Date.parse(today)){
-                alert ( "You can't submit in the past. Please change the date" );
-                valid = false;
-                el.value = NaN
-            }
-            return valid;
-        }
-    </script>
-
+    <div class="row">
+        {% if subscriptions %}
+            <ul>
+                {% for subscription in subscriptions %}
+                    <li>Subscription on {{ subscription.service }} in {{ subscription.target_city }} untill {{subscription.date_of_expire|date}}
+                        <a href = {% url "subscription:delete_subscription" subscription.pk%} class = 'btn btn-primary'>Delete</a>
+						<a href = {% url "subscription:update_subscription" subscription.pk%} class = 'btn btn-primary'>Update</a>
+                        <br>
+                        <br>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <script src="{% static 'js/subscription/index.js' %}"></script> 
     {% endblock %}
