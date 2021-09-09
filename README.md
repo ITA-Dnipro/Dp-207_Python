@@ -2,7 +2,7 @@
 ### Repository setup:
 1. Clone this repository:
 ```
-git clone https://github.com/ITA-Dnipro/Dp-207_Python.git
+git clone https://github.com/ITA-Dnipro/Dp-207_Python_e-mandruy.git
 ```
 2. Create .env files out of .env.example files for each folder with .env.example file, for example like this:
 ```
